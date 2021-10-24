@@ -1,0 +1,105 @@
+#library "LMSEXT"
+#include "zcommon.acs"
+
+str weapons[7] = {	"QCHeavyMachinegunDM", "QCSuperShotgunDM", "QCSuperNailgunDM",
+					"QCTriboltDM", "QCRocketLauncherDM", "QCLightningGunDM", "QCRailGunDM"	};
+					
+str unholyTrinity[3] = {"QCRocketLauncherDM", "QCLightningGunDM", "QCRailGunDM"};
+
+script "LMSExtensions_Enter" ENTER {
+	ACS_NamedExecuteAlways("LMSExtensions_ChangeLoadout", 0);
+}
+
+script "LMSExtensions_Return" RETURN {
+	ACS_NamedExecuteAlways("LMSExtensions_ChangeLoadout", 0);
+}
+
+script "LMSExtensions_Respawn" RESPAWN {
+	ACS_NamedExecuteAlways("LMSExtensions_ChangeLoadout", 0);
+}
+
+function void takeAll(str leave) {
+	for(int i = 0; i < 7; i++) {
+		if(StrIcmp(weapons[i], leave) != 0) {
+			TakeInventory(weapons[i], 1);
+		}
+	}
+}
+
+script "LMSExtensions_ChangeLoadout" (void) {
+	
+	if(!(GetCvar("lastmanstanding") || GetCvar("teamlms"))) terminate;
+	if(!(GetCvar("instagib") || GetCvar("rocketarena"))) terminate;
+
+	//Instagib
+	if(GetCVar("instagib")) {
+		Delay(5);
+		takeAll("QCRailgunDM");
+	}
+	
+	//Rocket Arena
+	if(GetCVar("rocketarena") == 1) {
+		Delay(5);
+		takeAll("QCRocketLauncherDM");
+	}	
+	
+	//Buckshot
+	if(GetCVar("rocketarena") == 2) {
+		Delay(5);
+		takeAll("QCSuperShotgunDM");
+	}
+	
+	//Unholy Trinity
+	if(GetCVar("rocketarena") == 3) {
+		Delay(5);
+		
+		int counter;
+		
+		for(int j = 0; j < 7; j++) {
+			counter = 0;
+			
+			for(int k = 0; k < 3; k++) {
+				if(StrIcmp(weapons[j], unholyTrinity[k]) != 0) counter++;
+				if(counter == 3) TakeInventory(weapons[j], 1);
+			}
+		}
+	}
+
+	//ShaftParty
+	if(GetCVar("rocketarena") == 6) {
+		Delay(5);
+		takeAll("QCLightningGunDM");
+	}
+	
+	//Random Loadout Life
+	if(GetCVar("rocketarena") == 5) {
+		int weaponCount = 0;
+		
+		Delay(5);
+		takeAll("");
+	
+		for(int l = 0; l < 7; l++) {
+			int rand = random(0, 1);
+			
+			if(rand == 1) {
+				weaponCount++;
+				GiveInventory(weapons[l], 1);
+				//log(s:"Given to: ", n:PlayerNumber() + 1, s:" | ", s:weapons[l], s:", count: ", d:weaponCount);
+			}			
+		}
+		
+		if(weaponCount < 3 || weaponCount > 4) {
+			restart;
+		}
+	}
+	
+	//Lower ammo capacity to fill weapon bars
+	SetAmmoCapacity("QCBulletAmmo", 5);
+	SetAmmoCapacity("QCShellAmmo" , 5);
+	SetAmmoCapacity("QCNailAmmo"  , 5);
+	SetAmmoCapacity("QCRocketAmmo", 5);
+	SetAmmoCapacity("QCBoltAmmo"  , 5);
+	SetAmmoCapacity("QCSlugAmmo"  , 5);
+	SetAmmoCapacity("QCCoilAmmo"  , 5);
+	SetAmmoCapacity("QCBFGAmmo"   , 5);
+}
