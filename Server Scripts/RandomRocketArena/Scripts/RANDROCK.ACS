@@ -1,7 +1,8 @@
 #library "RANDROCK"
 #include "zcommon.acs"
 
-int modes[9] = {
+int i, prev;
+int modes[10] = {
 					8,			//Gauntlet - any invalid value will do
 					2,			//SSG
 					100,		//SNG
@@ -11,8 +12,20 @@ int modes[9] = {
 					1000000,	//Rail
 					10000000,	//BFG
 					3,			//Unholy Trinity
+					11			//HMG + SSG
 				};
 
+function void roll(void) {
+	i = Random(0,9);
+}
+
 Script "RandomRocketArena" OPEN {
-	SetCVar("rocketarena", modes[Random(0,8)]);
+	
+	roll();
+	
+	if(i == 0 || i == 7) roll();	//Gauntlet and BFG need to be rolled twice to be accepted
+	if(i == prev) restart;			//No same weapon twice, also no gauntlet for first roll, thx!
+	
+	SetCVar("rocketarena", modes[i]);
+	prev = i;
 }
