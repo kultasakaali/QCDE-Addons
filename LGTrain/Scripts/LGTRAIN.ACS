@@ -36,7 +36,7 @@ script "initMap" OPEN {
 	
 	//give way to MOTD
 	if(GetCVarString("sv_motd") != "") {
-		_ticker = 210;
+		_ticker = 35 + GetCVar("cl_motdtime") * 35;
 	}
 }
 
