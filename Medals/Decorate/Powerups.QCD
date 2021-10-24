@@ -49,7 +49,7 @@ Actor QCAllmap : CustomInventory replaces Allmap
 {
 	Inventory.PickupSound "QC/Items/AutomapPick"
 	Inventory.RespawnTics 2100 //60 secs
-	Inventory.PickupMessage "Picked up the computer area map."
+	Inventory.PickupMessage "$GOT_QCAllmap" // "Picked up the computer area map."
 	States
 	{
 	Spawn:
@@ -98,11 +98,11 @@ Actor QCQuad : CustomInventory 15511
 	//$Category "QCDE Pickups"
 	//$Color 9
 	//$Title "Quad Damage"
-	Height 40
+	Height 48
 	Radius 20
 	Scale 0.95
-	Tag "Quad Damage"
-	Inventory.PickupMessage "Picked up Quad Damage!"
+	Tag "$TAG_QCQuad" // "Quad Damage"
+	Inventory.PickupMessage "$GOT_QCQuad" // "Picked up Quad Damage!"
 	Inventory.PickupSound "QC/Items/PowerupPick"
 	Inventory.RespawnTics 3150 //90 sec
 	+INVENTORY.BIGPOWERUP
@@ -137,7 +137,9 @@ Actor QCQuad : CustomInventory 15511
 		TNT1 A 0 A_SpawnItemEx("QuadFlash", 0,0,24, 0,0,0,0, SXF_NOCHECKPOSITION)
 		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ApplyPowerSecs",0)
 		TNT1 A 0 ACS_NamedExecuteAlways("QCDE_PowerupTaken",0,0)
+		//Medals start
 		TNT1 A 0 ACS_NamedExecuteAlways("QCDE_PowerupMassacre",0)
+		//Medals end
 		TNT1 A 0 A_ThrowGrenade("QuadIndicator")
 		Stop
 	Failer:
@@ -174,6 +176,7 @@ Actor QuadIndicator
 	Height 1
 	+NOINTERACTION
 	+BRIGHT
+	+INVISIBLE_TO_TARGET
 	Projectile
 	RenderStyle Add
 	Scale 0.5
@@ -221,11 +224,11 @@ Actor QuadFuller : QuadFull
 
 Actor QCQuadSP : CustomInventory
 {
-	Height 40
+	Height 48
 	Radius 20
 	Scale 0.95
-	Tag "Quad Damage"
-	Inventory.PickupMessage "Picked up Quad Damage!"
+	Tag "$TAG_QCQuad" // "Quad Damage"
+	Inventory.PickupMessage "$GOT_QCQuad" // "Picked up Quad Damage!"
 	Inventory.PickupSound ""
 	Inventory.RespawnTics 3150 //90 sec
 	+INVENTORY.BIGPOWERUP
@@ -266,6 +269,8 @@ Actor QCQuadSP : CustomInventory
 	}
 }
 
+
+
 //=======================================================================
 //=======================================================================
 // Protection droppable powerup
@@ -296,8 +301,8 @@ Actor QCProtec : QCQuad 15512
 	//$Category "QCDE Pickups"
 	//$Color 9
 	//$Title "Protection"
-	Tag "Protection"
-	Inventory.PickupMessage "Picked up Protection!"
+	Tag "$TAG_QCProtec" // "Protection"
+	Inventory.PickupMessage "$GOT_QCProtec" // "Picked up Protection!"
 	Scale 0.95
 	States
 	{
@@ -311,7 +316,9 @@ Actor QCProtec : QCQuad 15512
 		TNT1 A 0 A_SpawnItemEx("ProtecFlash", 0,0,24, 0,0,0,0, SXF_NOCHECKPOSITION)
 		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ApplyPowerSecs",1)
 		TNT1 A 0 ACS_NamedExecuteAlways("QCDE_PowerupTaken",0,1)
-		TNT1 A 0 ACS_NamedExecuteAlways("QCDE_PowerupMassacre",0)
+		//Medals start
+		TNT1 A 0 ACS_NamedExecuteAlways("QCDE_PowerupMassacre",0) 
+		//Medals end
 		TNT1 A 0 A_ThrowGrenade("ProtecIndicator")
 		Stop
 	}
@@ -385,11 +392,11 @@ Actor ProtecFuller : ProtecFull
 
 Actor QCProtecSP : CustomInventory
 {
-	Height 40
+	Height 48
 	Radius 20
 	Scale 0.95
-	Tag "Protection"
-	Inventory.PickupMessage "Picked up Protection!"
+	Tag "$TAG_QCProtec" // "Protection"
+	Inventory.PickupMessage "$GOT_QCProtec" // "Picked up Protection!"
 	Inventory.PickupSound ""
 	Inventory.RespawnTics 3150 //90 sec
 	+INVENTORY.BIGPOWERUP
@@ -429,6 +436,8 @@ Actor QCProtecSP : CustomInventory
 		Stop
 	}
 }
+
+
 
 //=======================================================================
 //=======================================================================
@@ -473,8 +482,8 @@ Actor QCInvul : QCQuad replaces InvulnerabilitySphere 15513
 	//$Category "QCDE Pickups"
 	//$Color 9
 	//$Title "Invulnerability"
-	Tag "Invulnerability"
-	Inventory.PickupMessage "Picked up Invulnerability!"
+	Tag "$TAG_QCInvul" // "Invulnerability"
+	Inventory.PickupMessage "$GOT_QCInvul" // "Picked up Invulnerability!"
 	Scale 0.95
 	States
 	{
@@ -559,6 +568,8 @@ Actor InvulIndicator : QuadIndicator
 	}
 }
 
+
+
 //=======================================================================
 //=======================================================================
 // Infinite Ammo droppable powerup
@@ -587,8 +598,8 @@ Actor QCInfin : QCQuad 15519
 	//$Category "QCDE Pickups"
 	//$Color 9
 	//$Title "Infinite Ammo"
-	Tag "Infinite Ammo"
-	Inventory.PickupMessage "Picked up Infinite Ammo!"
+	Tag "$TAG_QCInfin" // "Infinite Ammo"
+	Inventory.PickupMessage "$GOT_QCInfin" // "Picked up Infinite Ammo!"
 	Scale 0.95
 	States
 	{
@@ -700,9 +711,9 @@ Actor PowerupFactory
 		TNT1 A 2 A_SetTranslucent(0,0)	//resets
 		TNT1 A 5 A_JumpIf(!CallAcs("QCDE_IsPowerupCollected"), "Idle")
 		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_RemoveIfDuel")
-		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ItemTaken", 2,0)
+		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ItemTaken", 2)
 		TNT1 A 0 A_JumpIf(user_next_powerup == 0, "Quad")
-		TNT1 A 0 A_JumpIf(user_next_powerup == 1, "Protec")
+		//TNT1 A 0 A_JumpIf(user_next_powerup == 1, "Protec") // The first powerup is always Quad
 		TNT1 A 100
 		
 	Quad:
@@ -721,10 +732,38 @@ Actor PowerupFactory
 		TNT1 A 0 A_PlaySound("QC/UI/Powerup/Quad_Spawned",CHAN_AUTO,1,0,ATTN_NONE)
 		TNT1 A 0 A_SpawnItemEx("QCQuad", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION,0, 995)
 		TNT1 A 0 A_SetUserVar(user_next_powerup, 1)
-		Goto Idle
-	Protec: 
+		Goto Idle2
+		
+	Idle2:
+		TNT1 A 2 A_SetTranslucent(0,0)	//resets
+		TNT1 A 5 A_JumpIf(!CallAcs("QCDE_IsPowerupCollected"), "Idle2")
+		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_RemoveIfDuel")
+		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ItemTaken", 2, 1050)
+		TNT1 A 0 A_JumpIf(user_next_powerup == 0, "Quad2")
+		TNT1 A 0 A_JumpIf(user_next_powerup == 1, "Protec2")
+		TNT1 A 100
+	Quad2:
+		QUAD BBBBBBBBBBBBBBBBBBBB 15 A_FadeIn (0.011) //300 tics
+		QUAD B 50 //to complete 350 tics of 10 seconds
+		QUAD B 1050
+		QUAD BBBBBBBBBB 35
+		QUAD BBBBBBBBBB 35
+		QUAD BBBBBBBBBB 35
+		QUAD BBBBBBBBBB 35
+		QUAD BBBBBBBBBB 35
+		QUAD BBBBBBBBBB 35
+		QUAD BBBBB 35
+		TNT1 A 0 A_PlaySound("QC/UI/Powerup/Quad_Incoming",CHAN_AUTO,1,0,ATTN_NONE)
+		QUAD BBBBB 35
+		QUAD BBBBBBBBBB 35
+		TNT1 A 0 A_PlaySound("QC/UI/Powerup/Quad_Spawned",CHAN_AUTO,1,0,ATTN_NONE)
+		TNT1 A 0 A_SpawnItemEx("QCQuad", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION,0, 995)
+		TNT1 A 0 A_SetUserVar(user_next_powerup, 1)
+		Goto Idle2
+	Protec2: 
 		PROT BBBBBBBBBBBBBBBBBBBB 15 A_FadeIn (0.011) //300 tics
 		PROT B 50 //to complete 350 tics of 10 seconds
+		PROT B 1050
 		PROT BBBBBBBBBB 35	//350 tics=10 sec
 		PROT BBBBBBBBBB 35
 		PROT BBBBBBBBBB 35
@@ -738,7 +777,7 @@ Actor PowerupFactory
 		TNT1 A 0 A_PlaySound("QC/UI/Powerup/Protec_Spawned",CHAN_AUTO,1,0,ATTN_NONE)
 		TNT1 A 0 A_SpawnItemEx("QCProtec", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION,0, 995)
 		TNT1 A 0 A_SetUserVar(user_next_powerup, 0)
-		Goto Idle
+		Goto Idle2
 	}
 }
 
@@ -751,10 +790,10 @@ Actor PowerupFactory
 //=================================================================================================
 //=================================================================================================
 
-ACTOR QCEldersSoul : CustomInventory 15700
+Actor QCEldersSoul : CustomInventory 15700
 {
 	+INVENTORY.ALWAYSPICKUP
-	Inventory.PickupMessage "You picked up an Elder's Soul"
+	Inventory.PickupMessage "$GOT_QCEldersSoul" // "You picked up an Elder's Soul"
 	Inventory.PickupSound "NoSoundHax"
 	Scale 1.1
 	States
@@ -798,7 +837,9 @@ ACTOR QCEldersSoul : CustomInventory 15700
 		TNT1 A 0 A_Blast(BF_NOIMPACTDAMAGE)
 		TNT1 A 0 A_GiveInventory("EldersSoulPowerGiver",1)
 		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_EldersSoulPickup",0)
+		//Medals start
 		TNT1 A 0 ACS_NamedExecuteAlways("QCDE_PowerupMassacre",0)
+		//Medals end
 		TNT1 A 0 A_ThrowGrenade("EldersSoulIndicator")
 		Stop
 	}
@@ -895,6 +936,7 @@ Actor EldersSoulIndicator
 	Projectile
 	RenderStyle Add
 	Scale 0.71
+	+INVISIBLE_TO_TARGET
 	//Translation "0:255=%[0,0,0]:[2.0,2.0,0.0]"
 	States
 	{
