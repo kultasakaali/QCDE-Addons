@@ -91,7 +91,8 @@ Actor AimWellToken: Token {Inventory.MaxAmount 2}
 Actor TwoHitsToken: Token {Inventory.MaxAmount 2}
 
 //Point Blank
-Actor PelletHitToken: Token {Inventory.MaxAmount 30}
+//Actor PelletHitToken: Token {Inventory.MaxAmount 30} //unused
+Actor PointBlankToken: Token {Inventory.MaxAmount 1}
 
 //For ShowStopper
 Actor SpreeToken: Token {Inventory.MaxAmount 1}
@@ -102,7 +103,8 @@ Actor PreciseCounter: Token {Inventory.MaxAmount 10}
 Actor VelocityToken: Token {Inventory.MaxAmount 9}
 Actor NoVelocityToken: Token {Inventory.MaxAmount 2}
 
-//For Humiliation check
+/* For Humiliation check
+//QCDE already has a token built in for this
 Actor GFiredGiver: Powerupgiver
 {	
 	Inventory.PickupMessage ""
@@ -117,6 +119,7 @@ Actor PowerGFired: Powerup
 {
 	Powerup.Duration 15
 }
+*/
 
 //Net Master death stop
 Actor NetMasterEnd: Token {Inventory.MaxAmount 1}
@@ -126,6 +129,12 @@ Actor ExcellentEnd: Token {Inventory.MaxAmount 1}
 
 //Killing Spree restart
 Actor KillingSPreeEnd: Token {Inventory.MaxAmount 1}
+
+//Galen totem explosion token - move to QCDE_TotemExploded if possible in the future
+Actor TotemExploded: Token {Inventory.MaxAmount 5}
+
+//Projectile abilities for now check for this token
+Actor AbilityToken: Token {Inventory.MaxAmount 10}
 
 //////////////////////////////////////////////////
 //
@@ -181,8 +190,15 @@ Actor QCShotgunPuffHit_DM : QCShotgunPuff_DM
 	XDeath:
 		TNT1 A 0 A_GiveToTarget("HitBeepMid",1)
 		TNT1 A 0 A_GiveToTarget("SGDamageToken",1)
-		TNT1 A 0 A_GiveToTarget("PelletHitToken",1)
+		//TNT1 A 0 A_GiveToTarget("PelletHitToken",1)  //unused
+		TNT1 A 0 A_JumpIfCloser(96, "XDeath_PBlank")
 		TNT1 A 10 A_PlaySound("BulletHitFleshRandom",7,0.6,0,9)
+		Stop
+	
+	XDeath_PBlank:
+		TNT1 A 0 A_GiveToTarget("PointBlankToken",1)
+		TNT1 A 10 A_PlaySound("BulletHitFleshRandom",7,0.6,0,9)
+		TNT1 A 0 A_TakeFromTarget("PointBlankToken",1)
 		Stop
 	}
 }	
