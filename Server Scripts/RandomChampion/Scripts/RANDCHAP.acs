@@ -5,43 +5,71 @@ str champPool[31] = {	"RANGER", "DOOMSLAYER", "CORVUS", "KANE", "CALEB", "MENELK
 						"GALEN", "NYX", "SORGAUL", "DUKENUKEM", "DURANDAL", "KEEL", "SARGE", "LOWANG", "GRAYSON", "ERADICATOR", "BLAZKOWICZ",
 						"FREEMAN", "VORMATUR", "ELEENA", "LUCIENNE", "MAJOR", "HUNTER", "SAM", "POSTAL", "PAINKILLER", "INTRUDER"	};
 
-Script "RandomChamp" OPEN {
+Script "roll" (void) {
+	int champ = random(0, 30);
+		
+	for(int i = 0; i < 31; i++) {
+		SetCVar(StrParam(s:"_bc_", d:i), 1);
+	}
+		
+	SetCVar(StrParam(s:"_bc_", d:champ), 0);
+	SetCVar("_forcedClass", champ);
+	log(s:"\cg---Rolled ", s:champPool[champ]);
+}
+
+Script "InitMap" OPEN {
+	if(GetCVar("sv_randomChampMode") == 0) terminate;
 	
 	if(GetCVar("_forcedClass") == 999) {
-		int champ = random(0, 30);
-		
-		for(int i = 0; i < 31; i++) {
-			SetCVar(StrParam(s:"_bc_", d:i), 1);
-		}
-		
-		SetCVar(StrParam(s:"_bc_", d:champ), 0);
-		SetCVar("_forcedClass", champ);
-		
+		log(s:"\cg---Initing map");
+		ACS_NamedExecuteAlways("roll", 0);
 		Delay(210);
-		
 		SetCVar("_sameMap", true);
+		log(s:"\cg---InitMap ran");
 	}
 }
 
 Script "ClearChamp" UNLOADING {		//Handle game modes with warmup with these,
 	SetCVar("_forcedClass", 999);	//so that we don't end up endlessly picking
 	SetCVar("_sameMap", false);		//a new champ every time warmup ends
+	log(s:"\cg---Unloaded map");
 }
 
-Script "ForceChoice" OPEN CLIENTSIDE {
+Script "setClass" (void) CLIENTSIDE {	
+	int class = GetCvar("_forcedClass");
+	
+	ConsoleCommand(StrParam(s:"playerclass \"", s:champPool[class], s:"\" "));
+	log(s:"\cg---Class set on client");
+}
+
+Script "RoundEnds" (int evtType, int arg1, int arg2) EVENT {
+	
+	if(evtType == 6 && GetCVar("sv_randomChampMode") == 2) {
+		log(s:"\cg---Round ended");
+		ACS_NamedExecuteAlways("roll", 0);
+		Delay(35);
+		ACS_NamedExecuteAlways("setClass", 0);
+	}
+}
+
+Script "ForceChoiceMap" OPEN CLIENTSIDE {
+	if(GetCVar("sv_randomChampMode") == 0) terminate;
 	
 	if(!GetCVar("_sameMap") || GetCVar("_firstTime")) {
+		log(s:"\cg---Moving client to spectator");
+		Delay(3);
 		ConsoleCommand("spectate");
-		HudMessage(s:"You will be automatically joined in 10 seconds\n\cgDon't press anything!";
+		HudMessage(s:"Setting your class...\n\cgPlease wait!";
 			HUDMSG_PLAIN, 99, CR_WHITE, 1.5, 0.5, 3.0);
 	
 		Delay(70);
-	
-		int class = GetCvar("_forcedClass");
-		ConsoleCommand(StrParam(s:"playerclass \"", s:champPool[class], s:"\" "));
 		
-		Delay(280);
-		ConsoleCommand("join");
+		log(s:"\cg---executing setClass");
+		ACS_NamedExecuteAlways("setClass", 0);
+		
+		Delay(35);
+		HudMessage(s:"You can now join the game";
+			HUDMSG_PLAIN, 99, CR_GREEN, 1.5, 0.5, 1.5);
 		
 		SetUserCVar(ConsolePlayerNumber(), "_firstTime", false);
 	}

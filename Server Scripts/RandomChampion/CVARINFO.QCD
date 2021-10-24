@@ -1,3 +1,4 @@
+server				int		sv_randomChampMode = 1;	// 0 = off, 1 = per map, 2 = per round
 server	noarchive	int 	_forcedClass = 999;
 server	noarchive	bool	_sameMap = true;
 user	noarchive	bool	_firstTime = true;
