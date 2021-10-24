@@ -1,0 +1,43 @@
+QC Medals addon for QC: Doom Edition
+
+All credits for realizing this addon go to Ivory Duke.
+Medals in this addon not necessairly work the same way as in QC, most of that is intentional to reduce medal clutter.
+
+NOTE: This addon aims to work with Q-Zandronum 1.2.1 and is not compatible with GZDoom or Zandronum
+
+qzan_v1.3 changes from 1.2:
+	- DECORATE modifications to make the addon compatible with Q-Zandronum and QC:DE 2.7 (QCDEv2.7.pk3 /w qcdeqzpatch2.7.pk3)
+	- Daniel's Painkiller weapon now treated as a Gauntlet, thus melee kill yields HUMILIATION
+	- Moved MIDAIR, PRECISE and POINT BLANK medals to be triggered only on frag, not on hit
+	- MIDAIR now checks if victim was airborne in a different way
+	- POINT BLANK is now based on distance from the victim
+	- First Blood now triggers on the first actual kill, not when the first player hits 1 frag
+	- DIE HARD now triggers on frag event instead of constantly checking player health, lowered activation threshold to 15 HP
+	- PERFORATED will now trigger correctly even if the player recieves 1000000 hp damage from other source than telefrag (ex. DamageThing)
+	  (unless someone is entering a two-way teleport you are exiting from, as the corpse gets teleported, the check fails and it will give RING OUT)
+	- Added STOPWATCH medal
+	- TANK will now not be given in (T)LMS modes when the round starts
+	- Added missing FROM THE GRAVE assets to fix it not displaying
+	- Added missing MIDAIR sound
+	- Fixed DENIED being given also for suicide
+	- Fixed RING OUT being yielded for every frag in instagib
+	- Fixed close range instagib frag possibly giving PERFORATED
+	- Fixed HUMILIATION being given based on gauntlet firing (ex. Dave kills when gauntlet spinning gave medal)
+	- TANK will now trigger on 25 points of overstack, players need to lose both overstacks for it to be able to retrigger
+	- POWERUP MASSACRE frag requirement reduced 10 -> 5
+	- Added MENUDEF entry for toggling 'cl_qcmedals' under QCDE Hud options
+	- Fixed setting 'cl_qcmedals false' not switching every medal off
+	- Fixed Nyx getting RING OUT for a ghost walk kill
+	- Included RailJump addon, server switchable with 'sv_railJump'
+	- New ability medals: GET PSYCHED, CURSED, SEER, JUNKIE, PINEAPPLE, INSIDE OUT, SLAYER, STOMPER, SHOCKER
+	
+bugfixes of newly introduced features:
+	- Fixed Sarge occasionally getting STOPWATCH on (T)LMS round start
+	- Fixed STOPWATCH being given rapidly repeatedly when Heavy Armor could not be picked up
+	- Reduced network impact of new MIDAIR check significantly
+
+You MAY NOT redistribute this addon without this text file included and unmodified!
+
+todo (-: pending; +: needs testing):
+-midair given even when slightly in air
+-double whammy sometimes given seemingly randomly on rail hit

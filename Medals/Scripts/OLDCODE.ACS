@@ -1,0 +1,234 @@
+//////////////////////////////////////////////////////////////////////////
+//	Unused code moved here for safekeeping, just in case, to be safe 	//
+//////////////////////////////////////////////////////////////////////////
+
+/*Script "MedalsInitiator" ENTER
+{
+	//ACS_NamedExecuteAlways("QCDE_FirstBlood",0); //this is no longer needed as we do this check another way
+	//ACS_NamedExecuteAlways("GetVelocity",0); //this is no longer needed as we do this check another way
+	//ACS_NamedExecuteAlways("QCDE_DieHard",0); //this is no longer needed as we do this check another way
+}*/
+
+
+//A DEATH script cannot be terminated, so these medals would not turn off with 'cl_qcmedals false'
+//Migrated medals to be handled by FragEvent
+
+/*Script "QCDE_WhatsYourPoison" DEATH
+{
+	if(GameType() < GAME_NET_DEATHMATCH)
+	Terminate;
+	
+	If(!GetCVar("cl_qcmedals"))
+	Terminate;
+	
+	//Get info about killed
+	int a = ActivatorTID();
+	
+	SetActivatorToTarget(0);
+	
+	//To avoid getting medals for your own death check if TID of activator is different from target
+	int b = ActivatorTID();
+	
+	If(a == b)
+	terminate;
+	
+	//From The Grave, if killer and victim are dead killer gets medal
+	If((0 >= GetActorProperty(a,APROP_HEALTH)) && (0 >= GetActorProperty(b,APROP_HEALTH)))
+	ACS_NamedExecuteAlways("DrawKamikaze",0);
+	
+	//This delay is essential for the DEATH script to have time to detect necessary item in killer
+	delay(3);
+	//Combo Kill
+	If(CheckInventory("PowerSickShot"))
+	ACS_NamedExecuteAlways("DrawComboKill",0);
+		
+	//Humiliation
+	If(CheckWeapon("QCGauntlet") && CheckInventory("PowerGFired"))
+	{
+		ACS_NamedExecuteAlways("DrawHumiliation",0);
+		TakeInventory("GFired",256);
+	}
+	
+	//Show Stopper
+	SetActivator(a);
+	If(CheckInventory("SpreeToken"))
+	{
+		SetActivator(b);
+	
+		ACS_NamedExecuteAlways("DrawSStopper",0);
+	}
+	
+	//Party Breaker
+	SetActivator(a);
+	If(CheckInventory("QuadTimer") || CheckInventory("ProtecTimer"))
+	{
+		SetActivator(b);
+		
+		ACS_NamedExecuteAlways("DrawPBreaker",0);
+	}
+	
+	//Perforated
+	SetActivator(a);
+	If(-2000 > GetActorProperty(0,APROP_HEALTH))
+	{
+		SetActivator(b);
+		
+		ACS_NamedExecuteAlways("DrawPerforated",0);
+		//I have to terminate here otherwise a Perforated player would always also give Ring Out medal
+		//Ringed out player cannot have less than -2000 health (Telefrag damage -1000000, Instadeath Floor -999)
+		terminate;
+	}
+	
+	//Ring Out
+	SetActivator(a);
+	If(-500 > GetActorProperty(0,APROP_HEALTH))
+	{
+		SetActivator(b);
+		
+		ACS_NamedExecuteAlways("DrawRingOut",0);
+		terminate;
+	}
+}*/
+
+//For some reason Denied only works when it's on its own :shrug:		//this included no check for suicide, moved to be triggered
+/*Script "QCDE_Denied" DEATH											//on frag event for convenience
+{
+	If(CheckInventory("ActiveProgressToken") > 0)
+	{
+		SetActivatorToTarget(0);
+		
+		ACS_NamedExecuteAlways("DrawDenied",0);
+	}
+}*/
+
+
+/*Script "QCDE_PointBlank" (void) 	// left Ivory's code intact, but we don't execute this anymore as it gives a medal on every max dmg hit
+									// Plus, on kill you'd need to hit EXACTLY 20 or 30 pellets, which is very rare for as the victim dies,
+									// the remaining pellets are lost and not count, thus leaving the player without a medal
+{
+	if(GameType() < GAME_NET_DEATHMATCH)
+	Terminate;
+	
+	If(!GetCVar("cl_qcmedals"))
+	Terminate;
+	
+	If(CheckWeapon("QCShotgun"))
+	{
+		If(CheckInventory("PelletHitToken") == 20)
+		{
+			ACS_NamedExecuteAlways("DrawPointBlank",0);
+			TakeInventory("PelletHitToken",30);
+		}
+		Else
+		TakeInventory("PelletHitToken",30);
+	}
+	Else
+	{
+		If(CheckInventory("PelletHitToken") == 30)
+		{
+			ACS_NamedExecuteAlways("DrawPointBlank",0);
+			TakeInventory("PelletHitToken",30);
+		}
+		Else
+		TakeInventory("PelletHitToken",30);
+	}
+}*/
+
+//Direct Hit Rocket Stuff - Ivory's version left intact, but no longer executed
+/*Script "QCDE_RocketStuff" (void)
+{	
+	Int t = Timer()/35 + 8;
+	
+	While(!CheckInventory("DirectRocketToken"))
+	{
+		If((Timer()/35) == t)
+		{
+			Delay(48);
+			Terminate;
+		}
+		Delay(2);
+	}
+	TakeInventory("DirectRocketToken",256);
+	
+	If(CheckActorInventory(GetActorProperty(0, APROP_TracerTID),"VelocityToken") > 8)
+	int z = 1;
+	else
+	z = 0;
+	
+	SetActivatorToTarget(0);
+	
+	If(z > 0)
+	ACS_NamedExecuteAlways("DrawMidair",0);
+	Else
+	ACS_NamedExecuteAlways("DrawPrecise",0);
+	
+}*/
+
+
+/*Script "GetVelocity" (void) // this is no longer needed as we do this check another way
+{
+	while(GetActorVelZ(0))
+	{
+		GiveInventory("VelocityToken",1);
+		Delay(2);
+	}
+	
+	while(!GetActorVelZ(0))
+	{
+		GiveInventory("NoVelocityToken",1);
+		Delay(1);
+	}
+	
+	If(1 > CheckInventory("NoVelocityToken"))
+	{
+		TakeInventory("VelocityToken",256);
+		TakeInventory("NoVelocityToken",256);
+		Restart;
+	}
+	
+	Delay(2);
+	Restart;
+}*/
+
+
+//Now Low priority Medals Start: relatively common but not so essential to know right away
+
+//Die Hard
+/*Script "QCDE_DieHard" (void) // Moved this to be triggered on frag event to save resources
+{
+	While(GetActorProperty(0,APROP_HEALTH) > 30)
+	Delay(20);
+	
+	Int f = PlayerFrags() + 1;
+	While(30 >= GetActorProperty(0,APROP_HEALTH))
+	{
+		If(PlayerFrags() == f)
+		{
+			ACS_NamedExecuteAlways("DrawDHard",0);
+			Delay(105);
+			Restart;
+		}
+		Delay(10);
+	}
+	Restart;
+}*/
+
+
+//It's that time of the month
+/*Int blood = 0;
+Script "QCDE_FirstBlood" (void) 	// This would only trigger when someone has one frag. If someone happened to suicide first
+{									// and then score first frag, they're not given the medal.
+	if(blood > 0)
+	Terminate;
+	
+	If(PlayerFrags() >= 1)
+	{
+		blood = 1;
+		
+		ACS_NamedExecuteAlways("DrawFirstBlood",0);
+		Terminate;
+	}
+	Delay(10);
+	Restart;
+}
+*/
