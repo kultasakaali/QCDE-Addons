@@ -1,0 +1,1175 @@
+#library "MEDALS"
+#include "zcommon.acs"
+
+//////////////////////////////////////////////////////////////////
+//
+//	Scripts to start the routines and clear things up on death
+//
+/////////////////////////////////////////////////////////////////
+Script "MedalsInitiator" ENTER
+{
+	if(GameType() < GAME_NET_DEATHMATCH)
+	Terminate;
+	
+	If(!GetCVar("cl_qcmedals"))
+	Terminate;
+	
+	ACS_NamedExecuteAlways("QCDE_FirstBlood",0);
+	ACS_NamedExecuteAlways("QCDE_KillingSpree",0);
+	ACS_NamedExecuteAlways("QCDE_DieHard",0);
+	ACS_NamedExecuteAlways("QCDE_Tank",0);
+	ACS_NamedExecuteAlways("NetMasterStarter",0);
+	ACS_NamedExecuteAlways("GetVelocity",0);
+	
+	If(CheckInventory("duel"))
+	Terminate;
+	
+	//This medals cannot be obtained in duels so we might as well not have them start in the first place
+	ACS_NamedExecuteAlways("QCDE_Excellent",0);
+}
+
+Script "ResetMedalCounters" DEATH
+{
+	if(GameType() < GAME_NET_DEATHMATCH)
+	Terminate;
+	
+	If(!GetCVar("cl_qcmedals"))
+	Terminate;
+	
+	Delay(2);
+	
+	TakeInventory("TwoHitsToken",2);
+	TakeInventory("AimWellToken",2);
+	TakeInventory("SpreeToken",1);
+	TakeInventory("VelocityToken",10);
+	TakeInventory("NoVelocityToken",2);
+	TakeInventory("DieHardEnd",2);
+	
+	TakeInventory("GDamageToken",500);
+	TakeInventory("MGDamageToken",500);
+	TakeInventory("SGDamageToken",500);
+	TakeInventory("SNGDamageToken",500);
+	TakeInventory("TBDirectDamageToken",500);
+	TakeInventory("TBSplashDamageToken",500);
+	TakeInventory("RLDirectDamageToken",500);
+	TakeInventory("RLSplashDamageToken",500);
+	TakeInventory("LGDamageToken",500);
+	TakeInventory("RGDamageToken",500);
+	TakeInventory("BFGDirectDamageToken",500);
+	TakeInventory("BFGSplashDamageToken",500);
+	
+	//Tokens to end scripts that need to stop on player's death and may not stop on their own
+	GiveInventory("NetMasterEnd",1);
+	GiveInventory("ExcellentEnd",1);
+	GiveInventory("KillingSpreeEnd",1);
+}
+
+//////////////////////////////////////////////////////////////////
+//
+//	Medal Scripts
+//
+/////////////////////////////////////////////////////////////////
+
+
+//All Medals that are activated on death merged into one to save resources
+//Their respective Draw Medal scripts are further down ordered by priority
+Script "QCDE_WhatsYourPoison" DEATH
+{
+	if(GameType() < GAME_NET_DEATHMATCH)
+	Terminate;
+	
+	If(!GetCVar("cl_qcmedals"))
+	Terminate;
+	
+	//Get info about killed
+	int a = ActivatorTID();
+	
+	SetActivatorToTarget(0);
+	
+	//To avoid getting medals for your own death check if TID of activator is different from target
+	int b = ActivatorTID();
+	
+	If(a == b)
+	terminate;
+	
+	//From The Grave, if killer and victim are dead killer gets medal
+	If((0 >= GetActorProperty(a,APROP_HEALTH)) && (0 >= GetActorProperty(b,APROP_HEALTH)))
+	ACS_NamedExecuteAlways("DrawKamikaze",0);
+	
+	//This delay is essential for the DEATH script to have time to detect necessary item in killer
+	delay(3);
+	//Combo Kill
+	If(CheckInventory("PowerSickShot"))
+	ACS_NamedExecuteAlways("DrawComboKill",0);
+		
+	//Humiliation
+	If(CheckWeapon("QCGauntlet") && CheckInventory("PowerGFired"))
+	{
+		ACS_NamedExecuteAlways("DrawHumiliation",0);
+		TakeInventory("GFired",256);
+	}
+	
+	//Show Stopper
+	SetActivator(a);
+	If(CheckInventory("SpreeToken"))
+	{
+		SetActivator(b);
+	
+		ACS_NamedExecuteAlways("DrawSStopper",0);
+	}
+	
+	//Party Breaker
+	SetActivator(a);
+	If(CheckInventory("QuadTimer") || CheckInventory("ProtecTimer"))
+	{
+		SetActivator(b);
+		
+		ACS_NamedExecuteAlways("DrawPBreaker",0);
+	}
+	
+	//Perforated
+	SetActivator(a);
+	If(-2000 > GetActorProperty(0,APROP_HEALTH))
+	{
+		SetActivator(b);
+		
+		ACS_NamedExecuteAlways("DrawPerforated",0);
+		//I have to terminate here otherwise a Perforated player would always also give Ring Out medal
+		//Ringed out player cannot have less than -2000 health (Telefrag damage -1000000, Instadeath Floor -999)
+		terminate;
+	}
+	
+	//Ring Out
+	SetActivator(a);
+	If(-500 > GetActorProperty(0,APROP_HEALTH))
+	{
+		SetActivator(b);
+		
+		ACS_NamedExecuteAlways("DrawRingOut",0);
+		terminate;
+	}
+}
+
+//For some reason Denied only works when it's on its own :shrug:
+Script "QCDE_Denied" DEATH
+{
+	If(CheckInventory("ActiveProgressToken") > 0)
+	{
+		SetActivatorToTarget(0);
+		
+		ACS_NamedExecuteAlways("DrawDenied",0);
+	}
+}
+
+//Combo Kill
+Script "DrawComboKill" (void) CLIENTSIDE
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("COMMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("CKill",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+//this one checks if player fired RL or LG, then switched to RG and fired rail in less than 1 second from switch
+Script "ComboKillTokenGiver" ENTER
+{
+	If(CheckInventory("PowerRLFired") && CheckInventory("PowerComboSwitchRL") && CheckInventory("PowerRLHit") && CheckInventory("PowerRGFired"))
+	{
+		GiveInventory("SickShotGiver",1);
+			
+		TakeInventory("PowerRLFired",1);
+		TakeInventory("PowerComboSwitchRL",1);
+		TakeInventory("PowerRGFired",1);
+			
+		Delay(48);
+		TakeInventory("PowerSickShot",1);
+	}
+	
+	If(CheckInventory("PowerLGFired") && CheckInventory("PowerComboSwitchLG") && CheckInventory("PowerLGHit") && CheckInventory("PowerRGFired"))
+	{
+		GiveInventory("SickShotGiver",1);
+			
+		TakeInventory("PowerLGFired",1);
+		TakeInventory("PowerComboSwitchLG",1);
+		TakeInventory("PowerRGFired",1);
+			
+		Delay(48);
+		TakeInventory("PowerSickShot",1);
+	}
+}
+
+//Then weapon specific medals, otherwise it's awkward if they are delayed
+//No need to establish ierarchy between these three since they cannot happen at the same time
+//These two always come first
+
+Script "QCDE_Impressive" (void)  
+{
+	If((CheckInventory("AimWellToken") == 1) && (CheckInventory("TwoHitsToken") == 0))
+	{
+		TakeInventory("AimWellToken",2);
+		Terminate;
+	}
+	
+	If((CheckInventory("AimWellToken") == 2) && (CheckInventory("TwoHitsToken") == 1))
+	{
+		TakeInventory("AimWellToken",2);
+		TakeInventory("TwoHitsToken",2);
+		Terminate;
+	}
+	
+	If((CheckInventory("AimWellToken") == 1) && (CheckInventory("TwoHitsToken") == 2))
+	{
+		//Double Whammy
+		ACS_NamedExecuteAlways("DrawDWhammy",0);
+				
+		TakeInventory("TwoHitsToken",2);
+        TakeInventory("AimWellToken",2);
+		Terminate;
+	}
+            
+    If((CheckInventory("AimWellToken") > 1) && (CheckInventory("TwoHitsToken") > 1))
+    {
+        ACS_NamedExecuteAlways("DrawImpressive",0);
+				
+		TakeInventory("TwoHitsToken",2);
+        TakeInventory("AimWellToken",2);
+		Terminate;
+    }
+}
+
+Script "DrawDWhammy"  (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(1);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("WHAMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("DWhammy",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawImpressive"  (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(1);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("IMPMEDAL");
+    SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Impressive",120);
+				
+    Delay(48);
+    TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "QCDE_PointBlank" (void)
+{
+	if(GameType() < GAME_NET_DEATHMATCH)
+	Terminate;
+	
+	If(!GetCVar("cl_qcmedals"))
+	Terminate;
+	
+	If(CheckWeapon("QCShotgun"))
+	{
+		If(CheckInventory("PelletHitToken") == 20)
+		{
+			ACS_NamedExecuteAlways("DrawPointBlank",0);
+			TakeInventory("PelletHitToken",30);
+		}
+		Else
+		TakeInventory("PelletHitToken",30);
+	}
+	Else
+	{
+		If(CheckInventory("PelletHitToken") == 30)
+		{
+			ACS_NamedExecuteAlways("DrawPointBlank",0);
+			TakeInventory("PelletHitToken",30);
+		}
+		Else
+		TakeInventory("PelletHitToken",30);
+	}
+}
+
+Script "DrawPointBlank" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("POIMEDAL");
+    SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("PBlank",120);
+				
+    Delay(48);
+    TakeInventory("MedalInExecutionToken",1);
+}
+
+//Humiliation
+Script "DrawHumiliation" (void)  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("HUMMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Humiliation",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+//Net Master
+Script "NetMasterStarter" (void)
+{
+	int t = Timer()/35 + 20;
+	
+	//You are not dealing 1000 damage in less than 20 seconds
+	//And even if you do you will not realize
+	While((t > Timer()/35) && !CheckInventory("NetMasterEnd"))
+	Delay(175);
+	
+	If(CheckInventory("NetMasterEnd"))
+	{
+		TakeInventory("NetMasterEnd",1);
+		Terminate;
+	}
+		
+	ACS_NamedExecuteAlways("QCDE_NetMaster",0);
+}
+
+//Net Master - Damage Dealer
+Script "QCDE_NetMaster" (void)
+{
+	If(CheckInventory("NetMasterEnd"))
+	{
+		TakeInventory("NetMasterEnd",1);
+		ACS_NamedExecuteAlways("NetMasterStarter",0);
+		Terminate;
+	}
+		
+	int g = CheckInventory("GDamageToken") * 75;
+	
+	int hmg = CheckInventory("MGDamageToken") * 10;
+	
+	int sg = CheckInventory("SGDamageToken") * 4;
+	
+	int sng = CheckInventory("SNGDamageToken") * 20;
+	
+	int tb1 = CheckInventory("TBDirectDamageToken") * 45;
+	int tb2 = CheckInventory("TBSplashDamageToken") * 25;
+
+	int rl1 = CheckInventory("RLDirectDamageToken") * 100;
+	int rl2 = CheckInventory("RLSplashDamageToken") * 60;
+	
+	int lg = CheckInventory("LGDamageToken") * 7;
+	
+	int rg = CheckInventory("RGDamageToken") * 80;
+	
+	int bfg1 = CheckInventory("BFGDirectDamageToken") * 110;
+	int bfg2 = CheckInventory("BFGSplashDamageToken") * 70;
+	
+	int dmg = g + hmg + sg + sng + tb1 + tb2 + rl1 + rl2 + lg + rg + bfg1 + bfg2;
+	
+	If(dmg >= 1000)
+	{
+		ACS_NamedExecuteAlways("DrawNMaster",0);
+		
+		TakeInventory("GDamageToken",500);
+		TakeInventory("MGDamageToken",500);
+		TakeInventory("SGDamageToken",500);
+		TakeInventory("SNGDamageToken",500);
+		TakeInventory("TBDirectDamageToken",500);
+		TakeInventory("TBSplashDamageToken",500);
+		TakeInventory("RLDirectDamageToken",500);
+		TakeInventory("RLSplashDamageToken",500);
+		TakeInventory("LGDamageToken",500);
+		TakeInventory("RGDamageToken",500);
+		TakeInventory("BFGDirectDamageToken",500);
+		TakeInventory("BFGSplashDamageToken",500);
+		
+		Delay(105);
+		
+		ACS_NamedExecuteAlways("NetMasterStarter",0);
+		
+		Terminate;
+	}
+	
+	Delay(70);
+	Restart;
+}
+
+Script "DrawNMaster" (void) CLIENTSIDE  
+{	
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(2);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("NETMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("NMaster",120);
+			
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawDDealer" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(2);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("DAMMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("DDealer",120);
+			
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+//Excellent stuff
+Script "QCDE_Excellent" (void)
+{
+	Int f = PlayerFrags();
+    
+    Until(PlayerFrags() > f)
+	Delay(10);
+
+	//Excellent
+    Int f1 = PlayerFrags() + 1;
+    Int t1 = Timer() + 105;
+	
+	While((t1 > Timer()) && (PlayerFrags() != f1))
+	Delay(10);
+	
+	If(PlayerFrags() == f1)
+	ACS_NamedExecuteAlways("DrawExcellent",0);
+	Else
+	Restart;
+	
+	//Rage
+    Int f2 = PlayerFrags() + 1;
+    Int t2 = Timer() + 105;
+	
+	while((t2 > Timer()) && (PlayerFrags() != f2))
+	Delay(10);
+	
+	If(PlayerFrags() == f2)
+	ACS_NamedExecuteAlways("DrawTripleKill",0);
+	Else
+	Restart;
+	
+	//Frenzy
+    Int f3 = PlayerFrags() + 2;
+    Int t3 = Timer() + 210;
+	
+	while((t3 > Timer()) && (PlayerFrags() != f3))
+	{
+		If(CheckInventory("ExcellentEnd"))
+		{
+			TakeInventory("ExcellentEnd",1);
+			Restart;
+		}
+		
+		Delay(10);
+	}
+	
+	If(PlayerFrags() == f3)
+	ACS_NamedExecuteAlways("DrawFighter",0);
+	Else
+	Restart;
+
+	TakeInventory("StartAvatar",1);
+	
+	//Avatar
+    Int f4 = PlayerFrags() + 5;
+    Int t4 = Timer() + 525;
+	
+	while((t4 > Timer()) && (PlayerFrags() != f4))
+	{
+		If(CheckInventory("ExcellentEnd"))
+		{
+			TakeInventory("ExcellentEnd",1);
+			Restart;
+		}
+		
+		Delay(10);
+	}
+	
+	If(PlayerFrags() == f4)
+	ACS_NamedExecuteAlways("DrawAvatar",0);
+	
+	Delay(70);
+	
+	Restart;
+}
+
+//No need to organize these, they cannot happen close to each other
+Script "DrawExcellent" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(3);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("EXMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Excellent",120);
+			
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawTripleKill" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(3);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("TRIMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("TKill",120);
+					
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawFighter" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(3);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("FIGMEDAL");
+	SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+    LocalAmbientSound("Fighter",120);
+							
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawAvatar" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(3);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("AVAMEDAL");
+	SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+    LocalAmbientSound("Avatar",120);
+							
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+//If you really are a tank why don't you shoot from your cannon then smh
+Script "QCDE_Tank" (void)
+{
+	int h = GetActorProperty(0,APROP_HEALTH);
+	Int a = Checkinventory("BasicArmor");
+	
+	int maxh = CheckInventory("MaxHealthToken");
+	int maxa = Checkinventory("MaxArmorToken");
+	
+	While(((maxh >= h) && (maxa >= a)) || ((h > maxh) && (maxa >= a)) || ((maxh >= h) && (a > maxa)))
+	{
+		h = GetActorProperty(0,APROP_HEALTH);
+		a = Checkinventory("BasicArmor");
+		
+		Delay(15);
+	}
+	
+	ACS_NamedExecuteAlways("DrawTank",0);
+		
+	//otherwise Tank Medal stays until you have no overstack
+	Until((maxh >= GetActorProperty(0,APROP_HEALTH)) || (maxa >= Checkinventory("BasicArmor")))
+	Delay(15);
+	
+	Restart;
+}
+
+Script "DrawTank" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(4);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("TANMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Tank",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "QCDE_KillingSpree" (void)
+{
+	//Killing Spree
+	Int f1 = PlayerFrags() + 5;
+	
+	while(f1 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	//A player on a spree gets a special token, so that its killer can then get the Show Stopper medal
+	GiveInventory("SpreeToken",1);
+	
+	ACS_NamedExecuteAlways("DrawKSpree",0);
+	
+	//Rage
+	Int f2 = PlayerFrags() + 5;
+	
+	while(f2 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	ACS_NamedExecuteAlways("DrawRage",0);
+	
+	//Frenzy
+	Int f3 = PlayerFrags() + 10;
+	
+	while(f3 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	ACS_NamedExecuteAlways("DrawFrenzy",0);
+	
+	//Rampage
+	Int f4 = PlayerFrags() + 10;
+	
+	while(f4 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	ACS_NamedExecuteAlways("DrawRampage",0);
+	
+	Delay(105);
+	
+	Restart;
+}
+
+Script "DrawKSpree" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(5);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("SPRMEDAL");
+	SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+    LocalAmbientSound("KSpree",120);
+							
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawRage" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(4);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("RAGMEDAL");
+	SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+    LocalAmbientSound("Rage",120);
+							
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawFrenzy" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(5);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("FREMEDAL");
+	SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+    LocalAmbientSound("Frenzy",120);
+							
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawRampage" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(5);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("RAMMEDAL");
+	SetHudSize(1280, 952, 1);
+    HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+    LocalAmbientSound("Rampage",120);
+							
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+//Now come those medals that are harder to obtain and is cool to see them show up after the most iconic ones
+
+//Show Stopper = Guy who killed player on a spree
+Script "DrawSStopper" (void)  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(6);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("SHOMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("SStopper",120);
+		
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+//It is likely that Powerup carrier was also on a spree so these two go hand in hand
+Script "DrawPBreaker" (void)  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(7);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);	
+	
+	SetFont("PBRMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("PBreaker",120);
+		
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+
+//Telefrag
+Script "DrawPerforated" (void)  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(8);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("PERMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Perforated",120);
+		
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "DrawRingOut" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(8);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("RINMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("ROut",120);
+		
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+
+//Direct Hit Rocket Stuff
+Script "QCDE_RocketStuff" (void)
+{	
+	Int t = Timer()/35 + 8;
+	
+	While(!CheckInventory("DirectRocketToken"))
+	{
+		If((Timer()/35) == t)
+		{
+			Delay(48);
+			Terminate;
+		}
+		Delay(2);
+	}
+	TakeInventory("DirectRocketToken",256);
+	
+	If(CheckActorInventory(GetActorProperty(0, APROP_TracerTID),"VelocityToken") > 8)
+	int z = 1;
+	else
+	z = 0;
+	
+	SetActivatorToTarget(0);
+	
+	If(z > 0)
+	ACS_NamedExecuteAlways("DrawMidair",0);
+	Else
+	ACS_NamedExecuteAlways("DrawPrecise",0);
+	
+}
+	
+Script "DrawMidair" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(8);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("MIDMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Midair",120);
+		
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+Script "GetVelocity" (void)
+{
+	while(GetActorVelZ(0))
+	{
+		GiveInventory("VelocityToken",1);
+		Delay(2);
+	}
+	
+	while(!GetActorVelZ(0))
+	{
+		GiveInventory("NoVelocityToken",1);
+		Delay(1);
+	}
+	
+	If(1 > CheckInventory("NoVelocityToken"))
+	{
+		TakeInventory("VelocityToken",256);
+		TakeInventory("NoVelocityToken",256);
+		Restart;
+	}
+	
+	Delay(2);
+	Restart;
+}
+	
+Script "DrawPrecise" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(8);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("DHRMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Precise",120);
+		
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+
+//DENIED
+Script "DrawDenied" (void)  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(9);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("DENMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Denied",120);
+		
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+//Now Low priority Medals Start: relatively common but not so essential to know right away
+
+//Die Hard
+Script "QCDE_DieHard" (void)
+{
+	While(GetActorProperty(0,APROP_HEALTH) > 30)
+	Delay(20);
+	
+	Int f = PlayerFrags() + 1;
+	While(30 >= GetActorProperty(0,APROP_HEALTH))
+	{
+		If(PlayerFrags() == f)
+		{
+			ACS_NamedExecuteAlways("DrawDHard",0);
+			Delay(105);
+			Restart;
+		}
+		Delay(10);
+	}
+	Restart;
+}
+
+Script "DrawDHard" (void) CLIENTSIDE
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(10);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("DHMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("DHard",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+}
+
+
+//Paint the Town red
+Script "QCDE_PowerUpMassacre" (void)
+{
+	if(GameType() < GAME_NET_DEATHMATCH)
+	Terminate;
+	
+	If(!GetCVar("cl_qcmedals"))
+	Terminate;
+	
+	Int f = PlayerFrags() + 10;
+	
+	//So that engine has time to calculate f
+	Delay(2);
+	
+	While((CheckInventory("PowerQuad")) && (PlayerFrags() != f))
+	Delay(10);
+	
+	While((CheckInventory("PowerProtecc")) && (PlayerFrags() != f))
+	Delay(10);
+
+	If(PlayerFrags() == f)
+	ACS_NamedExecuteAlways("DrawPMassacre",0);
+}
+
+Script "DrawPMassacre" (void) CLIENTSIDE  
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(11);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("MASMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("PMassacre",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+	Terminate;
+}
+
+//It's that time of the month
+Int blood = 0;
+Script "QCDE_FirstBlood" (void)
+{
+	if(blood > 0)
+	Terminate;
+	
+	If(PlayerFrags() >= 1)
+	{
+		blood = 1;
+		
+		ACS_NamedExecuteAlways("DrawFirstBlood",0);
+		Terminate;
+	}
+	Delay(10);
+	Restart;
+}
+
+Script "DrawFirstBlood" (void)  CLIENTSIDE
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(13);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("BLMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("FBlood",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+	Terminate;
+}
+
+Script "DrawKamikaze" (void) CLIENTSIDE
+{
+	While(CheckInventory("MedalInExecutionToken"))
+	Delay(1);
+	
+	Delay(14);
+	If(CheckInventory("MedalInExecutionToken"))
+	Restart;
+	
+	GiveInventory("MedalInExecutionToken",1);
+	
+	SetFont("KAMMEDAL");
+	SetHudSize(1280, 952, 1);
+	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
+	LocalAmbientSound("Kamikaze",120);
+				
+	Delay(48);
+	TakeInventory("MedalInExecutionToken",1);
+	Terminate;
+}

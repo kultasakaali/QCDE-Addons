@@ -1,0 +1,205 @@
+//General Token to queue medals whose drawing is pending
+Actor MedalInExecutionToken: Token {Inventory.MaxAmount 1}
+
+//////////////////////////////////////////////////
+//
+//	Combo Kill
+//
+//////////////////////////////////////////////////
+
+//LG things
+Actor PowerLGFired: Powerup {Powerup.Duration 35}
+
+Actor LGFiredGiver: PowerupGiver
+{
+	Inventory.PickupMessage ""
+	Inventory.UseSound "Nothing"
+	Inventory.MaxAmount 1
+	+INVENTORY.AUTOACTIVATE
+	Powerup.Type "LGFired"
+	Powerup.Duration 35
+}
+
+Actor PowerLGHit: Powerup {Powerup.Duration 35}
+
+Actor LGHitGiver: LGFiredGiver
+{
+	Powerup.Type "LGHit"
+	Powerup.Duration 35
+}
+
+Actor PowerComboSwitchLG: Powerup {Powerup.Duration 35}
+
+Actor ComboSwitchLGGiver: LGFiredGiver
+{
+	Powerup.Type "ComboSwitchLG"
+	Powerup.Duration 35
+}
+
+//RL Things
+Actor PowerRLFired: Powerup {Powerup.Duration 70}
+
+Actor RLFiredGiver: LGFiredGiver
+{
+	Powerup.Type "RLFired"
+	Powerup.Duration 70
+}
+
+Actor PowerRLHit: Powerup {Powerup.Duration 70}
+
+Actor RLHitGiver: LGFiredGiver
+{
+	Powerup.Type "RLHit"
+	Powerup.Duration 70
+}
+
+Actor PowerComboSwitchRL: Powerup {Powerup.Duration 35}
+
+Actor ComboSwitchRLGiver: LGFiredGiver
+{
+	Powerup.Type "ComboSwitchRL"
+	Powerup.Duration 35
+}
+
+//RG Things
+
+Actor PowerRGFired: Powerup {Powerup.Duration 35}
+
+Actor RGFiredGiver: LGFiredGiver
+{
+	Powerup.Type "RGFired"
+	Powerup.Duration 35
+}
+
+//Final Combo Kill Check
+
+Actor PowerSickShot: Powerup {Powerup.Duration 35}
+Actor SickShotGiver: LGFiredGiver
+{
+	Powerup.Type "SickShot"
+	Powerup.Duration 48
+}
+
+//////////////////////////////////////////////////
+//
+//	Other Medal Checks
+//
+//////////////////////////////////////////////////
+
+//Double Whammy and Impressive
+Actor AimWellToken: Token {Inventory.MaxAmount 2}
+Actor TwoHitsToken: Token {Inventory.MaxAmount 2}
+
+//Point Blank
+Actor PelletHitToken: Token {Inventory.MaxAmount 30}
+
+//For ShowStopper
+Actor SpreeToken: Token {Inventory.MaxAmount 1}
+
+//To activate Direct Hit Rocket Medals
+Actor DirectRocketToken: Token {Inventory.MaxAmount 1}
+Actor PreciseCounter: Token {Inventory.MaxAmount 10}
+Actor VelocityToken: Token {Inventory.MaxAmount 9}
+Actor NoVelocityToken: Token {Inventory.MaxAmount 2}
+
+//For Humiliation check
+Actor GFiredGiver: Powerupgiver
+{	
+	Inventory.PickupMessage ""
+	Inventory.UseSound "Nothing"
+	Inventory.MaxAmount 0
+	+INVENTORY.AUTOACTIVATE
+	Powerup.Duration 35
+	Powerup.Type "GFired"
+}
+
+Actor PowerGFired: Powerup
+{
+	Powerup.Duration 15
+}
+
+//Net Master death stop
+Actor NetMasterEnd: Token {Inventory.MaxAmount 1}
+
+//Excellent Death restart
+Actor ExcellentEnd: Token {Inventory.MaxAmount 1}
+
+//Killing Spree restart
+Actor KillingSPreeEnd: Token {Inventory.MaxAmount 1}
+
+//////////////////////////////////////////////////
+//
+//	Net Master items for damage calculation
+//
+//////////////////////////////////////////////////
+
+Actor GDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor MGDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor SGDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor SNGDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor TBDirectDamageToken: Token {Inventory.MaxAmount 500}
+Actor TBSplashDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor RLDirectDamageToken: Token {Inventory.MaxAmount 500}
+Actor RLSplashDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor LGDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor RGDamageToken: Token {Inventory.MaxAmount 500}
+
+Actor BFGDirectDamageToken: Token {Inventory.MaxAmount 500}
+Actor BFGSplashDamageToken: Token {Inventory.MaxAmount 500}
+
+//////////////////////////////////////////////////
+//
+//	Custom Puffs for medals
+//
+//////////////////////////////////////////////////
+
+//HMG and MG
+Actor QCHMGBulletPuff : QCBulletPuff_DM
+{
+	States
+	{
+	XDeath: //hit bleeding actor
+		TNT1 A 0 A_GiveToTarget("HitBeepLow",1)
+		TNT1 A 0 A_GiveToTarget("MGDamageToken",1)
+		TNT1 A 10 A_PlaySound("BulletHitFleshRandom",7,0.6,0,9)
+		Stop
+	}
+}
+
+//SG and SSG
+Actor QCShotgunPuffHit_DM : QCShotgunPuff_DM
+{
+	States
+	{
+	XDeath:
+		TNT1 A 0 A_GiveToTarget("HitBeepMid",1)
+		TNT1 A 0 A_GiveToTarget("SGDamageToken",1)
+		TNT1 A 0 A_GiveToTarget("PelletHitToken",1)
+		TNT1 A 10 A_PlaySound("BulletHitFleshRandom",7,0.6,0,9)
+		Stop
+	}
+}	
+
+//Charged RG
+Actor RailgunChargedPuff_DM : RailgunPuff_DM
+{ 
+	States
+	{
+	Xdeath:	//hit bleeding actor
+		TNT1 A 0 
+		TNT1 A 0 A_GiveToTarget("HitBeepBig",1)
+		TNT1 A 1
+		TNT1 A 0 A_GiveToTarget("TwoHitsToken",1)
+		TNT1 A 1
+		TNT1 A 0 A_GiveToTarget("RLDirectDamageToken",1)
+		TNT1 A 1
+		Stop
+	}
+}
