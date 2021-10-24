@@ -16,12 +16,13 @@ script "healOnRespawn" RESPAWN {
 }
 
 script "firstSpawnHeal" ENTER {
+	ACS_NamedExecuteAlways("healOnRespawn", 0);
+	
 	//a bot has been replaced by a human player or vice versa, heal the other player too
+	Delay(5);
 	if(PlayerCount() == 2) {
 		ACS_NamedExecuteAlways("healOnFrag", 0);
-	}
-	
-	ACS_NamedExecuteAlways("healOnRespawn", 0);
+	}	
 }
 
 script "showRules" OPEN CLIENTSIDE {
@@ -36,11 +37,6 @@ script "initMap" OPEN {
 	//give way to MOTD
 	if(GetCVarString("sv_motd") != "") {
 		_ticker = 210;
-	}
-	
-	//For now this olny works with the included maps as health and armor items need to have a specific tid of 987	
-	if(GetCVar("sv_LGPractice")) {
-		//Thing_Remove(987);
 	}
 }
 
