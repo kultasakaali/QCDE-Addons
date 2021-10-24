@@ -9,12 +9,12 @@
 // This pickup is only for consistency -- it never gives weapon.
 Actor NailgunPickup : CustomInventory
 {
-	Height 30
+	Height 48
 	Radius 20
 	Scale 0.5
 	Inventory.PickupSound "QC/Items/WeaponPick"
-	Inventory.PickupMessage "Picked up a Nailgun."
-	Tag "Nailgun"
+	Inventory.PickupMessage "$GOT_QCNailgun" // "Picked up a Nailgun."
+	Tag "$TAG_QCNailgun" // "Nailgun"
 	States
 	{
 	Spawn:
@@ -51,6 +51,9 @@ Actor NailgunPickup : CustomInventory
 	Stay:
 		TNT1 A 0
 		Fail
+	HideIndefinitely:
+		TNT1 A 1 A_SetTics(CallACS("QCDE_SetWeaponRespawnTics"))
+		Goto HideDoomish+1
 	}
 }
 
@@ -58,16 +61,17 @@ Actor NailgunPickup : CustomInventory
 
 Actor QCNailgun : QCWeapon
 {
-	Height 40
+	Height 48
+	Weapon.SwaySpeed 1.4
 	Weapon.Kickback 30
 	Weapon.SelectionOrder 2000
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 50
 	Weapon.AmmoType "QCNailAmmo"
 	+INVENTORY.UNDROPPABLE
-	Obituary "%o was nailed by %k."
-	Inventory.PickupMessage "Picked up a Nailgun."
-	Tag "Nailgun"
+	Obituary "$OB_QCNailgun" // "%o was nailed by %k."
+	Inventory.PickupMessage "$GOT_QCNailgun" // "Picked up a Nailgun."
+	Tag "$TAG_QCNailgun" // "Nailgun"
 	Scale 0.5
 	States
 	{
@@ -268,7 +272,7 @@ Actor QCNailWeak : FastProjectile
 	+FORCEXYBILLBOARD
 	+BLOODSPLATTER
 	+MTHRUSPECIES
-	Obituary "%o was nailed by %k."
+	Obituary "$OB_QCNailgun" // "%o was nailed by %k."
 	Speed 52
 	Radius 3
 	Height 6
@@ -277,6 +281,7 @@ Actor QCNailWeak : FastProjectile
 	Scale 0.34
 	Decal "BulletChipBlack"
 	DamageType "NailgunWeak"
+	+DONTBLAST
 	States
 	{
 	Spawn:
@@ -286,7 +291,9 @@ Actor QCNailWeak : FastProjectile
 	
 	XDeath:
 		TNT1 A 10 A_GiveToTarget("HitBeepLow",1)
+		//Medals start
 		TNT1 A 5 A_GiveToTarget("MGDamageToken",1)
+		//Medals end
 		Stop
 		
 	Death:
@@ -319,6 +326,7 @@ Actor QCNailWeakDM : QCNailWeak
 	//Damage (10)
 	Damage (28)	//28dmg * 0.43 (damagefactor) = 12.04, which is rounded to 12, as intended
 	-MTHRUSPECIES
+	-DONTBLAST
 }
 
 
@@ -334,5 +342,8 @@ Actor QCNailgunDM : QCNailgun
 {	
 	+WEAPON.NOAUTOAIM	
 	+CHEATNOTWEAPON
-	Tag "Nailgun (DM)"
+	Tag "$TAG_QCNailgun" // "Nailgun (DM)"
+	Weapon.AmmoGive 100
+	Weapon.AmmoDmScale 1.0
+	Weapon.AmmoDmRefill 10
 }

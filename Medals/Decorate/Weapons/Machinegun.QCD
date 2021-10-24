@@ -16,8 +16,8 @@ Actor MachinegunPickup : CustomInventory
 {
 	Scale 0.5
 	Inventory.PickupSound "QC/Items/WeaponPick"
-	Inventory.PickupMessage "Picked up the Machinegun."
-	Tag "Machinegun"
+	Inventory.PickupMessage "$GOT_QCMachinegun" // "Picked up the Machinegun."
+	Tag "$TAG_QCMachinegun" // "Machinegun"
 	States
 	{
 	Spawn:
@@ -54,6 +54,9 @@ Actor MachinegunPickup : CustomInventory
 	Stay:
 		TNT1 A 0
 		Fail
+	HideIndefinitely:
+		TNT1 A 1 A_SetTics(CallACS("QCDE_SetWeaponRespawnTics"))
+		Goto HideDoomish+1
 	}
 }
 
@@ -61,15 +64,16 @@ Actor MachinegunPickup : CustomInventory
 
 Actor QCMachinegun : QCWeapon
 {
+	Weapon.SwaySpeed 1.7
 	Weapon.Kickback 20
 	Weapon.SelectionOrder 2000
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 50
 	Weapon.AmmoType "QCBulletAmmo"
-	Obituary "%o was riddled with holes by %k."
+	Obituary "$OB_QCMachinegun" // "%o was riddled with holes by %k."
 	+INVENTORY.UNDROPPABLE
-	Inventory.PickupMessage "Picked up the Machinegun."
-	Tag "Machinegun"
+	Inventory.PickupMessage "$GOT_QCMachinegun" // "Picked up the Machinegun."
+	Tag "$TAG_QCMachinegun" // "Machinegun"
 	States
 	{
  	Spawn:
@@ -202,17 +206,17 @@ Actor QCMachinegun : QCWeapon
 	// Attack doers
 	//-----------------------
 	SP_Flash: 
-		TNT1 A 0 A_FireBullets(1.85,1.85,1,random(3,5),"QCBulletPuff",FBF_NORANDOM|FBF_USEAMMO)
-		TNT1 A 0 A_FireCustomMissile("BulletSmallTracer",frandom(1.85,-1.85),false,8,0,0,frandom(1.85,-1.85))
+		TNT1 A 0 A_FireBullets(1.75,1.75,1,random(3,5),"QCBulletPuff",FBF_NORANDOM|FBF_USEAMMO)
+		TNT1 A 0 A_FireCustomMissile("BulletSmallTracer",frandom(1.75,-1.75),false,8,0,0,frandom(1.75,-1.75))
 		Goto EndFlash
 	SP_FlashNA:  //this one is "No (use of) Ammo"
-		TNT1 A 0 A_FireBullets(1.85,1.85,1,random(3,5),"QCBulletPuff",FBF_NORANDOM)
-		TNT1 A 0 A_FireCustomMissile("BulletSmallTracer",frandom(1.85,-1.85),false,8,0,0,frandom(1.85,-1.85))
+		TNT1 A 0 A_FireBullets(1.75,1.75,1,random(3,5),"QCBulletPuff",FBF_NORANDOM)
+		TNT1 A 0 A_FireCustomMissile("BulletSmallTracer",frandom(1.75,-1.75),false,8,0,0,frandom(1.75,-1.75))
 		Goto EndFlash
 		
 	DM_Flash:
-		TNT1 A 0 A_FireBullets(1.85,1.85,1,9,"QCHMGBulletPuff",FBF_NORANDOM|FBF_USEAMMO)
-		TNT1 A 0 A_FireCustomMissile("BulletSmallTracer",frandom(1.85,-1.85),false,7,0,0,frandom(1.85,-1.85))
+		TNT1 A 0 A_FireBullets(1.75,1.75,1,9,"QCHMGBulletPuff",FBF_NORANDOM|FBF_USEAMMO)
+		TNT1 A 0 A_FireCustomMissile("BulletSmallTracer",frandom(1.75,-1.75),false,7,0,0,frandom(1.75,-1.75))
 		Goto EndFlash
 			
 		EndFlash:
@@ -324,5 +328,8 @@ Actor QCMachinegunDM : QCMachinegun
 {	
 	+WEAPON.NOAUTOAIM	
 	+CHEATNOTWEAPON
-	Tag "Machinegun (DM)"
+	Tag "$TAG_QCMachinegun" // "Machinegun (DM)"
+	Weapon.AmmoGive 100
+	Weapon.AmmoDmScale 1.0
+	Weapon.AmmoDmRefill 10
 }

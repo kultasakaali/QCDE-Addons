@@ -8,11 +8,12 @@
 
 Actor QCGauntlet : QCWeapon
 {
+	Weapon.SwaySpeed 1.6
 	Weapon.Kickback 0
 	Weapon.SelectionOrder 2000
-	Inventory.PickupMessage "Picked up the Gauntlet."
-	Obituary "%o got shredded by %k's gauntlet."
-	Tag "Gauntlet"
+	Inventory.PickupMessage "$GOT_QCGauntlet" // "Picked up the Gauntlet."
+	Obituary "$OB_QCGauntlet" // "%o got shredded by %k's gauntlet."
+	Tag "$TAG_QCGauntlet" // "Gauntlet"
 	+INVENTORY.UNDROPPABLE
 	+WEAPON.MELEEWEAPON		
 	States
@@ -166,11 +167,11 @@ Actor QCGauntlet : QCWeapon
 		NormalDMRefire:
 			QCG1 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
 			
-			QCG1 C 1 A_CustomPunch(75,1,0,"GauntletPuff_DM",56)			
+			QCG1 C 1 A_CustomPunch(75,1,0,"GauntletPuff_DM",56)
 			QCG1 D 1
 			TNT1 A 0 A_JumpIfInventory("PunchedAlready",1,"GauntStop")
 			
-			QCG1 C 1 A_CustomPunch(75,1,0,"GauntletPuff_DM_NoFX",56)	
+			QCG1 C 1 A_CustomPunch(75,1,0,"GauntletPuff_DM_NoFX",56)
 			QCG1 D 1
 			TNT1 A 0 A_JumpIfInventory("PunchedAlready",1,"GauntStop")
 			
@@ -600,7 +601,7 @@ Actor GauntletPuff_DM
 	Renderstyle Add
 	Decal "GauntletDecal"
 	Scale 0.35
-	Obituary "%o was pummeled by %k." // variation line
+	Obituary "$OB_GauntletPuff_DM" // "%o was pummeled by %k." // variation line
 	States
 	{
 	Spawn:	//Hit non bleeder
@@ -609,7 +610,9 @@ Actor GauntletPuff_DM
 	XDeath: //hit bleeder
 		TNT1 A 0 A_GiveToTarget("PunchedAlready",1)
 		TNT1 A 0 A_GiveToTarget("HitBeepBig",1)
+		//Medals start
 		TNT1 A 0 A_GiveToTarget("GDamageToken",1)
+		//Medals end
 		TNT1 A 10 A_PlaySound("QC/Weapons/Gauntlet/Hit",7,1,0,9)
 		Stop
 	Crash:	//hit everything else
@@ -632,7 +635,7 @@ Actor GauntletPuff_DM_NoFX
 	+PUFFGETSOWNER
 	+PUFFONACTORS
 	+FORCEXYBILLBOARD
-	Obituary "%o tried to stop %k's rotating blade with a wrong limb." // variation line
+	Obituary "$OB_GauntletPuff_DM_NoFX" // "%o tried to stop %k's rotating blade with a wrong limb." // variation line
 	States
 	{
 	Spawn:
