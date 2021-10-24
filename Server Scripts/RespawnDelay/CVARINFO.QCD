@@ -1,0 +1,4 @@
+//CVars to modify respawn delay
+
+server 	bool	sv_respawnDelay			=	true;	//enable delayed respawns
+server 	int		sv_respawnDelayTime		=	4;		//average time to provide base value to randomize around

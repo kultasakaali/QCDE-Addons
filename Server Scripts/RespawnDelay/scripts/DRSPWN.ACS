@@ -1,0 +1,41 @@
+#library "DRSPWN"
+#include "zcommon.acs"
+
+script "DelayRespawn" RESPAWN {
+	
+	SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
+	Delay(10);
+	GiveInventory("GhostWalkInProc", 1);
+	
+	//seconds
+	int delayTime = GetCvar("sv_respawnDelayTime");
+	//tics
+	int minTime = (delayTime * 0.8 * 35) >> 16; 
+	int maxTime = (delayTime * 1.2 * 35) >> 16;
+	int t = Random(minTime, maxTime);
+	
+	while(t != 0) {
+		t--;
+		HudMessage(s:"Get ready... ", d:t/35 + 1;
+			HUDMSG_PLAIN, 1, CR_RED, 0.5, 0.80, 0.5);
+			
+		if(t % 35 == 0 && t != 0) {
+			LocalAmbientSound("menu/change", 120);
+		}
+		
+		Delay(1);
+	}
+	
+	SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
+	GiveInventory("GhostWalkOutProc", 1);
+	
+	LocalAmbientSound("intermission/nextstage", 120);
+	SetFont("BIGFONT");
+	HudMessage(s:"GO!";
+			HUDMSG_PLAIN, 1, CR_RED, 0.5, 0.80, 1.0);
+			
+	Delay(3);
+	
+	TakeInventory("GhostWalkInProc", 1);
+	TakeInventory("GhostWalkOutProc", 1);
+}
