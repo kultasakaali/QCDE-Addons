@@ -1,0 +1,21 @@
+#library "STAKLEFT"
+#include "zcommon.acs"
+
+script 100 (int evtTyp, int victimNo, int arg2) EVENT {
+	
+	if(!GetUserCVar(victimNo, "cl_showStackLeft")) terminate;
+	if(GameType() < GAME_NET_DEATHMATCH) terminate;
+	if(GetCvar("duel") && !GetCVar("sv_showStackLeftInDuels")) terminate;
+	
+	if(evtTyp == 0) {
+		Delay(5); //leave time for QCDE scripts to run
+		
+		int hp = GetActorProperty(0, APROP_Health);
+		int ap = CheckInventory("BasicArmor");
+		
+		SetActivator(1000 + victimNo);
+		
+		SetFont("SMALLFNT");
+		HudMessage(s:"\cgStack left: \cv", d:hp, s:"\cj/\cd", d:ap; HUDMSG_FADEOUT, 1, CR_RED, 0.5, 0.40, 2.5, 0.5, 1);
+	}
+}

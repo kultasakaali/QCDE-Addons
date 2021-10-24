@@ -1,0 +1,5 @@
+//CVars to toggle displaying enemy stack left on or off
+//Host can enable displaying also in duels
+
+server 	bool	sv_showStackLeftInDuels	=	false;
+user 	bool	cl_showStackLeft		=	true;
