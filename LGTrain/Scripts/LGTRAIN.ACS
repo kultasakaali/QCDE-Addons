@@ -4,24 +4,30 @@
 script "healOnRespawn" RESPAWN {
 	if (!GetCVar("sv_LGPractice")) terminate;
 	
-	Delay(35);
+	Delay(10);
 	GiveInventory("QCMegaHealth", 2);
 	GiveInventory("QCArmorBonus", 200);
 }
 
-script "showRules" ENTER {
+script "firstSpawnHeal" ENTER {
 	ACS_NamedExecuteAlways("healOnRespawn", 0);
-	Delay(105);
-	Print(s: "\cfWork hard and benefit\n\cgSarge only!\n\n\ci1v1\n\cdWait for your turn!\nEveryone is healed to max after each frag");
+}
+
+script "showRules" OPEN CLIENTSIDE {
+	Delay(140);
+	HudMessage(s:"\cfWork hard and benefit\n\cgSarge only!\n\n\ci1v1\n\cdWait for your turn!\n\ccEveryone is healed to max after each frag";HUDMSG_FADEINOUT,0,CR_RED,1.5,0.5,5.0,0.7,1.0);
 }
 
 script "healOnFrag" DEATH {
 	if (!GetCVar("sv_LGPractice")) terminate;
 	
+	Delay(45);
 	int i;
 	for(i = 0; i < 64; i++)	{
-		GiveActorInventory(1000 + i, "QCMegaHealth", 1);
-		GiveActorInventory(1000 + i, "QCMegaHealth", 1);
-		GiveActorInventory(1000 + i, "QCArmorBonus", 200);
+		if(GetActorProperty(i, APROP_Health) > 0) {
+			GiveActorInventory(1000 + i, "QCMegaHealth", 1);
+			GiveActorInventory(1000 + i, "QCMegaHealth", 1);
+			GiveActorInventory(1000 + i, "QCArmorBonus", 200);
+		}
 	}
 }
