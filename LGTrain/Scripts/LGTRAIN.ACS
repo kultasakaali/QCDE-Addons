@@ -1,6 +1,10 @@
 #library "LGTRAIN"
 #include "zcommon.acs"
 
+script "checkPracticeMode" (void) {
+	SetResultValue(GetCVar("sv_LGPractice"));
+}
+
 script "healOnRespawn" RESPAWN {
 	if (!GetCVar("sv_LGPractice")) terminate;
 	

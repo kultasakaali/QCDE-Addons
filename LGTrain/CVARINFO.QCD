@@ -1,1 +1,4 @@
-server bool sv_LGPractice = true;		//LG practice mooooude
+//CVar to switch automatic healing of players and armor shard generation
+//Note that this does NOT toggle forced Sarge only, you commit to that by loading this thing
+
+server bool sv_LGPractice = true;		//LG(R) practice mooooude
