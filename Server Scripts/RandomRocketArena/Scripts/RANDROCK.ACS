@@ -1,0 +1,18 @@
+#library "RANDROCK"
+#include "zcommon.acs"
+
+int modes[9] = {
+					8,			//Gauntlet - any invalid value will do
+					2,			//SSG
+					100,		//SNG
+					1000,		//Tribolt
+					1,			//Rocket
+					6,			//LG
+					1000000,	//Rail
+					10000000,	//BFG
+					3,			//Unholy Trinity
+				};
+
+Script "RandomRocketArena" OPEN {
+	SetCVar("rocketarena", modes[Random(0,8)]);
+}
