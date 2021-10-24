@@ -1,0 +1,27 @@
+#library "LGTRAIN"
+#include "zcommon.acs"
+
+script "healOnRespawn" RESPAWN {
+	if (!GetCVar("sv_LGPractice")) terminate;
+	
+	Delay(35);
+	GiveInventory("QCMegaHealth", 2);
+	GiveInventory("QCArmorBonus", 200);
+}
+
+script "showRules" ENTER {
+	ACS_NamedExecuteAlways("healOnRespawn", 0);
+	Delay(105);
+	Print(s: "\cfWork hard and benefit\n\cgSarge only!\n\n\ci1v1\n\cdWait for your turn!\nEveryone is healed to max after each frag");
+}
+
+script "healOnFrag" DEATH {
+	if (!GetCVar("sv_LGPractice")) terminate;
+	
+	int i;
+	for(i = 0; i < 64; i++)	{
+		GiveActorInventory(1000 + i, "QCMegaHealth", 1);
+		GiveActorInventory(1000 + i, "QCMegaHealth", 1);
+		GiveActorInventory(1000 + i, "QCArmorBonus", 200);
+	}
+}
