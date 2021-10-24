@@ -1,0 +1,3 @@
+server	noarchive	int 	_forcedClass = 999;
+server	noarchive	bool	_sameMap = true;
+user	noarchive	bool	_firstTime = true;

@@ -1,0 +1,48 @@
+#library "RANDCHAP"
+#include "zcommon.acs"
+
+str champPool[31] = {	"RANGER", "DOOMSLAYER", "CORVUS", "KANE", "CALEB", "MENELKIR", "TERMINATOR", "ZEDEK", "INQUISITOR", "BITTERMAN",
+						"GALEN", "NYX", "SORGAUL", "DUKENUKEM", "DURANDAL", "KEEL", "SARGE", "LOWANG", "GRAYSON", "ERADICATOR", "BLAZKOWICZ",
+						"FREEMAN", "VORMATUR", "ELEENA", "LUCIENNE", "MAJOR", "HUNTER", "SAM", "POSTAL", "PAINKILLER", "INTRUDER"	};
+
+Script "RandomChamp" OPEN {
+	
+	if(GetCVar("_forcedClass") == 999) {
+		int champ = random(0, 30);
+		
+		for(int i = 0; i < 31; i++) {
+			SetCVar(StrParam(s:"_bc_", d:i), 1);
+		}
+		
+		SetCVar(StrParam(s:"_bc_", d:champ), 0);
+		SetCVar("_forcedClass", champ);
+		
+		Delay(210);
+		
+		SetCVar("_sameMap", true);
+	}
+}
+
+Script "ClearChamp" UNLOADING {		//Handle game modes with warmup with these,
+	SetCVar("_forcedClass", 999);	//so that we don't end up endlessly picking
+	SetCVar("_sameMap", false);		//a new champ every time warmup ends
+}
+
+Script "ForceChoice" OPEN CLIENTSIDE {
+	
+	if(!GetCVar("_sameMap") || GetCVar("_firstTime")) {
+		ConsoleCommand("spectate");
+		HudMessage(s:"You will be automatically joined in 10 seconds\n\cgDon't press anything!";
+			HUDMSG_PLAIN, 99, CR_WHITE, 1.5, 0.5, 3.0);
+	
+		Delay(70);
+	
+		int class = GetCvar("_forcedClass");
+		ConsoleCommand(StrParam(s:"playerclass \"", s:champPool[class], s:"\" "));
+		
+		Delay(280);
+		ConsoleCommand("join");
+		
+		SetUserCVar(ConsolePlayerNumber(), "_firstTime", false);
+	}
+}
