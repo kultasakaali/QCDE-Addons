@@ -1,0 +1,1 @@
+server	bool	sv_randomRocketArena = true;

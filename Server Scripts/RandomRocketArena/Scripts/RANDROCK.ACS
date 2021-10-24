@@ -21,6 +21,8 @@ function void roll(void) {
 
 Script "RandomRocketArena" OPEN {
 	
+	if(!GetCVar("sv_randomRocketArena")) terminate;
+	
 	roll();
 	
 	if(i == 0 || i == 7) roll();	//Gauntlet and BFG need to be rolled twice to be accepted
