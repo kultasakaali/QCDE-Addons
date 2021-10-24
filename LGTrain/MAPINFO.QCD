@@ -2,8 +2,8 @@ GameInfo {
 	PlayerClasses = "QCSarge"
 }
 
-map LGTRAIN "Lightning gun training" {
-	Music = "a0000011"
+map QCLG01 "Lightning gun training" {
+	Music = "QCDEM22"
 	UsePlayerStartZ
-	Next = "LGTRAIN"
+	Next = "QCLG02"
 }

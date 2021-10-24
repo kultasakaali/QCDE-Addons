@@ -1,7 +1,7 @@
 #library "LGTRAIN"
 #include "zcommon.acs"
 
-script "checkPracticeMode" (void) {
+script "checkPracticeMode" (void) {				//need this for decorate
 	SetResultValue(GetCVar("sv_LGPractice"));
 }
 
@@ -18,8 +18,22 @@ script "firstSpawnHeal" ENTER {
 }
 
 script "showRules" OPEN CLIENTSIDE {
-	Delay(140);
+	int ticker = 140;
+	
+	if(GetCVar("sv_motd") != "") {
+		ticker = 210;
+	}
+	
+	Delay(ticker);
 	HudMessage(s:"\cfWork hard and benefit\n\cgSarge only!\n\n\ci1v1\n\cdWait for your turn!\n\ccEveryone is healed to max after each frag";HUDMSG_FADEINOUT,0,CR_RED,1.5,0.5,5.0,0.7,1.0);
+}
+
+
+//For now this olny works with the included maps as health and armor items need to have a specific tid of 987
+script "despawnHealthArmor" OPEN {
+	if(GetCVar("sv_LGPractice")) {
+		Thing_Remove(987);
+	}
 }
 
 script "healOnFrag" DEATH {
