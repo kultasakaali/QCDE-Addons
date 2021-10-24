@@ -1,6 +1,8 @@
 #library "LGTRAIN"
 #include "zcommon.acs"
 
+int _ticker = 140;
+
 script "checkPracticeMode" (void) {				//need this for decorate
 	SetResultValue(GetCVar("sv_LGPractice"));
 }
@@ -14,25 +16,31 @@ script "healOnRespawn" RESPAWN {
 }
 
 script "firstSpawnHeal" ENTER {
+	//a bot has been replaced by a human player or vice versa, heal the other player too
+	if(PlayerCount() == 2) {
+		ACS_NamedExecuteAlways("healOnFrag", 0);
+	}
+	
 	ACS_NamedExecuteAlways("healOnRespawn", 0);
 }
 
 script "showRules" OPEN CLIENTSIDE {
-	int ticker = 140;
-	
-	if(GetCVar("sv_motd") != "") {
-		ticker = 210;
-	}
-	
-	Delay(ticker);
+	Delay(_ticker);
 	HudMessage(s:"\cfWork hard and benefit\n\cgSarge only!\n\n\ci1v1\n\cdWait for your turn!\n\ccEveryone is healed to max after each frag";HUDMSG_FADEINOUT,0,CR_RED,1.5,0.5,5.0,0.7,1.0);
 }
 
-
-//For now this olny works with the included maps as health and armor items need to have a specific tid of 987
-script "despawnHealthArmor" OPEN {
+script "initMap" OPEN {
+	//force minplayers, no sense in having more bots
+	SetCvar("sv_minplayers", 2);
+	
+	//give way to MOTD
+	if(GetCVarString("sv_motd") != "") {
+		_ticker = 210;
+	}
+	
+	//For now this olny works with the included maps as health and armor items need to have a specific tid of 987	
 	if(GetCVar("sv_LGPractice")) {
-		Thing_Remove(987);
+		//Thing_Remove(987);
 	}
 }
 

@@ -1,5 +1,6 @@
+//No armor shards from corpses, thanks!
 Actor noShards : QCPlayerArmorDrop replaces QCPlayerArmorDrop {
-	States	{
+	States {
 		Spawn:
 			TNT1 A 0 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("MultiplayerCheck") < 2, "Death")
 			TNT1 A 1 A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
