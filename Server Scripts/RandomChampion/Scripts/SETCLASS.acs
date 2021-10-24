@@ -196,6 +196,8 @@ int classConversion[NUMBER_OF_CLASSES] = {	//Class conversion chart from "canoni
 };
 // ^ insert more classes here, format: classConversion[canonicalIndex] = MAPINFOindex
 
+int allowedClasses[NUMBER_OF_CLASSES - 1];	//because at least 1 is disabled
+
 Script "QCDE_ClassDisabled" (void)
 {
 	int tid = UniqueTid();
@@ -206,12 +208,19 @@ Script "QCDE_ClassDisabled" (void)
 	ACS("QCDE_CleanBlood");
 	Thing_Remove(tid);
 
-	// Find a class not banned by the server
+	// Find a random class not banned by the server
 	
-	for(int i = 0; i < 31; i++) {
-		if(!GetCVar(StrParam(s:"_bc_", d:i)))
-			int to = classConversion[i];
+	int arrayLength = 0;
+	
+	for(int i = 0; i < NUMBER_OF_CLASSES; i++) {
+		if(!GetCVar(StrParam(s:"_bc_", d:i))) {
+			allowedClasses[arrayLength] = i;
+			arrayLength++;
+		}
 	}
+	
+	int randomAllowedClass = allowedClasses[random(0, arrayLength - 1)];
+	int to = classConversion[randomAllowedClass];
 	
 	ACS("QCDE_KMP", to);
 	ACS("QCDE_Playerclass", to);
