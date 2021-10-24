@@ -6,6 +6,8 @@
 //
 // --------------------------------------------------------------------------
 
+
+
 Actor RailgunPickup : CustomInventory 15607
 {
 	//$NotAngled
@@ -18,7 +20,7 @@ Actor RailgunPickup : CustomInventory 15607
 	Inventory.PickupSound "QC/Items/WeaponPick"
 	Inventory.PickupMessage "$GOT_QCRailgun" // "Picked up a Railgun."
 	Tag "$TAG_QCRailgun" // "Railgun"
-	Inventory.RespawnTics 175
+	Inventory.RespawnTics 35
 	States
 	{
 	Spawn:
@@ -33,7 +35,7 @@ Actor RailgunPickup : CustomInventory 15607
 		Wait
 	Pickup:
 		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("MultiplayerCheck",0,0,0,0) == 2,"DMPickup")
-		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("WeaponStayCheck",0,0,0,0),"WeaponStay")
+		//TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("WeaponStayCheck",0,0,0,0),"WeaponStay")
 		TNT1 A 0 A_GiveInventory("QCRailgun")
 		TNT1 A 0 
 		Stop
@@ -56,6 +58,9 @@ Actor RailgunPickup : CustomInventory 15607
 	Stay:
 		TNT1 A 0
 		Fail
+	HideIndefinitely:
+		TNT1 A 1 A_SetTics(CallACS("QCDE_SetWeaponRespawnTics"))
+		Goto HideDoomish+1
 	}
 }
 
@@ -66,8 +71,9 @@ Actor QCRailGun : QCWeapon
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
 	+WEAPON.NOALERT
-	+WEAPON.NOAUTOFIRE
+	+WEAPON.NOALTAUTOFIRE
 	+WEAPON.NOAUTOAIM	//rails never autoaim, but this needed for effects and sound spawners
+	Weapon.SwaySpeed 1.35
 	Weapon.AmmoType1 "QCSlugAmmo"
 	Weapon.AmmoGive1 10
 	Weapon.AmmoUse1 1
@@ -307,7 +313,7 @@ Actor QCRailGun : QCWeapon
 		Goto PerformSP
 		
 		PerformSP:
-			TNT1 A 0 A_RailAttack(random(20,24)*10,2,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff",0,0,0,0,6.0,1.0,"RailgunTrail",-2)
+			TNT1 A 0 A_RailAttack(random(20,24)*10,2,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff",0,0,0,0,6.0,1.0,"RailgunTrail")
 			TNT1 A 0 A_JumpIfInventory("RG_UG_Pierce",1,"AddPierceBeam")
 			Goto FlashCheckSound
 			
@@ -316,7 +322,7 @@ Actor QCRailGun : QCWeapon
 				Goto FlashCheckSound
 			
 		PerformDM:
-			TNT1 A 0 A_RailAttack(80,2,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff_DM",0,0,0,0,6.0,1.0,"RailgunTrail",-2)
+			TNT1 A 0 A_RailAttack(80,2,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff_DM",0,0,0,0,6.0,1.0,"RailgunTrail")
 			Goto FlashCheckSound
 			
 		FlashCheckSound:
@@ -335,7 +341,7 @@ Actor QCRailGun : QCWeapon
 		TNT1 A 0 A_JumpIfInventory("WepNoFlashToken",1,2)
 		TNT1 A 0 A_SetBlend("Green",0.14,15)
 		TNT1 A 0 A_AlertMonsters
-		TNT1 A 0 A_RailAttack(0,2,0,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"DummyPuff",0,0,0,0,70.0,1.0,"RailgunSmoke",-2)
+		TNT1 A 0 A_RailAttack(0,2,0,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"DummyPuff",0,0,0,0,70.0,1.0,"RailgunSmoke")
 		TNT1 A 0 A_FireCustomMissile("RailgunWhoosher",0,false,1,0,0,0)				//to play "whoosh" sound when passes by
 		TNT1 A 0 A_FireCustomMissile("RailgunImpactSoundPuffoid",0,false,1,0,0,0)	//to play impact sound on floors and ceilings
 		TNT1 A 0 A_JumpIfInventory("WepNoRecoilToken",1,"FlashEnderNoRecoil")
@@ -506,7 +512,7 @@ Actor QCRailGun : QCWeapon
 		
 		PerformSPZoomed:
 			TNT1 A 0 A_JumpIfInventory("RailgunCharges",52,"PerformSPZoomedCharged")
-			TNT1 A 0 A_RailAttack(random(20,25)*10,0,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff",0,0,0,0,6.0,1.0,"RailgunTrail",-2)
+			TNT1 A 0 A_RailAttack(random(20,25)*10,0,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff",0,0,0,0,6.0,1.0,"RailgunTrail")
 			TNT1 A 0 A_JumpIfInventory("RG_UG_Explosive",1,"AddExplosiveWeak")
 			TNT1 A 0 A_JumpIfInventory("RG_UG_Pierce",1,"AddPierceBeamZoomedWeak")
 			Goto FlashZoomedCheckSound
@@ -516,14 +522,14 @@ Actor QCRailGun : QCWeapon
 				Goto FlashZoomedCheckSound
 			
 			AddExplosiveWeak:
-				TNT1 A 0 A_FireCustomMissile("RailgunExplosivePuffoidWeak",0,false,0,0,0)
+				TNT1 A 0 A_FireCustomMissile("RailgunExplosivePuffoidWeak",0,false,0)
 				TNT1 A 0 A_RailAttack(random(10,15)*10,0,false,"none","none",RGF_SILENT|RGF_FULLBRIGHT)
 				TNT1 A 0 A_JumpIfInventory("RG_UG_Pierce",1,"AddPierceBeamZoomedWeak")
 				Goto FlashZoomedCheckSound
 			
 			
 		PerformSPZoomedCharged:
-			TNT1 A 0 A_RailAttack(random(30,40)*10,0,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff",0,0,0,0,6.0,1.0,"RailgunTrail",-2)
+			TNT1 A 0 A_RailAttack(random(30,40)*10,0,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff",0,0,0,0,6.0,1.0,"RailgunTrail")
 			TNT1 A 0 A_JumpIfInventory("RG_UG_Explosive",1,"AddExplosiveStrong")
 			TNT1 A 0 A_JumpIfInventory("RG_UG_Pierce",1,"AddPierceBeamZoomedStrong")
 			Goto FlashZoomedCheckSound
@@ -533,20 +539,15 @@ Actor QCRailGun : QCWeapon
 				Goto FlashZoomedCheckSound
 			
 			AddExplosiveStrong:
-				TNT1 A 0 A_FireCustomMissile("RailgunExplosivePuffoidStrong",0,false,0,0,0)
+				TNT1 A 0 A_FireCustomMissile("RailgunExplosivePuffoidStrong",0,false,0)
 				TNT1 A 0 A_RailAttack(random(20,25)*10,0,false,"none","none",RGF_SILENT|RGF_FULLBRIGHT)
 				TNT1 A 0 A_JumpIfInventory("RG_UG_Pierce",1,"AddPierceBeamZoomedStrong")
 				Goto FlashZoomedCheckSound
 			
 			
 		PerformDMZoomed:
-			TNT1 A 0 A_JumpIfInventory("RailgunCharges",52,"PerformDMZoomedCharged")
-			TNT1 A 0 A_RailAttack(80,0,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff_DM",0,0,0,0,6.0,1.0,"RailgunTrail",-2)
+			TNT1 A 0 A_RailAttack(80,0,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff_DM",0,0,0,0,6.0,1.0,"RailgunTrail")
 			Goto FlashZoomedCheckSound
-			
-			PerformDMZoomedCharged:
-				TNT1 A 0 A_RailAttack(100,0,1,"Green","Green",RGF_SILENT|RGF_FULLBRIGHT,0,"RailgunPuff_DM",0,0,0,0,6.0,1.0,"RailgunTrail",-2)
-				Goto FlashZoomedCheckSound
 			
 		FlashZoomedCheckSound:
 			TNT1 A 0 A_JumpIfInventory("PowerQuad",1,"QuadSoundZoomed")
@@ -1026,6 +1027,7 @@ Actor RailgunImpactSoundPuffoid : FastProjectile
 		TNT1 A 10
 		Stop
 	PlaneImpact:
+		//TNT1 A 0 A_PrintBold("Impact!")
 		TNT1 A 0 A_JumpIfCloser(64,"LaunchPlayer")
 		TNT1 A 0 A_Jump(256,"ImpactSound")
 		Stop
@@ -1253,4 +1255,7 @@ Actor QCRailGunDM : QCRailGun
 	+WEAPON.NOAUTOAIM	
 	+CHEATNOTWEAPON
 	Tag "$TAG_QCRailGun" // "Railgun (DM)"
+	Weapon.AmmoGive1 10
+	Weapon.AmmoDmScale 1.0
+	Weapon.AmmoDmRefill 1
 }
