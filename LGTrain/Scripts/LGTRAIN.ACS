@@ -24,7 +24,7 @@ script "healOnFrag" DEATH {
 	Delay(45);
 	int i;
 	for(i = 0; i < 64; i++)	{
-		if(GetActorProperty(i, APROP_Health) > 0) {
+		if(GetActorProperty(1000 + i, APROP_Health) > 0) {
 			GiveActorInventory(1000 + i, "QCMegaHealth", 1);
 			GiveActorInventory(1000 + i, "QCMegaHealth", 1);
 			GiveActorInventory(1000 + i, "QCArmorBonus", 200);
