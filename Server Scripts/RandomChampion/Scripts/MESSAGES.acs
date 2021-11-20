@@ -550,7 +550,7 @@ str classes[NUMBER_OF_CLASSES] = {
 	"DoomSlayer", // that I admit that
 	"Corvus"    , // this numbering is
 	"Galen"     , // non-canonical,
-	"DukeNukem" , // instead, it's the
+	"Duke Nukem" , // instead, it's the
 	"Sarge"     , // one dictated by
 	"Grayson"   , // MAPINFO
 	"Blazkowicz", // 
