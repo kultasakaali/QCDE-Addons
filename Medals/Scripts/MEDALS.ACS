@@ -248,9 +248,6 @@ script "QCDE_WhatsYourPoison" DEATH {
 	}
 	
 	//Ring Out - not when instagib
-	if(GetCVar("instagib"))
-		terminate;
-	
 	SetActivator(a);
 	if(-500 > GetActorProperty(0,APROP_HEALTH))	{
 		
@@ -259,7 +256,7 @@ script "QCDE_WhatsYourPoison" DEATH {
 		if(CheckInventory("Class_Nyx") && CheckInventory("AbilityToken")) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_INSIDEOUT);
 			terminate;
-		} else {
+		} else if(!GetCVar("instagib")) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RINGOUT);
 			terminate;
 		}
@@ -339,7 +336,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		
 		//First blood
 		if(!firstBloodGiven) {
-			ACS_NamedExecuteAlways("DrawMedal",0, MEDAL_FIRSTBLOOD);
+			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_FIRSTBLOOD);
 			firstBloodGiven = true;
 		}
 		
@@ -544,8 +541,15 @@ script "QCDE_Excellent" (void) {
     int f1 = PlayerFrags() + 1;
     int t1 = Timer() + 105;
 	
-	while((t1 > Timer()) && (PlayerFrags() != f1))
+	while((t1 > Timer()) && (PlayerFrags() != f1)) {
+	
+		if(CheckInventory("ExcellentEnd")) {
+			TakeInventory("ExcellentEnd", 1);
+			restart;
+		}
+	
 		Delay(10);
+	}
 	
 	if(PlayerFrags() == f1)
 		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_EXCELLENT);
@@ -556,8 +560,15 @@ script "QCDE_Excellent" (void) {
     int f2 = PlayerFrags() + 1;
     int t2 = Timer() + 105;
 	
-	while((t2 > Timer()) && (PlayerFrags() != f2))
+	while((t2 > Timer()) && (PlayerFrags() != f2)) {
+	
+		if(CheckInventory("ExcellentEnd")) {
+			TakeInventory("ExcellentEnd", 1);
+			restart;
+		}
+	
 		Delay(10);
+	}
 	
 	if(PlayerFrags() == f2)
 		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_TRIPLEKILL);
