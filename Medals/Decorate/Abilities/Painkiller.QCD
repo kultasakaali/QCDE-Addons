@@ -803,7 +803,6 @@ Actor TarotOverheadBase
 	+NOINTERACTION
 	+BRIGHT
 	+INVISIBLE_TO_TARGET
-	Projectile
 	Scale 0.35
 	Alpha 0.8
 	States

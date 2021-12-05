@@ -2,98 +2,10 @@
 #include "zcommon.acs"
 #include "medaldef.acs"
 
-#define CSF_SOLIDGROUND 1
-#define CSF_SOLIDACTORS 2
-#define CSF_ALL (CSF_SOLIDGROUND|CSF_SOLIDACTORS)
-
 bool firstBloodGiven = false;
 
 int megaSpawnTics;
 int heavySpawnTics;
-
-//Function to check if actor is airbound
-//source: ZDoom Wiki - modified slightly to work with the addon
-
-function bool CheckSolidFooting(int tid, int flags) {
-
-    int x = GetActorX(tid);
-    int y = GetActorY(tid);
-    int z = GetActorZ(tid);
-    int fz = GetActorFloorZ(tid);
-    int vz = GetActorVelZ(tid);
-    int radius = GetActorProperty(tid, APROP_Radius);
-    
-    // we need to remember the activator --- we don't need this as we pass a tid to the script
-    /*if (!tid)
-    {
-        Thing_ChangeTID(tid, UniqueTID());
-        tid = ActivatorTID();
-    }
-    */
-    // remember this for later
-    bool shootable = CheckFlag(tid, "SHOOTABLE");
-    
-    // unset shootable on actor
-    GiveActorInventory(tid, "UnSetShootable", 1);
-    
-    for (int px = -radius; px <= radius; px += radius) {
-        for (int py = -radius; py <= radius; py += radius) {
-		
-			int point = UniqueTID();
-			SpawnForced("CheckSolidFooting", x + px, y + py, z, point);
-        
-			int check = UniqueTID();
-			LineAttack(point, 0, 0.25, 0, "CheckSolidFooting", "", 9.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, check);
-        
-			if (ThingCount(T_NONE, check) > 0) {
-				if ((flags & CSF_SOLIDACTORS) && SetActivatorToTarget(check)) {
-					int height  = GetActorProperty(0, APROP_Height);
-					int hitzpos = GetActorZ(0);
-					int hitzvel = GetActorVelZ(0);
-                
-					// restore activator
-					SetActivator(tid);
-                
-					// restore shootable flag
-					if (shootable)
-						GiveActorInventory(tid, "SetShootable", 1);
-                
-					if (z == hitzpos + height && vz == hitzvel) {
-						Thing_ChangeTID(point, 0);
-						Thing_ChangeTID(check, 0);
-						return true;
-					} else {
-						Thing_ChangeTID(point, 0);
-						Thing_ChangeTID(check, 0);
-						return false;
-					}
-				}
-            
-				// restore shootable flag
-				if (shootable)
-					GiveActorInventory(tid, "SetShootable", 1);
-            
-				if (flags & CSF_SOLIDGROUND) {
-					Thing_ChangeTID(point, 0);
-					Thing_ChangeTID(check, 0);
-					return true;
-				}
-			}
-			//clear tids
-			Thing_ChangeTID(point, 0);
-			Thing_ChangeTID(check, 0);
-		}
-	}
-    
-	// restore shootable flag
-	if (shootable)
-		GiveActorInventory(tid, "SetShootable", 1);
-    
-	if (flags & CSF_SOLIDGROUND)
-		return z <= fz;
-		
-	return false;
-}
 
 script "getRailJumpCVar" (void) {
 	SetResultValue(GetCVar("sv_railJump"));
@@ -358,7 +270,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 				
 		//Midair
 		if(CheckInventory("DirectRocketToken")) {
-			if(!CheckSolidFooting(victimTID, CSF_SOLIDGROUND)) {
+			if(!CheckSolidFooting(victimTID, 32.0)) {
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_MIDAIR);
 				terminate; //if midair was given don't give precise
 			}

@@ -79,7 +79,7 @@ Actor ShotgunPickup : CustomInventory 15601
 Actor QCShotgun : QCWeapon
 {
 	Height 48
-	Weapon.SwaySpeed 1.6
+	Weapon.SwaySpeed 3.2
 	Weapon.Kickback 35
 	Weapon.SelectionOrder 1940
 	Weapon.AmmoUse 1

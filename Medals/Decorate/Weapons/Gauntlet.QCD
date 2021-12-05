@@ -8,7 +8,7 @@
 
 Actor QCGauntlet : QCWeapon
 {
-	Weapon.SwaySpeed 1.6
+	Weapon.SwaySpeed 3.2
 	Weapon.Kickback 0
 	Weapon.SelectionOrder 2000
 	Inventory.PickupMessage "$GOT_QCGauntlet" // "Picked up the Gauntlet."

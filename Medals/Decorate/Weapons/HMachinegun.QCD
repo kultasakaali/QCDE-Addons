@@ -74,7 +74,7 @@ Actor HeavyMachinegunPickup : CustomInventory 15600
 Actor QCHeavyMachinegun : QCWeapon
 {
 	Height 48
-	Weapon.SwaySpeed 1.6
+	Weapon.SwaySpeed 3.2
 	Weapon.Kickback 20
 	Weapon.SelectionOrder 1000
 	Weapon.AmmoUse 1

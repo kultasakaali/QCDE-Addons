@@ -138,7 +138,7 @@ Actor SuperShotgunPickupDMvar: CustomInventory 	//this one is for SSGs spawned i
 Actor QCSuperShotgun : QCWeapon
 {
 	Height 48
-	Weapon.SwaySpeed 1.5
+	Weapon.SwaySpeed 3.0
 	Weapon.Kickback 35
 	Weapon.SelectionOrder 1100
 	Weapon.AmmoUse 2
