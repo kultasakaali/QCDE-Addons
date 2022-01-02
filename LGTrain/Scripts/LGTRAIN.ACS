@@ -13,6 +13,7 @@ script "healOnRespawn" RESPAWN {
 	Delay(10);
 	GiveInventory("QCMegaHealth", 2);
 	GiveInventory("QCArmorBonus", 200);
+	TakeInventory("QCGauntlet", 1);
 }
 
 script "firstSpawnHeal" ENTER {
