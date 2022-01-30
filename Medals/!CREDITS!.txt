@@ -28,7 +28,6 @@ qzan_v1.3 changes from 1.2:
 	- Added MENUDEF entry for toggling 'cl_qcmedals' under QCDE Hud options
 	- Fixed setting 'cl_qcmedals false' not switching every medal off
 	- Fixed Nyx getting RING OUT for a ghost walk kill
-	- Included RailJump addon, server switchable with 'sv_railJump'
 	- New ability medals: GET PSYCHED, CURSED, SEER, JUNKIE, PINEAPPLE, INSIDE OUT, SLAYER, STOMPER, SHOCKER
 	
 bugfixes of newly introduced features:

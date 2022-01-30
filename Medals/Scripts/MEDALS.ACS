@@ -7,10 +7,6 @@ bool firstBloodGiven = false;
 int megaSpawnTics;
 int heavySpawnTics;
 
-script "getRailJumpCVar" (void) {
-	SetResultValue(GetCVar("sv_railJump"));
-}
-
 //////////////////////////////////////////////////////////////////
 //																//
 //	Scripts to start the routines and clear things up on death	//

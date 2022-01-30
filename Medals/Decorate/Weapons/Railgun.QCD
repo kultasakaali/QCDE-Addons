@@ -889,10 +889,6 @@ Actor DummyPuff
 	}
 }
 
-DamageType RailJump {
-	Factor 0
-}
-
 Actor RailgunPuff
 {
 	+CLIENTSIDEONLY +NONETID
@@ -916,19 +912,7 @@ Actor RailgunPuff
 		Stop
 	Crash:
 		TNT1 A 0 A_SpawnItemEx("RailgunPuffFx", 5,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
-		goto CheckForCVar
-	CheckForCVar:
-		TNT1 A 0 NoDelay A_JumpIf(CallACS("getRailJumpCVar") == 1, "ProxymityCheck")
-		goto DeathCont
-	ProxymityCheck:
-		TNT1 A 0 NoDelay A_JumpIfCloser(64,"LaunchPlayer")
-		goto DeathCont
-	LaunchPlayer:
-		TNT1 A 0 NoDelay A_SetDamageType("RailJump")
-        TNT1 A 0 A_Explode(50, 128, XF_HURTSOURCE, 0, 18)
-		goto DeathCont
-	DeathCont:
-		TNT1 A 10 A_PlaySound("QC/Weapons/Railgun/Quad/Impact")	//it only plays in walls, thanks zandro! - not anymore, thanks q-zandro :)
+		TNT1 A 10 A_PlaySound("QC/Weapons/Railgun/Quad/Impact")	//it only plays in walls, thanks zandro!
 		Stop
 	}
 }
