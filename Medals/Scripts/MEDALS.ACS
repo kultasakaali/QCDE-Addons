@@ -16,6 +16,14 @@ script "getRailJumpCVar" (void) {
 //	Scripts to start the routines and clear things up on death	//
 //																//
 //////////////////////////////////////////////////////////////////
+script "MapInitiator" OPEN {
+
+	if(GameType() < GAME_NET_DEATHMATCH)
+		terminate;
+		
+	firstBloodGiven = false;	//reset this here, so it starts with default value after warm-up ends
+}
+
 script "MedalsInitiator" ENTER {
 
 	if(GameType() < GAME_NET_DEATHMATCH)
@@ -241,6 +249,8 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 			if(CheckInventory("Class_Zedek"))
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_STOMPER);
 		}
+		
+		//Nyx @ Ring Out because of the damage dealt by the ability
 		
 		//////////////////////
 		//	Other medals	//
