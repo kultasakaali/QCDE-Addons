@@ -163,6 +163,10 @@ Actor RGDamageToken: Token {Inventory.MaxAmount 500}
 Actor BFGDirectDamageToken: Token {Inventory.MaxAmount 500}
 Actor BFGSplashDamageToken: Token {Inventory.MaxAmount 500}
 
+Actor PKDamageToken: Token {Inventory.MaxAmount 500}
+Actor DemonDirectDamageToken: Token {Inventory.MaxAmount 500}
+Actor DemonSplashDamageToken: Token {Inventory.MaxAmount 500}
+
 //////////////////////////////////////////////////
 //
 //	Custom Puffs for medals

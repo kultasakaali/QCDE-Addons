@@ -11,7 +11,7 @@ qzan_v1.3 changes from 1.2:
 	- Moved MIDAIR, PRECISE and POINT BLANK medals to be triggered only on frag, not on hit
 	- MIDAIR now checks if victim was airborne in a different way
 	- POINT BLANK is now based on distance from the victim
-	- First Blood now triggers on the first actual kill, not when the first player hits 1 frag
+	- FIRST BLOOD now triggers on the first actual kill, not when the first player hits 1 frag
 	- DIE HARD now triggers on frag event instead of constantly checking player health, lowered activation threshold to 15 HP
 	- PERFORATED will now trigger correctly even if the player recieves 1000000 hp damage from other source than telefrag (ex. DamageThing)
 	  (unless someone is entering a two-way teleport you are exiting from, as the corpse gets teleported, the check fails and it will give RING OUT)
@@ -29,6 +29,9 @@ qzan_v1.3 changes from 1.2:
 	- Fixed setting 'cl_qcmedals false' not switching every medal off
 	- Fixed Nyx getting RING OUT for a ghost walk kill
 	- New ability medals: GET PSYCHED, CURSED, SEER, JUNKIE, PINEAPPLE, INSIDE OUT, SLAYER, STOMPER, SHOCKER
+	- FIRST BLOOD will now reset after warm-up when a round starts
+	- Brought back DAMAGE DEALER
+	- Damage dealt by Daniel's Painkiller weapon and demon morph projectile are now counted towards NET MASTER and DAMAGE DEALER
 	
 bugfixes of newly introduced features:
 	- Fixed Sarge occasionally getting STOPWATCH on (T)LMS round start

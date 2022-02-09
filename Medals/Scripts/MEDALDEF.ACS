@@ -1,4 +1,4 @@
-#define MEDALS_TOTAL			36
+#define MEDALS_TOTAL			37
 
 //////////////////////
 //		General		//
@@ -19,31 +19,32 @@
 #define MEDAL_DWHAMMY			13
 #define MEDAL_IMPRESSIVE		14
 #define MEDAL_NETMASTER			15
-#define MEDAL_EXCELLENT			16
-#define MEDAL_TRIPLEKILL		17
-#define MEDAL_FIGHTER			18
-#define MEDAL_AVATAR			19
-#define MEDAL_TANK				20
-#define MEDAL_KILLSPREE			21
-#define MEDAL_RAGE				22
-#define MEDAL_FRENZY			23
-#define MEDAL_RAMPAGE			24
-#define MEDAL_PMASSACRE			25
-#define MEDAL_SWATCH			26
+#define MEDAL_DDEALER			16
+#define MEDAL_EXCELLENT			17
+#define MEDAL_TRIPLEKILL		18
+#define MEDAL_FIGHTER			19
+#define MEDAL_AVATAR			20
+#define MEDAL_TANK				21
+#define MEDAL_KILLSPREE			22
+#define MEDAL_RAGE				23
+#define MEDAL_FRENZY			24
+#define MEDAL_RAMPAGE			25
+#define MEDAL_PMASSACRE			26
+#define MEDAL_SWATCH			27
 // ^ insert more medals here
 
 //////////////////////
 //		Ability		//
 //////////////////////
-#define MEDAL_ABIL_PSYCHED		27
-#define MEDAL_ABIL_SEER			28
-#define MEDAL_ABIL_CURSED		29
-#define MEDAL_ABIL_JUNKIE		30
-#define MEDAL_ABIL_PINEAPPLE	31
-#define MEDAL_ABIL_INSIDEOUT	32
-#define MEDAL_ABIL_SLAYER		33
-#define MEDAL_ABIL_STOMPER		34
-#define MEDAL_ABIL_SHOCKER		35
+#define MEDAL_ABIL_PSYCHED		28
+#define MEDAL_ABIL_SEER			29
+#define MEDAL_ABIL_CURSED		30
+#define MEDAL_ABIL_JUNKIE		31
+#define MEDAL_ABIL_PINEAPPLE	32
+#define MEDAL_ABIL_INSIDEOUT	33
+#define MEDAL_ABIL_SLAYER		34
+#define MEDAL_ABIL_STOMPER		35
+#define MEDAL_ABIL_SHOCKER		36
 // ^ insert more medals here
 
 //////////////////////////////////////
@@ -67,6 +68,7 @@ str medalPool[MEDALS_TOTAL][2] = {
 	{	"WHAMEDAL", "DWhammy"		},
 	{	"IMPMEDAL", "Impressive"	},
 	{	"NETMEDAL", "NMaster"		},
+	{	"DAMMEDAL", "DDealer"		},
 	{	"EXMEDAL" ,	"Excellent"		},
 	{	"TRIMEDAL", "TKill"			},
 	{	"FIGMEDAL", "Fighter"		},

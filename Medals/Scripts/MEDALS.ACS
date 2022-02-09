@@ -3,6 +3,7 @@
 #include "medaldef.acs"
 
 bool firstBloodGiven = false;
+bool netMasterHit = false;
 
 int megaSpawnTics;
 int heavySpawnTics;
@@ -417,11 +418,20 @@ script "QCDE_NetMaster" (void) {
 	int bfg1 = CheckInventory("BFGDirectDamageToken") * 110;
 	int bfg2 = CheckInventory("BFGSplashDamageToken") * 70;
 	
-	int dmg = g + hmg + sg + sng + tb1 + tb2 + rl1 + rl2 + lg + rg + bfg1 + bfg2;
+	int pk = CheckInventory("PKDamageToken") * 90;
+	int pkd1 = CheckInventory("DemonDirectDamageToken") * 100;
+	int pkd2 = CheckInventory("DemonSplashDamageToken") * 40;
 	
-	if(dmg >= 1000)	{
+	int dmg = g + hmg + sg + sng + tb1 + tb2 + rl1 + rl2 + lg + rg + bfg1 + bfg2 + pk + pkd1 + pkd2;
 	
+	if(!netMasterHit && dmg >= 1000) {
+		netMasterHit = true;
 		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_NETMASTER);
+	}
+	
+	if(dmg >= 5000) {
+		
+		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DDEALER);
 		
 		TakeInventory("GDamageToken", 500);
 		TakeInventory("MGDamageToken", 500);
@@ -435,8 +445,13 @@ script "QCDE_NetMaster" (void) {
 		TakeInventory("RGDamageToken", 500);
 		TakeInventory("BFGDirectDamageToken", 500);
 		TakeInventory("BFGSplashDamageToken", 500);
+		TakeInventory("PKDamageToken", 500);
+		TakeInventory("DemonDirectDamageToken", 500);
+		TakeInventory("DemonSplashDamageToken", 500);
 		
 		Delay(105);
+		
+		netMasterHit = false;
 		
 		ACS_NamedExecuteAlways("NetMasterStarter", 0);
 		
