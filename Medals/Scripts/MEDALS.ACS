@@ -352,7 +352,7 @@ script "QCDE_Impressive" (void) {
 		terminate;
 	}
 	
-	if((CheckInventory("AimWellToken") == 1) && (CheckInventory("TwoHitsToken") == 2)) {
+	if((CheckInventory("DWhammyToken") == 2)) {
 		//Double Whammy
 		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DWHAMMY);
 				

@@ -929,10 +929,13 @@ Actor RailgunPuff_DM : RailgunPuff
 		TNT1 A 0
 		TNT1 A 0 A_GiveToTarget("HitBeepBig",1)
 		TNT1 A 1
+		TNT1 A 0 A_GiveToTarget("DWhammyToken",1)
+		TNT1 A 1
 		TNT1 A 0 A_GiveToTarget("TwoHitsToken",1)
 		TNT1 A 1
 		TNT1 A 0 A_GiveToTarget("RGDamageToken",1)
-		TNT1 A 1
+		TNT1 A 10
+		TNT1 A 0 A_TakeFromTarget("DWhammyToken",1)
 		Stop
 	}
 	//Medals end

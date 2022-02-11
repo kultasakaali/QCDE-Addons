@@ -89,6 +89,7 @@ Actor SickShotGiver: LGFiredGiver
 //Double Whammy and Impressive
 Actor AimWellToken: Token {Inventory.MaxAmount 2}
 Actor TwoHitsToken: Token {Inventory.MaxAmount 2}
+Actor DWhammyToken: Token {Inventory.MaxAmount 2}
 
 //Point Blank
 //Actor PelletHitToken: Token {Inventory.MaxAmount 30} //unused
