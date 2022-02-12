@@ -37,10 +37,11 @@ This add-on will provide you with a Railgun that is able to thrust you in the ai
 
 ## Server Scripts
 
-- **LMSExtensions**: Loading this add-on will make QC:DE obey certain `rocketarena` and the `instagib` CVar, thus giving you the tools to host Last Man Standing modes you'd not be able to otherwise. Supported modes include: _instagib, rocket arena, buckshot, unholy trinity, shaft party, random loadout per life_
+- **LMSExtensions**: Loading this add-on will make QC:DE obey the `instagib` and certain `rocketarena` CVars in (T)LMS, thus giving you the tools to host Last Man Standing modes you'd not be able to otherwise. Supported modes include: _instagib, rocket arena, buckshot, unholy trinity, shaft party, random loadout per life_
 - **RandomChampion**: This add-on will pick a random champion for each played map/round and force it for every player. Switchable with CVar `sv_randomChampMode` 0: off, 1: per map, 2: per round
 - **RandomRocketArena**: Picks a random rocket arena game mode for every new map, switchable on or off with `sv_randomRocketArena`. And yes. Gauntlet and BFG too.
-- **RespawnDelay**: A script that will lock you in place for set amount of time after respawning while being invisible and not being able to move, take or inflict damage. `sv_respawnDelay` toggles on or off, `sv_respawnDelayTime` sets the delay timer in seconds. Timer is also randomized by ±20%.
+- **RespawnDelay**: A script that will lock you in place for set amount of time after respawning while being invisible and not being able to move, take or inflict damage. `sv_respawnDelay` toggles on or off, `sv_respawnDelayTime` sets the delay timer in seconds. Timer is also randomized by ±20%. Make sure to set the following for the script to have full control on the delay applied to the players:
+`sv_forcerespawn true; sv_forcerespawntimer 0`
 
 ## Stack Left
 
