@@ -3,7 +3,8 @@
 #include "medaldef.acs"
 
 bool firstBloodGiven = false;
-bool netMasterHit = false;
+
+int matchDmg[64][2];
 
 int megaSpawnTics;
 int heavySpawnTics;
@@ -373,13 +374,6 @@ script "QCDE_Impressive" (void) {
 //Net Master
 script "NetMasterStarter" (void) {
 
-	int t = Timer()/35 + 20;
-	
-	//You are not dealing 1000 damage in less than 20 seconds
-	//And even if you do you will not realize
-	while((t > Timer()/35) && !CheckInventory("NetMasterEnd"))
-		Delay(175);
-	
 	if(CheckInventory("NetMasterEnd")) {
 		TakeInventory("NetMasterEnd", 1);
 		terminate;
@@ -422,16 +416,22 @@ script "QCDE_NetMaster" (void) {
 	int pkd1 = CheckInventory("DemonDirectDamageToken") * 100;
 	int pkd2 = CheckInventory("DemonSplashDamageToken") * 40;
 	
+	int plr = PlayerNumber();
+	int oldDmg;
 	int dmg = g + hmg + sg + sng + tb1 + tb2 + rl1 + rl2 + lg + rg + bfg1 + bfg2 + pk + pkd1 + pkd2;
 	
-	if(!netMasterHit && dmg >= 1000) {
-		netMasterHit = true;
-		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_NETMASTER);
+	if(dmg - oldDmg > 0)
+		matchDmg[plr][0] += dmg - oldDmg;
+	
+	oldDmg = dmg;
+	
+	if(!matchDmg[plr][1] && matchDmg[plr][0] >= 5000) {
+		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DDEALER);
+		matchDmg[plr][1] = 1;
 	}
 	
-	if(dmg >= 5000) {
-		
-		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DDEALER);
+	if(dmg >= 1000) {
+		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_NETMASTER);
 		
 		TakeInventory("GDamageToken", 500);
 		TakeInventory("MGDamageToken", 500);
@@ -450,8 +450,6 @@ script "QCDE_NetMaster" (void) {
 		TakeInventory("DemonSplashDamageToken", 500);
 		
 		Delay(105);
-		
-		netMasterHit = false;
 		
 		ACS_NamedExecuteAlways("NetMasterStarter", 0);
 		
