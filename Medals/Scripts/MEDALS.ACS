@@ -2,6 +2,9 @@
 #include "zcommon.acs"
 #include "medaldef.acs"
 
+#define DAMAGE 0;
+#define GOT_DDEALER 1;
+
 bool firstBloodGiven = false;
 
 int matchDmg[64][2];
@@ -421,13 +424,13 @@ script "QCDE_NetMaster" (void) {
 	int dmg = g + hmg + sg + sng + tb1 + tb2 + rl1 + rl2 + lg + rg + bfg1 + bfg2 + pk + pkd1 + pkd2;
 	
 	if(dmg - oldDmg > 0)
-		matchDmg[plr][0] += dmg - oldDmg;
+		matchDmg[plr][DAMAGE] += dmg - oldDmg;
 	
 	oldDmg = dmg;
 	
-	if(!matchDmg[plr][1] && matchDmg[plr][0] >= 5000) {
+	if(!matchDmg[plr][GOT_DDEALER] && matchDmg[plr][DAMAGE] >= 5000) {
 		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DDEALER);
-		matchDmg[plr][1] = 1;
+		matchDmg[plr][GOT_DDEALER] = 1;
 	}
 	
 	if(dmg >= 1000) {
