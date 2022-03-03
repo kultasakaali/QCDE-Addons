@@ -2,12 +2,12 @@
 #include "zcommon.acs"
 #include "medaldef.acs"
 
-#define DAMAGE 0;
-#define GOT_DDEALER 1;
-
 bool firstBloodGiven = false;
 
 int matchDmg[64][2];
+
+int lastFrag[64][2];
+int excellentLevels[5][2] = {{2, MEDAL_EXCELLENT}, {3, MEDAL_TRIPLEKILL}, {5, MEDAL_FIGHTER}, {10, MEDAL_AVATAR}, {9999, DREAM_ON}};
 
 int megaSpawnTics;
 int heavySpawnTics;
@@ -38,12 +38,6 @@ script "MedalsInitiator" ENTER {
 	
 	if(!GetCVar("lastmanstanding") && !GetCVar("teamlms")) //don't give a Tank at every round start
 		ACS_NamedExecuteAlways("QCDE_Tank", 0);
-
-	if(CheckInventory("duel"))
-		terminate;
-	
-	//This medal cannot be obtained in duels so we might as well not have them start in the first place
-	ACS_NamedExecuteAlways("QCDE_Excellent", 0);
 }
 
 script "ResetMedalCounters" DEATH {
@@ -78,8 +72,10 @@ script "ResetMedalCounters" DEATH {
 	
 	//Tokens to end scripts that need to stop on player's death and may not stop on their own
 	GiveInventory("NetMasterEnd", 1);
-	GiveInventory("ExcellentEnd", 1);
 	GiveInventory("KillingSpreeEnd", 1);
+	
+	//Reset excellent counter
+	lastFrag[PlayerNumber()][EXCELLENT] = 0;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -189,22 +185,25 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 
 	if(GameType() < GAME_NET_DEATHMATCH)
 		terminate;
-
-	if(!GetCVar("cl_qcmedals")) {
-		if(!firstBloodGiven)			//still have to flip the switch even if the fist killer has turned medals off
-			firstBloodGiven = true;
-		terminate;
-	}
 	
-	Delay(5);	//Delay these checks slightly to prevent two medals showing at the same time
-	
+	//GAMEEVENT_PLAYERFRAGS
 	if(evtTyp == 0) {
+	
+		if(!GetCVar("cl_qcmedals")) {
+			if(!firstBloodGiven)			//still have to flip the switch even if the fist killer has turned medals off
+				firstBloodGiven = true;
+			terminate;
+		}
 		
 		int victimTID = 1000 + victimNo;
 		int killerHP = GetActorProperty(0, APROP_Health);
 		
 		if(victimTID == ActivatorTID())
 			terminate;
+			
+		ACS_NamedExecuteAlways("QCDE_Excellent", 0, Timer());
+		
+		Delay(5);	//Delay these checks slightly to prevent two medals showing at the same time
 		
 		//////////////////////
 		//	Ability medals	//
@@ -300,10 +299,10 @@ script "DrawMedal" (int medal) CLIENTSIDE {
 	
 	GiveInventory("MedalInExecutionToken", 1);
 	
-	SetFont(medalPool[medal][0]);
+	SetFont(medalPool[medal][GRAPHIC]);
 	SetHudSize(1280, 952, 1);
 	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
-	LocalAmbientSound(medalPool[medal][1], 120);
+	LocalAmbientSound(medalPool[medal][SOUND], 120);
 				
 	Delay(48);
 	TakeInventory("MedalInExecutionToken", 1);
@@ -464,92 +463,31 @@ script "QCDE_NetMaster" (void) {
 }
 
 //Excellent stuff
-script "QCDE_Excellent" (void) {
+script "QCDE_Excellent" (int currentTic) {
+	
+	int plr = PlayerNumber();
+	
+	//be quick or be dead
+	if(currentTic - lastFrag[plr][TIC] >= 105)
+		lastFrag[plr][EXCELLENT] = 0;
 
-	int f = PlayerFrags();
-    
-    until(PlayerFrags() > f)
-		Delay(10);
-
-	//Excellent
-    int f1 = PlayerFrags() + 1;
-    int t1 = Timer() + 105;
+	lastFrag[plr][EXCELLENT]++;
+	lastFrag[plr][TIC] = currentTic;
 	
-	while((t1 > Timer()) && (PlayerFrags() != f1)) {
-	
-		if(CheckInventory("ExcellentEnd")) {
-			TakeInventory("ExcellentEnd", 1);
-			restart;
+	for(int i = 0; i < 4; i++) {
+		if(lastFrag[plr][EXCELLENT] == excellentLevels[i][FRAGS]) {
+			
+			Delay(1);
+			
+			//special case for simultaneous kills - only show the highest rank medal
+			if(lastFrag[plr][EXCELLENT] >= excellentLevels[i + 1][FRAGS]) {
+				terminate;
+			}
+			
+			ACS_NamedExecuteAlways("DrawMedal", 0, excellentLevels[i][MEDAL]);
+			break;
 		}
-	
-		Delay(10);
 	}
-	
-	if(PlayerFrags() == f1)
-		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_EXCELLENT);
-	else
-		restart;
-	
-	//Triple Kill
-    int f2 = PlayerFrags() + 1;
-    int t2 = Timer() + 105;
-	
-	while((t2 > Timer()) && (PlayerFrags() != f2)) {
-	
-		if(CheckInventory("ExcellentEnd")) {
-			TakeInventory("ExcellentEnd", 1);
-			restart;
-		}
-	
-		Delay(10);
-	}
-	
-	if(PlayerFrags() == f2)
-		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_TRIPLEKILL);
-	else
-		restart;
-	
-	//Fighter
-    int f3 = PlayerFrags() + 2;
-    int t3 = Timer() + 210;
-	
-	while((t3 > Timer()) && (PlayerFrags() != f3)) {
-	
-		if(CheckInventory("ExcellentEnd")) {
-			TakeInventory("ExcellentEnd", 1);
-			restart;
-		}
-		
-		Delay(10);
-	}
-	
-	if(PlayerFrags() == f3)
-		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_FIGHTER);
-	else
-		restart;
-
-	TakeInventory("StartAvatar", 1);
-	
-	//Avatar
-    int f4 = PlayerFrags() + 5;
-    int t4 = Timer() + 525;
-	
-	while((t4 > Timer()) && (PlayerFrags() != f4)) {
-	
-		if(CheckInventory("ExcellentEnd")) {
-			TakeInventory("ExcellentEnd", 1);
-			restart;
-		}
-		
-		Delay(10);
-	}
-	
-	if(PlayerFrags() == f4)
-		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_AVATAR);
-	
-	Delay(70);
-	
-	Restart;
 }
 
 //If you really are a tank why don't you shoot from your cannon then smh

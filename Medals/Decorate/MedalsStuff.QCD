@@ -125,9 +125,6 @@ Actor PowerGFired: Powerup
 //Net Master death stop
 Actor NetMasterEnd: Token {Inventory.MaxAmount 1}
 
-//Excellent Death restart
-Actor ExcellentEnd: Token {Inventory.MaxAmount 1}
-
 //Killing Spree restart
 Actor KillingSPreeEnd: Token {Inventory.MaxAmount 1}
 

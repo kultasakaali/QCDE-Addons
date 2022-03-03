@@ -231,4 +231,93 @@ Script "QCDE_FirstBlood" (void) 	// This would only trigger when someone has one
 	Delay(10);
 	Restart;
 }
+
+//Excellent stuff
+script "QCDE_Excellent" (void) {
+
+	int f = PlayerFrags();
+    
+    until(PlayerFrags() > f)
+		Delay(10);
+
+	//Excellent
+    int f1 = PlayerFrags() + 1;
+    int t1 = Timer() + 105;
+	
+	while((t1 > Timer()) && (PlayerFrags() != f1)) {
+	
+		if(CheckInventory("ExcellentEnd")) {
+			TakeInventory("ExcellentEnd", 1);
+			restart;
+		}
+	
+		Delay(10);
+	}
+	
+	if(PlayerFrags() == f1)
+		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_EXCELLENT);
+	else
+		restart;
+	
+	//Triple Kill
+    int f2 = PlayerFrags() + 1;
+    int t2 = Timer() + 105;
+	
+	while((t2 > Timer()) && (PlayerFrags() != f2)) {
+	
+		if(CheckInventory("ExcellentEnd")) {
+			TakeInventory("ExcellentEnd", 1);
+			restart;
+		}
+	
+		Delay(10);
+	}
+	
+	if(PlayerFrags() == f2)
+		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_TRIPLEKILL);
+	else
+		restart;
+	
+	//Fighter
+    int f3 = PlayerFrags() + 2;
+    int t3 = Timer() + 210;
+	
+	while((t3 > Timer()) && (PlayerFrags() != f3)) {
+	
+		if(CheckInventory("ExcellentEnd")) {
+			TakeInventory("ExcellentEnd", 1);
+			restart;
+		}
+		
+		Delay(10);
+	}
+	
+	if(PlayerFrags() == f3)
+		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_FIGHTER);
+	else
+		restart;
+
+	TakeInventory("StartAvatar", 1);
+	
+	//Avatar
+    int f4 = PlayerFrags() + 5;
+    int t4 = Timer() + 525;
+	
+	while((t4 > Timer()) && (PlayerFrags() != f4)) {
+	
+		if(CheckInventory("ExcellentEnd")) {
+			TakeInventory("ExcellentEnd", 1);
+			restart;
+		}
+		
+		Delay(10);
+	}
+	
+	if(PlayerFrags() == f4)
+		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_AVATAR);
+	
+	Delay(70);
+	
+	Restart;
+}
 */
