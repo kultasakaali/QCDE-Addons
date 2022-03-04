@@ -1,4 +1,4 @@
-#define MEDALS_TOTAL			37
+#define MEDALS_TOTAL			38
 
 #define GRAPHIC 0
 #define SOUND 1
@@ -44,20 +44,21 @@
 #define MEDAL_RAMPAGE			25
 #define MEDAL_PMASSACRE			26
 #define MEDAL_SWATCH			27
+#define MEDAL_COLLATERAL		28
 // ^ insert more medals here
 
 //////////////////////
 //		Ability		//
 //////////////////////
-#define MEDAL_ABIL_PSYCHED		28
-#define MEDAL_ABIL_SEER			29
-#define MEDAL_ABIL_CURSED		30
-#define MEDAL_ABIL_JUNKIE		31
-#define MEDAL_ABIL_PINEAPPLE	32
-#define MEDAL_ABIL_INSIDEOUT	33
-#define MEDAL_ABIL_SLAYER		34
-#define MEDAL_ABIL_STOMPER		35
-#define MEDAL_ABIL_SHOCKER		36
+#define MEDAL_ABIL_PSYCHED		29
+#define MEDAL_ABIL_SEER			30
+#define MEDAL_ABIL_CURSED		31
+#define MEDAL_ABIL_JUNKIE		32
+#define MEDAL_ABIL_PINEAPPLE	33
+#define MEDAL_ABIL_INSIDEOUT	34
+#define MEDAL_ABIL_SLAYER		35
+#define MEDAL_ABIL_STOMPER		36
+#define MEDAL_ABIL_SHOCKER		37
 // ^ insert more medals here
 
 //////////////////////////////////////
@@ -93,6 +94,7 @@ str medalPool[MEDALS_TOTAL][2] = {
 	{	"RAMMEDAL", "Rampage"		},
 	{	"MASMEDAL", "PMassacre"		},
 	{	"SWAMEDAL", "SWatch"		},
+	{	"COLMEDAL",	"Collateral"	},
 	
 	{	"PSYMEDAL", "GPsyched"		},
 	{	"SEEMEDAL", "Seer"			},

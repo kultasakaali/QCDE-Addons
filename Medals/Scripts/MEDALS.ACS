@@ -466,9 +466,10 @@ script "QCDE_NetMaster" (void) {
 script "QCDE_Excellent" (int currentTic) {
 	
 	int plr = PlayerNumber();
+	int dTic = currentTic - lastFrag[plr][TIC];
 	
 	//be quick or be dead
-	if(currentTic - lastFrag[plr][TIC] >= 105)
+	if(dTic >= 105)
 		lastFrag[plr][EXCELLENT] = 0;
 
 	lastFrag[plr][EXCELLENT]++;
@@ -485,6 +486,11 @@ script "QCDE_Excellent" (int currentTic) {
 			}
 			
 			ACS_NamedExecuteAlways("DrawMedal", 0, excellentLevels[i][MEDAL]);
+			
+			//check for COLLATERAL DAMAGE
+			if(CheckInventory("CollateralToken") && dTic == 0)
+				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_COLLATERAL);
+			
 			break;
 		}
 	}

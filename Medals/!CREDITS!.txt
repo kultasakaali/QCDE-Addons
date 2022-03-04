@@ -34,6 +34,7 @@ qzan_v1.3 changes from 1.2:
 	- Damage dealt by Daniel's Painkiller weapon and demon morph projectile are now counted towards NET MASTER and DAMAGE DEALER
 	- Fixed players only recieving IMPRESSIVE when hitting a DOUBLE WHAMMY with a consecutive Railgun hit already on the counter
 	- Fixed not getting EXCELLENT or higher for simultaneous kills (eg. 1 shot 2 frags)
+	- Added COLLATERAL DAMAGE medal
 	
 bugfixes of newly introduced features:
 	- Fixed Sarge occasionally getting STOPWATCH on (T)LMS round start

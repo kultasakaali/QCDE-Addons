@@ -101,8 +101,8 @@ Actor SpreeToken: Token {Inventory.MaxAmount 1}
 //To activate Direct Hit Rocket Medals
 Actor DirectRocketToken: Token {Inventory.MaxAmount 1}
 Actor PreciseCounter: Token {Inventory.MaxAmount 10}
-Actor VelocityToken: Token {Inventory.MaxAmount 9}
-Actor NoVelocityToken: Token {Inventory.MaxAmount 2}
+
+Actor CollateralToken: Token {Inventory.MaxAmount 1}
 
 /* For Humiliation check
 //QCDE already has a token built in for this
@@ -206,7 +206,8 @@ Actor QCShotgunPuffHit_DM : QCShotgunPuff_DM
 }	
 
 //Charged RG
-Actor RailgunChargedPuff_DM : RailgunPuff_DM
+//charging mechanics removed from QC:DE
+/*Actor RailgunChargedPuff_DM : RailgunPuff_DM
 { 
 	States
 	{
@@ -220,4 +221,4 @@ Actor RailgunChargedPuff_DM : RailgunPuff_DM
 		TNT1 A 1
 		Stop
 	}
-}
+}*/
