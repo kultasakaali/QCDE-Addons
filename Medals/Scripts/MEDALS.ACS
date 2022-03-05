@@ -239,6 +239,10 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		//Kane
 		if(CheckInventory("PowerInjectionSpeed"))
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_JUNKIE);
+			
+		//Nyx
+		if(CheckInventory("FromTheShadowsToken"))
+			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_FTSHADOWS);
 	
 		//Projectile or puff based abilities
 		if(CheckInventory("AbilityToken")) {
@@ -256,7 +260,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_STOMPER);
 		}
 		
-		//Nyx @ Ring Out because of the damage dealt by the ability
+		//Nyx's INSIDE OUT @ Ring Out because of the damage dealt by the ability
 		
 		//////////////////////
 		//	Other medals	//

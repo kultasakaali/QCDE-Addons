@@ -131,6 +131,9 @@ Actor KillingSPreeEnd: Token {Inventory.MaxAmount 1}
 //Galen totem explosion token - move to QCDE_TotemExploded if possible in the future
 Actor TotemExploded: Token {Inventory.MaxAmount 5}
 
+//Nyx ability token
+Actor FromTheShadowsToken: Token {Inventory.MaxAmount 1}
+
 //Projectile abilities for now check for this token
 Actor AbilityToken: Token {Inventory.MaxAmount 10}
 

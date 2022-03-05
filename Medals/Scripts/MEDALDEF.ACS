@@ -1,4 +1,4 @@
-#define MEDALS_TOTAL			39
+#define MEDALS_TOTAL			40
 
 #define GRAPHIC 0
 #define SOUND 1
@@ -56,10 +56,11 @@
 #define MEDAL_ABIL_JUNKIE		32
 #define MEDAL_ABIL_PINEAPPLE	33
 #define MEDAL_ABIL_INSIDEOUT	34
-#define MEDAL_ABIL_SLAYER		35
-#define MEDAL_ABIL_STOMPER		36
-#define MEDAL_ABIL_SHOCKER		37
-#define MEDAL_ABIL_SHUB			38
+#define MEDAL_ABIL_FTSHADOWS	35
+#define MEDAL_ABIL_SLAYER		36
+#define MEDAL_ABIL_STOMPER		37
+#define MEDAL_ABIL_SHOCKER		38
+#define MEDAL_ABIL_SHUB			39
 // ^ insert more medals here
 
 //////////////////////////////////////
@@ -103,6 +104,7 @@ str medalPool[MEDALS_TOTAL][2] = {
 	{	"JUNMEDAL", "Junkie"		},
 	{	"PINMEDAL", "Pineapple"		},
 	{	"IOMEDAL" , "InsideOut"		},
+	{	"SHAMEDAL",	"FTShadows"		},
 	{	"SLAMEDAL", "Slayer"		},
 	{	"STOMEDAL", "Stomper"		},
 	{	"SHKMEDAL", "Shocker"		},
