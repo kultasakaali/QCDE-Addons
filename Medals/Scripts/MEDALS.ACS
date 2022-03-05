@@ -154,6 +154,12 @@ script "QCDE_WhatsYourPoison" DEATH {
 			if(CheckInventory("PowerRGFired")) //no-no if Instagib point blank range with Quad Damage - just in case
 				terminate;
 			
+			//Check for Shub Slaying
+			if(CheckInventory("Class_Ranger") && CheckInventory("ActiveProgressToken")) {
+				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_SHUB);
+				terminate;
+			}
+			
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_PERFORATED);
 			//I have to terminate here otherwise a Perforated player would always also give Ring Out medal
 			//Ringed out player cannot have less than -2000 health (Telefrag damage -1000000, Instadeath Floor -999)
