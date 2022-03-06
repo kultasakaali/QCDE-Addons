@@ -9,6 +9,9 @@ int matchDmg[64][2];
 int lastFrag[64][2];
 int excellentLevels[5][2] = {{2, MEDAL_EXCELLENT}, {3, MEDAL_TRIPLEKILL}, {5, MEDAL_FIGHTER}, {10, MEDAL_AVATAR}, {9999, DREAM_ON}};
 
+int killingSpree[64];
+int spreeLevels[4][2] = {{5, MEDAL_KILLSPREE}, {10, MEDAL_RAGE}, {20, MEDAL_FRENZY}, {30, MEDAL_RAMPAGE}};
+
 int megaSpawnTics;
 int heavySpawnTics;
 
@@ -33,7 +36,6 @@ script "MedalsInitiator" ENTER {
 	if(!GetCVar("cl_qcmedals"))
 		terminate;
 	
-	ACS_NamedExecuteAlways("QCDE_KillingSpree", 0);
 	ACS_NamedExecuteAlways("NetMasterStarter", 0);
 	
 	if(!GetCVar("lastmanstanding") && !GetCVar("teamlms")) //don't give a Tank at every round start
@@ -72,10 +74,10 @@ script "ResetMedalCounters" DEATH {
 	
 	//Tokens to end scripts that need to stop on player's death and may not stop on their own
 	GiveInventory("NetMasterEnd", 1);
-	GiveInventory("KillingSpreeEnd", 1);
 	
-	//Reset excellent counter
+	//Reset excellent and killing spree counters
 	lastFrag[PlayerNumber()][EXCELLENT] = 0;
+	killingSpree[PlayerNumber()] = 0;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -208,6 +210,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 			terminate;
 			
 		ACS_NamedExecuteAlways("QCDE_Excellent", 0, Timer());
+		ACS_NamedExecuteAlways("QCDE_KillingSpree", 0);
 		
 		Delay(5);	//Delay these checks slightly to prevent two medals showing at the same time
 		
@@ -538,65 +541,20 @@ script "QCDE_Tank" (void) {
 }
 
 script "QCDE_KillingSpree" (void) {
-
-	//Killing Spree
-	int f1 = PlayerFrags() + 5;
 	
-	while(f1 > PlayerFrags()) {
-		if(CheckInventory("KillingSpreeEnd")) {
-			TakeInventory("KillingSpreeEnd", 1);
-			restart;
+	int plr = PlayerNumber();
+	
+	killingSpree[plr]++;
+	
+	for(int i = 0; i < 4; i++) {
+		if(killingSpree[plr] == spreeLevels[i][FRAGS]) {
+		
+			ACS_NamedExecuteAlways("DrawMedal", 0, spreeLevels[i][MEDAL]);
+			
+			//A player on a spree gets a special token, so that its killer can then get the Show Stopper medal
+			GiveInventory("SpreeToken",1);
 		}
-		Delay(10);
 	}
-	
-	//A player on a spree gets a special token, so that its killer can then get the Show Stopper medal
-	GiveInventory("SpreeToken",1);
-	
-	ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_KILLSPREE);
-	
-	//Rage
-	int f2 = PlayerFrags() + 5;
-	
-	while(f2 > PlayerFrags()) {
-		if(CheckInventory("KillingSpreeEnd")) {
-			TakeInventory("KillingSpreeEnd", 1);
-			restart;
-		}
-		Delay(10);
-	}
-	
-	ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RAGE);
-	
-	//Frenzy
-	int f3 = PlayerFrags() + 10;
-	
-	while(f3 > PlayerFrags()) {
-		if(CheckInventory("KillingSpreeEnd")) {
-			TakeInventory("KillingSpreeEnd", 1);
-			restart;
-		}
-		Delay(10);
-	}
-	
-	ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_FRENZY);
-	
-	//Rampage
-	int f4 = PlayerFrags() + 10;
-	
-	while(f4 > PlayerFrags()) {
-		if(CheckInventory("KillingSpreeEnd")) {
-			TakeInventory("KillingSpreeEnd", 1);
-			restart;
-		}
-		Delay(10);
-	}
-	
-	ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RAMPAGE);
-	
-	Delay(105);
-	
-	restart;
 }
 
 //Paint the Town red

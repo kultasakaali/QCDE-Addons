@@ -320,4 +320,74 @@ script "QCDE_Excellent" (void) {
 	
 	Restart;
 }
+
+Script "QCDE_KillingSpree" (void)
+{
+	//Killing Spree
+	Int f1 = PlayerFrags() + 5;
+	
+	while(f1 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	//A player on a spree gets a special token, so that its killer can then get the Show Stopper medal
+	GiveInventory("SpreeToken",1);
+	
+	ACS_NamedExecuteAlways("DrawKSpree",0);
+	
+	//Rage
+	Int f2 = PlayerFrags() + 5;
+	
+	while(f2 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	ACS_NamedExecuteAlways("DrawRage",0);
+	
+	//Frenzy
+	Int f3 = PlayerFrags() + 10;
+	
+	while(f3 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	ACS_NamedExecuteAlways("DrawFrenzy",0);
+	
+	//Rampage
+	Int f4 = PlayerFrags() + 10;
+	
+	while(f4 > PlayerFrags())
+	{
+		If(CheckInventory("KillingSpreeEnd"))
+		{
+			TakeInventory("KillingSpreeEnd",1);
+			Restart;
+		}
+		Delay(10);
+	}
+	
+	ACS_NamedExecuteAlways("DrawRampage",0);
+	
+	Delay(105);
+	
+	Restart;
+}
 */

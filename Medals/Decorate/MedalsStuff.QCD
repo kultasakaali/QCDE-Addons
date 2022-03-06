@@ -125,9 +125,6 @@ Actor PowerGFired: Powerup
 //Net Master death stop
 Actor NetMasterEnd: Token {Inventory.MaxAmount 1}
 
-//Killing Spree restart
-Actor KillingSPreeEnd: Token {Inventory.MaxAmount 1}
-
 //Galen totem explosion token - move to QCDE_TotemExploded if possible in the future
 Actor TotemExploded: Token {Inventory.MaxAmount 5}
 

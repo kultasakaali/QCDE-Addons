@@ -46,3 +46,7 @@ You MAY NOT redistribute this addon without this text file included and unmodifi
 todo (-: pending; +: needs testing):
 + double whammy sometimes given seemingly randomly on rail hit
 + excellent medals
++ shub slayer
++ collateral damage
++ from the shadows
++ spree medals
