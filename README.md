@@ -22,6 +22,9 @@ bot_twitch 200
 
 Happy frying!
 
+[Download 1.25](https://allfearthesentinel.net/zandronum/download.php?file=qcde--lgtrain_v1.25.pk3)  
+[Download map pack](https://allfearthesentinel.net/zandronum/download.php?file=qcde--lgtrain-arenas_v1.0.pk3)
+
 ## Medals
 
 A continuation of **Ivory Duke**'s QC style [medals add-on](https://www.moddb.com/mods/quake-champions-doom-edition/addons/qcde-medals) updated for QCDE 2.7 with bug fixes, improvements and new medals.
@@ -29,11 +32,16 @@ Medals can be turned on/off in the `HUD Options` menu or with the console variab
 
 **NOTE**: This add-on will only work with Q-Zandronum 1.3, while older testing versions found on TSPG are targeted for Q-Zandronum 1.2.1
 
-See the included credits file for more information and changelog!
+See the included [credits](https://github.com/kultasakaali/QCDE-Addons/blob/99cd75f32082f6772327e4c965fea08f48d38e76/Medals/!CREDITS!.txt) file for more information and changelog!
+
+[Download RC4](https://allfearthesentinel.net/zandronum/download.php?file=qcde_medals-qzantesting_v1.3_rc4.pk3)
 
 ## RailJump
 
 This add-on will provide you with a Railgun that is able to thrust you in the air, exactly like a rocket jump, with no self-damage. Intended to use with Instagib game mode, however it's not restricted to that.
+
+[Download 1.0 for Zandronum](https://allfearthesentinel.net/zandronum/download.php?file=qcde--railjump.pk3)  
+[Download 1.3 for Q-Zandronum](https://allfearthesentinel.net/zandronum/download.php?file=qcde--railjump-qzand_v1.3.pk3)
 
 ## Server Scripts
 
@@ -43,6 +51,13 @@ This add-on will provide you with a Railgun that is able to thrust you in the ai
 - **RespawnDelay**: A script that will lock you in place for set amount of time after respawning while being invisible and not being able to move, take or inflict damage. `sv_respawnDelay` toggles on or off, `sv_respawnDelayTime` sets the delay timer in seconds. Timer is also randomized by ±20%. Make sure to set the following for the script to have full control on the delay applied to the players:
 `sv_forcerespawn true; sv_forcerespawntimer 0`
 
+[Download LMSExtensions 1.01](https://allfearthesentinel.net/zandronum/download.php?file=qcde--lmsextensions_v1.01.pk3)  
+[Download RandomChampion 1.15](https://allfearthesentinel.net/zandronum/download.php?file=qcde--randomchampion_v1.15.pk3)  
+[Download RandomRocketArena 1.02](https://allfearthesentinel.net/zandronum/download.php?file=qcde--randomrocketarena_v1.02.pk3)  
+[Download RespawnDelay 1.0](https://allfearthesentinel.net/zandronum/download.php?file=qcde--respawndelay_v1.0.pk3)
+
 ## Stack Left
 
 This simple add-on will display your killer's stack left like in QC. Disabled in duels by default, but can be enabled by the server with `sv_showStackLeftInDuels`. Players who wouldn't like to recieve these messages can turn them off with `cl_showStackLeft`.
+
+[Download 1.0](https://allfearthesentinel.net/zandronum/download.php?file=qcde--stackleft.pk3)
