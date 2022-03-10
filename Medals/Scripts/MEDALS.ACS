@@ -55,9 +55,6 @@ script "ResetMedalCounters" DEATH {
 	TakeInventory("TwoHitsToken", 2);
 	TakeInventory("AimWellToken", 2);
 	TakeInventory("SpreeToken", 1);
-	TakeInventory("VelocityToken", 10);
-	TakeInventory("NoVelocityToken", 2);
-	TakeInventory("DieHardEnd", 2);
 	
 	TakeInventory("GDamageToken", 500);
 	TakeInventory("MGDamageToken", 500);
@@ -71,13 +68,18 @@ script "ResetMedalCounters" DEATH {
 	TakeInventory("RGDamageToken", 500);
 	TakeInventory("BFGDirectDamageToken", 500);
 	TakeInventory("BFGSplashDamageToken", 500);
+	TakeInventory("PKDamageToken", 500);
+	TakeInventory("DemonDirectDamageToken", 500);
+	TakeInventory("DemonSplashDamageToken", 500);
 	
 	//Tokens to end scripts that need to stop on player's death and may not stop on their own
 	GiveInventory("NetMasterEnd", 1);
 	
 	//Reset excellent and killing spree counters
-	lastFrag[PlayerNumber()][EXCELLENT] = 0;
-	killingSpree[PlayerNumber()] = 0;
+	int plr = PlayerNumber();
+	
+	lastFrag[plr][EXCELLENT] = 0;
+	killingSpree[plr] = 0;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -286,14 +288,14 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		}
 		
 		//Point Blank
-		If(CheckInventory("PointBlankToken")) {
+		if(CheckInventory("PointBlankToken")) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_PBLANK);
 			terminate; //wielding a shotgun, don't check for rocket medals
 		}
 				
 		//Midair
 		if(CheckInventory("DirectRocketToken")) {
-			if(!CheckSolidFooting(victimTID, 32.0)) {
+			if(!CheckSolidFooting(victimTID, 64 << 16)) {
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_MIDAIR);
 				terminate; //if midair was given don't give precise
 			}

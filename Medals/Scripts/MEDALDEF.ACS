@@ -1,17 +1,17 @@
-#define MEDALS_TOTAL			40
+#define MEDALS_TOTAL	40
 
-#define GRAPHIC 0
-#define SOUND 1
+#define GRAPHIC			0
+#define SOUND			1
 
-#define DAMAGE 0
-#define GOT_DDEALER 1
+#define DAMAGE			0
+#define GOT_DDEALER		1
 
-#define TIC 0
-#define EXCELLENT 1
+#define TIC				0
+#define EXCELLENT		1
 
-#define FRAGS 0
-#define MEDAL 1
-#define DREAM_ON 9999
+#define FRAGS			0
+#define MEDAL			1
+#define DREAM_ON		9999
 
 //////////////////////
 //		General		//
