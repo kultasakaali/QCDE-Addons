@@ -317,7 +317,7 @@ script "DrawMedal" (int medal) CLIENTSIDE {
 	SetFont(medalPool[medal][GRAPHIC]);
 	SetHudSize(1280, 952, 1);
 	HudMessage(s:"A"; HUDMSG_FADEOUT, 1234, CR_UNTRANSLATED, 640.0, 220.0, 2.0, 0.2);
-	LocalAmbientSound(medalPool[medal][SOUND], 120);
+	LocalAmbientSound(medalPool[medal][SOUND], 127 * GetCVar("snd_announcervolume") >> 16);
 				
 	Delay(48);
 	TakeInventory("MedalInExecutionToken", 1);
