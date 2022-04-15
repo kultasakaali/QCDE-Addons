@@ -583,12 +583,12 @@ script "QCDE_PowerUpMassacre" (void) {
 		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_PMASSACRE);
 }
 
-Script "QCDE_MajorItemSpawned" (int itemType) { // 1 for Mega, 2 for Heavy
+Script "QCDE_MajorItemSpawned" (int itemType) { // 0 for Mega, 1 for Heavy <-- from SCORBORD.acs QCDE_ItemSpawned
 	
-	if(itemType == 1)
+	if(itemType == 0)
 		megaSpawnTics = Timer();
 		
-	if(itemType == 2)
+	if(itemType == 1)
 		heavySpawnTics = Timer();
 }
 
