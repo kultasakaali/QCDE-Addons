@@ -36,7 +36,7 @@ See the included [credits](https://github.com/kultasakaali/QCDE-Addons/blob/main
 
 A list of medals can be found [here](https://github.com/kultasakaali/QCDE-Addons/blob/main/Medals/qcde_medals.pdf).
 
-[Download 1.3 RC4](https://allfearthesentinel.net/zandronum/download.php?file=qcde_medals-qzantesting_v1.3_rc4.pk3)
+[Download 1.3 RC5](https://allfearthesentinel.net/zandronum/download.php?file=qcde_medals-qzan_v1.3_rc5.pk3)
 
 ## RailJump
 
