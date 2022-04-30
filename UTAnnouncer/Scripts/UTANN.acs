@@ -1,0 +1,144 @@
+#library "UTANN"
+
+#include "zcommon.acs"
+#include "bcsutils.bcs"
+#include "UTANNDEF.acs"
+
+int lastFrag[64][2];
+int excellentLevels[8] = {2, 3, 4, 5, 6, 7, 8, 9999};
+
+int killingSpree[64];
+int spreeLevels[6] = {5, 10, 15, 20, 25, 30};
+							
+script "UTANN_PlayerDeath" DEATH {
+	int plr = PlayerNumber();
+	
+	SetActivatorToTarget(0);
+	int killerNo = PlayerNumber();
+	
+	SetActivatorToPlayer(plr);
+	
+	if(CheckInventory("SpreeToken"))
+			ACS_NamedExecuteAlways("UTANN_Announce", 0, SPREE_END, killerNo, plr);
+			
+	lastFrag[plr][EXCELLENT] = 0;
+	killingSpree[plr] = 0;
+}
+
+script "UTANN_FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
+
+	if(GameType() < GAME_NET_DEATHMATCH)
+		terminate;
+	
+	//GAMEEVENT_PLAYERFRAGS
+	if(evtTyp == 0) {
+		
+		int victimTID = victimNo + 1000;
+		
+		if(victimTID == ActivatorTID()) {
+			terminate;
+		}
+			
+		ACS_NamedExecuteAlways("UTANN_Excellent", 0, Timer());
+		ACS_NamedExecuteAlways("UTANN_KillingSpree", 0);
+	}
+}
+
+script "UTANN_Excellent" (int currentTic) {
+	
+	int plr = PlayerNumber();
+	int dTic = currentTic - lastFrag[plr][TIC];
+	
+	//be quick or be dead
+	if(dTic >= 140)
+		lastFrag[plr][EXCELLENT] = 0;
+
+	lastFrag[plr][EXCELLENT]++;
+	lastFrag[plr][TIC] = currentTic;
+	
+	for(int i = 0; i < NUM_MULTIS; i++) {
+		if(lastFrag[plr][EXCELLENT] == excellentLevels[i]) {
+			
+			Delay(1);
+			
+			//special case for simultaneous kills - only show the highest rank multikill
+			if(lastFrag[plr][EXCELLENT] >= excellentLevels[i + 1]) {
+				terminate;
+			}
+			
+			ACS_NamedExecuteAlways("UTANN_Announce", 0, MULTI, i, plr);
+			
+			break;
+		}
+	}
+}
+
+script "UTANN_KillingSpree" (void) {
+	
+	int plr = PlayerNumber();
+	
+	killingSpree[plr]++;
+	
+	for(int i = 0; i < NUM_SPREES; i++) {
+		if(killingSpree[plr] == spreeLevels[i]) {
+			
+			PlaySound(0, "UTDE/Other/SpreeSound", CHAN_AUTO, 1.0, false, ATTN_NONE);
+			ACS_NamedExecuteAlways("UTANN_Announce", 0, SPREE, i, plr);
+			GiveInventory("SpreeToken",1);
+		}
+	}
+}
+
+script "UTANN_Announce" (int mode, int idx, int plr) CLIENTSIDE {
+	
+	switch(mode) {
+		
+		case MULTI:
+
+			idx > 3 ? SetFont("TORMENTS") : SetFont("UNRC");
+				
+			HudMessage(s:multiKills[idx]; HUDMSG_FADEOUT, MSGID_MULTI, CR_DARKRED, 1.5, 0.24, 2.0, 0.5);
+			
+			UTANN_PlaySound(mode, idx);
+			break;
+			
+		case SPREE:
+			
+			str on_a;
+			
+			idx < 2 ? on_a = "on a " : on_a = "";
+			
+			SetFont("UNRC");
+			HudMessageBold(n:plr + 1, s:" is ", s:on_a, s:killingSprees[idx];
+				HUDMSG_FADEOUT|HUDMSG_LOG, MSGID_SPREE, CR_LIGHTBLUE, 1.5, 0.28, 2.0, 0.5);
+				
+			UTANN_PlaySound(mode, idx);
+			break;
+			
+		case SPREE_END:
+		
+			SetFont("UNRC");
+			
+			//we store the killer in idx as it's free in this mode
+			if(plr == idx) {
+				int playerGender = GetPlayerInfo(plr, PLAYERINFO_GENDER);
+				HudMessageBold(n:plr + 1, s:" was looking good till ", s:genders[playerGender][0], s:" killed ", s: genders[playerGender][1];
+					HUDMSG_FADEOUT|HUDMSG_LOG, MSGID_SPREE, CR_LIGHTBLUE, 1.5, 0.28, 2.0, 0.5);
+			} else {
+				HudMessageBold(n:plr + 1, s:"'s killing spree was ended by ", n:idx + 1;
+					HUDMSG_FADEOUT|HUDMSG_LOG, MSGID_SPREE, CR_LIGHTBLUE, 1.5, 0.28, 2.0, 0.5);
+			}
+			
+			break;
+	}
+}
+
+function void UTANN_PlaySound(int mode, int idx) {
+
+	int announcer = BCSUtils.clamp(GetCVar("cl_utannouncer"), 0, 4);
+	str set = (mode == SPREE) ? "spree" : "multi";
+	str sound = StrParam(s:"UTDE/announcer/a", d:announcer, s:"_", s:set, d:idx);
+	
+	LocalAmbientSound(sound, 127 * GetCVar("snd_announcervolume") >> 16);
+
+}

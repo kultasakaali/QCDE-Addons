@@ -1,0 +1,2 @@
+//see menudef for valid options
+user int cl_utannouncer = 0;

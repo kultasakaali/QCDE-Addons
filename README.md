@@ -38,6 +38,20 @@ A list of medals can be found [here](https://github.com/kultasakaali/QCDE-Addons
 
 [Download 1.3 RC5](https://allfearthesentinel.net/zandronum/download.php?file=qcde_medals-qzan_v1.3_rc5.pk3)
 
+## UT Announcer for the Unreal Tournament weapons add-on
+
+An add-on for **geNia**'s [UT Weapons add-on](https://www.moddb.com/mods/quake-champions-doom-edition/addons/unreal-tournament-weapons-for-q-zandronum) that brings multikill and killing spree announcements to the game.  
+
+Currently the pack contains 5 announcers you can choose from via the sound menu or using the `cl_utannouncer` CVar.  
+
+- UT99
+- UT2004 Male
+- UT2004 Female
+- UT2004 Sexy
+- UT2003
+
+[Download 1.0](https://allfearthesentinel.net/zandronum/download.php?file=qcde_ut_weapons_announcer_v1.0.pk3)
+
 ## RailJump
 
 This add-on will provide you with a Railgun that is able to thrust you in the air, exactly like a rocket jump, with no self-damage. Intended to use with Instagib game mode, however it's not restricted to that.

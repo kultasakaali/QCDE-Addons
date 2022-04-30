@@ -1,0 +1,44 @@
+enum {
+	TIC,
+	EXCELLENT
+};
+
+enum {
+	FRAGS,
+	TEXT
+};
+
+enum {
+	MULTI,
+	SPREE,
+	SPREE_END
+};
+
+enum {
+	NUM_MULTIS = 7,
+	NUM_SPREES = 6
+};
+
+enum {
+	MSGID_MULTI = 15486,
+	MSGID_SPREE = 15487
+};
+
+str multiKills[NUM_MULTIS] = {	"Double Kill!",
+								"Multi Kill!",
+								"Mega Kill!!",
+								"ULTRA KILL!!",
+								"MONSTER KILL!!!",
+								"LUDICROUS KILL!!!",
+								"H O L Y  S H I T !!!"	};
+						
+str killingSprees[NUM_SPREES] = {	"Killing Spree",
+									"Rampage!",
+									"Dominating!",
+									"Unstoppable!",
+									"GODLIKE!",
+									"WHICKED SICK!"	};
+									
+str genders[3][2] = {	{"he", "himself"},
+						{"she", "herself"},
+						{"it", "itself" }	};

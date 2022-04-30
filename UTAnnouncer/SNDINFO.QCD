@@ -1,0 +1,82 @@
+//Misc
+UTDE/Other/SpreeSound "Sounds/UTAnnounce/misc/SpreeSound.wav"
+
+//Announcer - Default UT99
+UTDE/announcer/a0_multi0 "Sounds/UTAnnounce/announcers/default/multi0.ogg"
+UTDE/announcer/a0_multi1 "Sounds/UTAnnounce/announcers/default/multi1.ogg"
+UTDE/announcer/a0_multi2 "Sounds/UTAnnounce/announcers/default/multi2.ogg"
+UTDE/announcer/a0_multi3 "Sounds/UTAnnounce/announcers/default/multi3.ogg"
+UTDE/announcer/a0_multi4 "Sounds/UTAnnounce/announcers/default/multi4.ogg"
+UTDE/announcer/a0_multi5 "Sounds/UTAnnounce/announcers/default/multi5.ogg"
+UTDE/announcer/a0_multi6 "Sounds/UTAnnounce/announcers/default/multi6.ogg"
+
+UTDE/announcer/a0_spree0 "Sounds/UTAnnounce/announcers/default/spree0.ogg"
+UTDE/announcer/a0_spree1 "Sounds/UTAnnounce/announcers/default/spree1.ogg"
+UTDE/announcer/a0_spree2 "Sounds/UTAnnounce/announcers/default/spree2.ogg"
+UTDE/announcer/a0_spree3 "Sounds/UTAnnounce/announcers/default/spree3.ogg"
+UTDE/announcer/a0_spree4 "Sounds/UTAnnounce/announcers/default/spree4.ogg"
+UTDE/announcer/a0_spree5 "Sounds/UTAnnounce/announcers/default/spree5.ogg"
+
+//Announcer - UT2004 Male
+UTDE/announcer/a1_multi0 "Sounds/UTAnnounce/announcers/2k4_male/multi0.ogg"
+UTDE/announcer/a1_multi1 "Sounds/UTAnnounce/announcers/2k4_male/multi1.ogg"
+UTDE/announcer/a1_multi2 "Sounds/UTAnnounce/announcers/2k4_male/multi2.ogg"
+UTDE/announcer/a1_multi3 "Sounds/UTAnnounce/announcers/2k4_male/multi3.ogg"
+UTDE/announcer/a1_multi4 "Sounds/UTAnnounce/announcers/2k4_male/multi4.ogg"
+UTDE/announcer/a1_multi5 "Sounds/UTAnnounce/announcers/2k4_male/multi5.ogg"
+UTDE/announcer/a1_multi6 "Sounds/UTAnnounce/announcers/2k4_male/multi6.ogg"
+
+UTDE/announcer/a1_spree0 "Sounds/UTAnnounce/announcers/2k4_male/spree0.ogg"
+UTDE/announcer/a1_spree1 "Sounds/UTAnnounce/announcers/2k4_male/spree1.ogg"
+UTDE/announcer/a1_spree2 "Sounds/UTAnnounce/announcers/2k4_male/spree2.ogg"
+UTDE/announcer/a1_spree3 "Sounds/UTAnnounce/announcers/2k4_male/spree3.ogg"
+UTDE/announcer/a1_spree4 "Sounds/UTAnnounce/announcers/2k4_male/spree4.ogg"
+UTDE/announcer/a1_spree5 "Sounds/UTAnnounce/announcers/2k4_male/spree5.ogg"
+
+//Announcer - UT2004 Female
+UTDE/announcer/a2_multi0 "Sounds/UTAnnounce/announcers/2k4_female/multi0.ogg"
+UTDE/announcer/a2_multi1 "Sounds/UTAnnounce/announcers/2k4_female/multi1.ogg"
+UTDE/announcer/a2_multi2 "Sounds/UTAnnounce/announcers/2k4_female/multi2.ogg"
+UTDE/announcer/a2_multi3 "Sounds/UTAnnounce/announcers/2k4_female/multi3.ogg"
+UTDE/announcer/a2_multi4 "Sounds/UTAnnounce/announcers/2k4_female/multi4.ogg"
+UTDE/announcer/a2_multi5 "Sounds/UTAnnounce/announcers/2k4_female/multi5.ogg"
+UTDE/announcer/a2_multi6 "Sounds/UTAnnounce/announcers/2k4_female/multi6.ogg"
+
+UTDE/announcer/a2_spree0 "Sounds/UTAnnounce/announcers/2k4_female/spree0.ogg"
+UTDE/announcer/a2_spree1 "Sounds/UTAnnounce/announcers/2k4_female/spree1.ogg"
+UTDE/announcer/a2_spree2 "Sounds/UTAnnounce/announcers/2k4_female/spree2.ogg"
+UTDE/announcer/a2_spree3 "Sounds/UTAnnounce/announcers/2k4_female/spree3.ogg"
+UTDE/announcer/a2_spree4 "Sounds/UTAnnounce/announcers/2k4_female/spree4.ogg"
+UTDE/announcer/a2_spree5 "Sounds/UTAnnounce/announcers/2k4_female/spree5.ogg"
+
+//Announcer - UT2004 Sexy
+UTDE/announcer/a3_multi0 "Sounds/UTAnnounce/announcers/2k4_sexy/multi0.ogg"
+UTDE/announcer/a3_multi1 "Sounds/UTAnnounce/announcers/2k4_sexy/multi1.ogg"
+UTDE/announcer/a3_multi2 "Sounds/UTAnnounce/announcers/2k4_sexy/multi2.ogg"
+UTDE/announcer/a3_multi3 "Sounds/UTAnnounce/announcers/2k4_sexy/multi3.ogg"
+UTDE/announcer/a3_multi4 "Sounds/UTAnnounce/announcers/2k4_sexy/multi4.ogg"
+UTDE/announcer/a3_multi5 "Sounds/UTAnnounce/announcers/2k4_sexy/multi5.ogg"
+UTDE/announcer/a3_multi6 "Sounds/UTAnnounce/announcers/2k4_sexy/multi6.ogg"
+
+UTDE/announcer/a3_spree0 "Sounds/UTAnnounce/announcers/2k4_sexy/spree0.ogg"
+UTDE/announcer/a3_spree1 "Sounds/UTAnnounce/announcers/2k4_sexy/spree1.ogg"
+UTDE/announcer/a3_spree2 "Sounds/UTAnnounce/announcers/2k4_sexy/spree2.ogg"
+UTDE/announcer/a3_spree3 "Sounds/UTAnnounce/announcers/2k4_sexy/spree3.ogg"
+UTDE/announcer/a3_spree4 "Sounds/UTAnnounce/announcers/2k4_sexy/spree4.ogg"
+UTDE/announcer/a3_spree5 "Sounds/UTAnnounce/announcers/2k4_sexy/spree5.ogg"
+
+//Announcer - UT2003
+UTDE/announcer/a4_multi0 "Sounds/UTAnnounce/announcers/2k3/multi0.ogg"
+UTDE/announcer/a4_multi1 "Sounds/UTAnnounce/announcers/2k3/multi1.ogg"
+UTDE/announcer/a4_multi2 "Sounds/UTAnnounce/announcers/2k3/multi2.ogg"
+UTDE/announcer/a4_multi3 "Sounds/UTAnnounce/announcers/2k3/multi3.ogg"
+UTDE/announcer/a4_multi4 "Sounds/UTAnnounce/announcers/2k3/multi4.ogg"
+UTDE/announcer/a4_multi5 "Sounds/UTAnnounce/announcers/2k3/multi5.ogg"
+UTDE/announcer/a4_multi6 "Sounds/UTAnnounce/announcers/2k3/multi6.ogg"
+
+UTDE/announcer/a4_spree0 "Sounds/UTAnnounce/announcers/2k3/spree0.ogg"
+UTDE/announcer/a4_spree1 "Sounds/UTAnnounce/announcers/2k3/spree1.ogg"
+UTDE/announcer/a4_spree2 "Sounds/UTAnnounce/announcers/2k3/spree2.ogg"
+UTDE/announcer/a4_spree3 "Sounds/UTAnnounce/announcers/2k3/spree3.ogg"
+UTDE/announcer/a4_spree4 "Sounds/UTAnnounce/announcers/2k3/spree4.ogg"
+UTDE/announcer/a4_spree5 "Sounds/UTAnnounce/announcers/2k3/spree5.ogg"

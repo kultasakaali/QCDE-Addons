@@ -1,0 +1,29 @@
+OptionMenu "QZDESoundOptions"
+{
+	Title "SOUND OPTIONS"
+	Slider "Sounds volume",		"snd_sfxvolume", 0, 1, 0.05
+	Slider "Menu volume",		"snd_menuvolume", 0, 1, 0.05
+	Slider "Music volume",		"snd_musicvolume", 0, 1, 0.05
+	Slider "Announcer volume",	"snd_announcervolume", 0, 1, 0.05 // [TP]
+	Option "Announcer",			"cl_announcer", "ZA_Announcers" // [TP]
+	Option "UT Announcer",		"cl_utannouncer", "UT_Announcers"
+	StaticText " "
+	Option 		"QCDE Weapon hit-beeps",			"cl_hitbeep",				"OnOff"
+	Slider 		"QCDE Auto Taunt chance",				"cl_autoTaunt", 			0, 50, 1
+	Option 		"QCDE Taunt subtitles",			"cl_tauntSubtitles",		"TauntSubtitles"
+	Option 		"QCDE OST enabled (if loaded)",	"snd_qcdemus",				"OnOff"
+	Option 		"QCDE OST playback order",		"snd_randommus",			"OSTorder"
+	
+	StaticText " "	
+	Submenu 	"All Sound Options",			"SoundOptions"
+	
+}
+
+OptionValue "UT_Announcers"
+{
+	0, "UT99"
+	1, "UT2004 Male"
+	2, "UT2004 Female"
+	3, "UT2004 Sexy"
+	4, "UT2003"
+}
