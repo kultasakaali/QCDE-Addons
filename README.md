@@ -57,7 +57,8 @@ Currently the pack contains 5 announcers you can choose from via the sound menu 
 This add-on will provide you with a Railgun that is able to thrust you in the air, exactly like a rocket jump, with no self-damage. Intended to use with Instagib game mode, however it's not restricted to that.
 
 [Download 1.0 for Zandronum](https://allfearthesentinel.net/zandronum/download.php?file=qcde--railjump.pk3)  
-[Download 1.3 for Q-Zandronum](https://allfearthesentinel.net/zandronum/download.php?file=qcde--railjump-qzand_v1.3.pk3)
+[Download 1.3 for Q-Zandronum](https://allfearthesentinel.net/zandronum/download.php?file=qcde--railjump-qzand_v1.3.pk3)  
+[Download 1.3 for Q-Zandronum w/ Medals](https://allfearthesentinel.net/zandronum/download.php?file=qcde--railjump-qzand_medals_v1.3.pk3)
 
 ## Server Scripts
 
