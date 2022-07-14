@@ -37,6 +37,7 @@ qzan_v1.3 changes from 1.2:
 	- Added COLLATERAL DAMAGE medal
 	- New ability medals: SHUB SLAYER, FROM THE SHADOWS
 	- Announcer volume will now obey user setting 'snd_announcervolume'
+	- Added 'sound only' option for medals
 	
 bugfixes of newly introduced features:
 	- Fixed Sarge occasionally getting STOPWATCH on (T)LMS round start
