@@ -69,7 +69,7 @@ This add-on will provide you with a Railgun that is able to thrust you in the ai
 `sv_forcerespawn true; sv_forcerespawntimer 0`
 
 [Download LMSExtensions 1.01](https://allfearthesentinel.net/zandronum/download.php?file=qcde--lmsextensions_v1.01.pk3)  
-[Download RandomChampion 1.15](https://allfearthesentinel.net/zandronum/download.php?file=qcde--randomchampion_v1.15.pk3)  
+[Download RandomChampion 1.25](https://allfearthesentinel.net/zandronum/download.php?file=qcde--randomchampion_v1.25.pk3)  
 [Download RandomRocketArena 1.02](https://allfearthesentinel.net/zandronum/download.php?file=qcde--randomrocketarena_v1.02.pk3)  
 [Download RespawnDelay 1.0](https://allfearthesentinel.net/zandronum/download.php?file=qcde--respawndelay_v1.0.pk3)
 

@@ -2,23 +2,46 @@
 #include "zcommon.acs"
 #import "QCDE.bcs"
 
+global int 48: numUsedChamps;
+global int 49: usedChamps[];
+
 str champPool[NUMBER_OF_CLASSES] = {	"RANGER", "DOOMSLAYER", "CORVUS", "KANE", "CALEB", "MENELKIR", "TERMINATOR", "ZEDEK", "INQUISITOR", "BITTERMAN",
 										"GALEN", "NYX", "SORGAUL", "DUKE NUKEM", "DURANDAL", "KEEL", "SARGE", "LO WANG", "GRAYSON", "ERADICATOR", "BLAZKOWICZ",
-										"FREEMAN", "VORMATUR", "ELEENA", "LUCIENNE", "MAJOR", "HUNTER", "SAM", "POSTAL", "PAINKILLER", "INTRUDER"	};
+										"FREEMAN", "VORMATUR", "ELEENA", "LUCIENNE", "MAJOR", "HUNTER", "SAM", "POSTAL", "PAINKILLER", "INTRUDER", "ORBB"	};
 
-Script "roll" (void) {
+script "roll" (void) {
 	int champ = random(0, NUMBER_OF_CLASSES - 1);
-		
+	
 	for(int i = 0; i < NUMBER_OF_CLASSES; i++) {
-		SetCVar(StrParam(s:"_bc_", d:i), 1);
+		if(usedChamps[i] == champ)
+			restart;
+	}
+		
+	for(int j = 0; j < NUMBER_OF_CLASSES; j++) {
+		SetCVar(StrParam(s:"_bc_", d:j), 1);
 	}
 		
 	SetCVar(StrParam(s:"_bc_", d:champ), 0);
 	SetCVar("_forcedClass", champ);
+	
+	usedChamps[numUsedChamps] = champ;
+	numUsedChamps++;
 }
 
-Script "InitMap" OPEN {
-	if(GetCVar("sv_randomChampMode") == 0) terminate;
+function void initUsedArray() {
+	
+	numUsedChamps = 0;
+	
+	for(int i = 0; i < NUMBER_OF_CLASSES; i++)
+		usedChamps[i] = -1;
+}
+
+script "InitMap" OPEN {
+	if(GetCVar("sv_randomChampMode") == 0)
+		terminate;
+	
+	if(numUsedChamps == 0 || numUsedChamps == NUMBER_OF_CLASSES)
+		initUsedArray();
 	
 	if(GetCVar("_forcedClass") == 999) {
 		ACS_NamedExecuteAlways("roll", 0);
@@ -27,18 +50,18 @@ Script "InitMap" OPEN {
 	}
 }
 
-Script "ClearChamp" UNLOADING {		//Handle game modes with warmup with these,
+script "ClearChamp" UNLOADING {		//Handle game modes with warmup with these,
 	SetCVar("_forcedClass", 999);	//so that we don't end up endlessly picking
 	SetCVar("_sameMap", false);		//a new champ every time warmup ends
 }
 
-Script "setClass" (void) CLIENTSIDE {	
+script "setClass" (void) CLIENTSIDE {	
 	int class = GetCvar("_forcedClass");
 	
 	ConsoleCommand(StrParam(s:"playerclass \"", s:champPool[class], s:"\" "));
 }
 
-Script "RoundEnds" (int evtType, int arg1, int arg2) EVENT {
+script "RoundEnds" (int evtType, int arg1, int arg2) EVENT {
 	
 	if(evtType == 6 && GetCVar("sv_randomChampMode") == 2) {
 	
@@ -48,7 +71,7 @@ Script "RoundEnds" (int evtType, int arg1, int arg2) EVENT {
 	}
 }
 
-Script "ForceChoiceMap" OPEN CLIENTSIDE {						//for first time joiners and spectators, keep server selection updated
+script "ForceChoiceMap" OPEN CLIENTSIDE {						//for first time joiners and spectators, keep server selection updated
 	if(GetCVar("sv_randomChampMode") == 0) terminate;
 	if(!PlayerIsSpectator(ConsolePlayerNumber())) terminate;
 	
