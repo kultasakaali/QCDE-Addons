@@ -21,7 +21,7 @@ Script "QCDE_ResetClass" (int firsttime)
 {
 	if(firsttime)
 		ACS("QCDE_PistolStart");
-	
+
 	if(CheckActorClass(0, "QCRanger"    )) SetInventory("Class_Ranger"    ,1); else SetInventory("Class_Ranger"    ,0);
 	if(CheckActorClass(0, "QCDoomslayer")) SetInventory("Class_Doomslayer",1); else SetInventory("Class_Doomslayer",0);
 	if(CheckActorClass(0, "QCCorvus"    )) SetInventory("Class_Corvus"    ,1); else SetInventory("Class_Corvus"    ,0);
@@ -53,61 +53,63 @@ Script "QCDE_ResetClass" (int firsttime)
 	if(CheckActorClass(0, "QCPostal"    )) SetInventory("Class_Postal"    ,1); else SetInventory("Class_Postal"    ,0);
 	if(CheckActorClass(0, "QCPainkiller")) SetInventory("Class_Painkiller",1); else SetInventory("Class_Painkiller",0);
 	if(CheckActorClass(0, "QCIntruder"  )) SetInventory("Class_Intruder"  ,1); else SetInventory("Class_Intruder"  ,0);
+	if(CheckActorClass(0, "QCOrbb"		)) SetInventory("Class_Orbb"      ,1); else SetInventory("Class_Orbb"      ,0);
 	// ^ insert more classes here
-	
+
 	// Health & Armor
 	if(CheckActorClass(0, "QCRanger"    )) { SetQcdeStack(125, 100); SetInventory("ClassID",  0); }
 	if(CheckActorClass(0, "QCDoomslayer")) { SetQcdeStack(150,  75); SetInventory("ClassID",  1); }
 	if(CheckActorClass(0, "QCCorvus"    )) { SetQcdeStack(125, 100); SetInventory("ClassID",  2); }
-	if(CheckActorClass(0, "QCKane"      )) { SetQcdeStack(100,  50); SetInventory("ClassID",  3); }
-	if(CheckActorClass(0, "QCCaleb"     )) { SetQcdeStack(100,  50); SetInventory("ClassID",  4); }
-	if(CheckActorClass(0, "QCMenelkir"  )) { SetQcdeStack(100,  50); SetInventory("ClassID",  5); }
-	if(CheckActorClass(0, "QCTerminator")) { SetQcdeStack(150, 150); SetInventory("ClassID",  6); }
-	if(CheckActorClass(0, "QCZedek"     )) { SetQcdeStack(150, 150); SetInventory("ClassID",  7); }
-	if(CheckActorClass(0, "QCInquisitor")) { SetQcdeStack(175, 125); SetInventory("ClassID",  8); }
-	if(CheckActorClass(0, "QCBitterman" )) { SetQcdeStack(150, 150); SetInventory("ClassID",  9); }
+	if(CheckActorClass(0, "QCKane"      )) { SetQcdeStack(100,  75); SetInventory("ClassID",  3); }
+	if(CheckActorClass(0, "QCCaleb"     )) { SetQcdeStack(100,  75); SetInventory("ClassID",  4); }
+	if(CheckActorClass(0, "QCMenelkir"  )) { SetQcdeStack(100,  75); SetInventory("ClassID",  5); }
+	if(CheckActorClass(0, "QCTerminator")) { SetQcdeStack(150, 125); SetInventory("ClassID",  6); }
+	if(CheckActorClass(0, "QCZedek"     )) { SetQcdeStack(150, 125); SetInventory("ClassID",  7); }
+	if(CheckActorClass(0, "QCInquisitor")) { SetQcdeStack(175, 100); SetInventory("ClassID",  8); }
+	if(CheckActorClass(0, "QCBitterman" )) { SetQcdeStack(150, 125); SetInventory("ClassID",  9); }
 	if(CheckActorClass(0, "QCGalen"     )) { SetQcdeStack(125, 100); SetInventory("ClassID", 10); }
-	if(CheckActorClass(0, "QCNyx"       )) { SetQcdeStack(100,  50); SetInventory("ClassID", 11); }
-	if(CheckActorClass(0, "QCSorgaul"   )) { SetQcdeStack(125, 175); SetInventory("ClassID", 12); }
+	if(CheckActorClass(0, "QCNyx"       )) { SetQcdeStack(100,  75); SetInventory("ClassID", 11); }
+	if(CheckActorClass(0, "QCSorgaul"   )) { SetQcdeStack(125, 150); SetInventory("ClassID", 12); }
 	if(CheckActorClass(0, "QCDukeNukem" )) { SetQcdeStack(150,  75); SetInventory("ClassID", 13); }
-	if(CheckActorClass(0, "QCDurandal"  )) { SetQcdeStack(100,  50); SetInventory("ClassID", 14); }
-	if(CheckActorClass(0, "QCKeel"      )) { SetQcdeStack(175, 125); SetInventory("ClassID", 15); }
+	if(CheckActorClass(0, "QCDurandal"  )) { SetQcdeStack(100,  75); SetInventory("ClassID", 14); }
+	if(CheckActorClass(0, "QCKeel"      )) { SetQcdeStack(175, 100); SetInventory("ClassID", 15); }
 	if(CheckActorClass(0, "QCSarge"     )) { SetQcdeStack(100, 100); SetInventory("ClassID", 16); }
-	if(CheckActorClass(0, "QCLoWang"    )) { SetQcdeStack(100,  50); SetInventory("ClassID", 17); }
+	if(CheckActorClass(0, "QCLoWang"    )) { SetQcdeStack(100,  75); SetInventory("ClassID", 17); }
 	if(CheckActorClass(0, "QCGrayson"   )) { SetQcdeStack(125, 100); SetInventory("ClassID", 18); }
-	if(CheckActorClass(0, "QCEradicator")) { SetQcdeStack(150, 150); SetInventory("ClassID", 19); }
+	if(CheckActorClass(0, "QCEradicator")) { SetQcdeStack(150, 125); SetInventory("ClassID", 19); }
 	if(CheckActorClass(0, "QCBlazkowicz")) { SetQcdeStack(125, 100); SetInventory("ClassID", 20); }
 	if(CheckActorClass(0, "QCFreeman"   )) { SetQcdeStack(100, 125); SetInventory("ClassID", 21); }
 	if(CheckActorClass(0, "QCVorMatur"  )) { SetQcdeStack(300,   0); SetInventory("ClassID", 22); }
-	if(CheckActorClass(0, "QCEleena"    )) { SetQcdeStack(125,  25); SetInventory("ClassID", 23); }
-	if(CheckActorClass(0, "QCLucienne"  )) { SetQcdeStack(100,  50); SetInventory("ClassID", 24); }
-	if(CheckActorClass(0, "QCMajor"     )) { SetQcdeStack(150, 150); SetInventory("ClassID", 25); }
-	if(CheckActorClass(0, "QCHunter"    )) { SetQcdeStack(100,  50); SetInventory("ClassID", 26); }
-	if(CheckActorClass(0, "QCSam"       )) { SetQcdeStack(175, 125); SetInventory("ClassID", 27); }
-	if(CheckActorClass(0, "QCPostal"    )) { SetQcdeStack(100,  50); SetInventory("ClassID", 28); }
+	if(CheckActorClass(0, "QCEleena"    )) { SetQcdeStack(125,  50); SetInventory("ClassID", 23); }
+	if(CheckActorClass(0, "QCLucienne"  )) { SetQcdeStack(100,  75); SetInventory("ClassID", 24); }
+	if(CheckActorClass(0, "QCMajor"     )) { SetQcdeStack(150, 125); SetInventory("ClassID", 25); }
+	if(CheckActorClass(0, "QCHunter"    )) { SetQcdeStack(100,  75); SetInventory("ClassID", 26); }
+	if(CheckActorClass(0, "QCSam"       )) { SetQcdeStack(175, 100); SetInventory("ClassID", 27); }
+	if(CheckActorClass(0, "QCPostal"    )) { SetQcdeStack(100,  75); SetInventory("ClassID", 28); }
 	if(CheckActorClass(0, "QCPainkiller")) { SetQcdeStack(100, 125); SetInventory("ClassID", 29); }
 	if(CheckActorClass(0, "QCIntruder"  )) { SetQcdeStack(150,  75); SetInventory("ClassID", 30); }
+	if(CheckActorClass(0, "QCOrbb"		)) { SetQcdeStack(100,  75); SetInventory("ClassID", 31); }
 	// ^ insert more classes here
-	
+
 	// Disabled class? Git kekd nao (when ClassID is already set)
 	if(IsClassDisabled())
 	{
 		ACS("QCDE_ClassDisabled");
 		terminate;
 	}
-	
+
 	// Ability that can be retriggered during cooldown or progress.
 	// Implements its own logic for "can't retrigger cuz tired".
-	if (CheckActorClass(0, "QCGrayson") || 
-		CheckActorClass(0, "QCEleena" )) 
+	if (CheckActorClass(0, "QCGrayson") ||
+		CheckActorClass(0, "QCEleena" ))
 		GiveInventory("AbilityChecksItself",1);
 	else
 		TakeInventory("AbilityChecksItself",1);
-		
+
 	// If I am a bot, give a token for quick in-Decorate identifying
 	if(PlayerIsBot(PlayerNumber()))
 		GiveInventory("IamBotToken",1);
-	
+
 	if(GameType() < GAME_NET_DEATHMATCH) //If PvE
 	{
 		if(GetCvar("sv_pvescaledamage"))
@@ -124,13 +126,13 @@ Script "QCDE_ResetClass" (int firsttime)
 	else
 	{
 		// Initial health in PVP
-		
+
 		// Sarge has 125hp on respawn (more than max)
-		if(CheckActorClass(0, "QCSarge")) 
+		if(CheckActorClass(0, "QCSarge"))
 			SetActorProperty(0,APROP_Health,125);
-		
+
 		// Vormatur has 225hp on respawn (less than max)
-		if(CheckActorClass(0, "QCVorMatur")) 
+		if(CheckActorClass(0, "QCVorMatur"))
 			SetActorProperty(0,APROP_Health,225);
 	}
 }
@@ -145,11 +147,11 @@ Script "QCDE_PistolStart" (void)
 {
 	if (GameType() >= GAME_NET_DEATHMATCH) terminate;
 	if (!getCvar("sv_pistolStart") && !isSkirmish()) terminate;
-	
+
 	ClearInventory();
 	GiveInventory("QCGauntlet", 1);
 	SetWeapon("QCGauntlet");
-	
+
 	SetInventory("BackpackRewardToken" , 0);
 	SetInventory("CooldownRewardToken" , 0);
 	SetInventory("CooldownRewardToken2", 0);
@@ -159,14 +161,14 @@ Script "QCDE_PistolStart" (void)
 	SetInventory("QCShellAmmo" , 15);
 	SetInventory("QCNailAmmo"  , 50);
 	HealThing(999);
-	
+
 	// Remove upgrades
 	for(int i = 0; i < NUMBER_OF_WEAPONS; i++)
 	{
 		SetInventory(WeaponUpgrades[i][0][WU_TOKEN], 0);
 		SetInventory(WeaponUpgrades[i][1][WU_TOKEN], 0);
 	}
-	
+
 	// Early tools of trade for adventurer
 	if(isSkirmish() && GetGameModeState() != 1) // GAMESTATE_COUNTDOWN
 	{
@@ -174,7 +176,7 @@ Script "QCDE_PistolStart" (void)
 		ACS_NamedExecuteAlways("uppgradera",0);
 		ACS_NamedExecuteAlways("QCDE~GiveLoot뮻🅾️x",0,true);
 		ACS_NamedExecuteAlways("QCDE_SkirmishDoom1Warning",0);
-		
+
 		// Reliquary rewards
 		SetInventory("ExtraHealthToken",0);
 		SetInventory("ExtraArmorToken",0);
@@ -191,8 +193,8 @@ Script "QCDE_PistolStart" (void)
 }
 
 int classConversion[NUMBER_OF_CLASSES] = {	//Class conversion chart from "canonical" to MAPINFO as QCDE_Playerclass takes MAPINFO index
-	0, 1, 2, 11, 12, 13, 21, 22, 23, 25, 3, 14, 24, 4, 15, 26,
-	5, 16, 6, 27, 7, 8, 28, 17, 18, 29, 19, 30, 20, 9, 10
+	0, 1, 2, 11, 12, 13, 22, 23, 24, 26, 3, 14, 25, 4, 15, 27,
+	5, 16, 6, 28, 7, 8, 29, 17, 18, 30, 19, 31, 20, 9, 10, 21
 };
 // ^ insert more classes here, format: classConversion[canonicalIndex] = MAPINFOindex
 
@@ -201,7 +203,6 @@ int allowedClasses[NUMBER_OF_CLASSES - 1];	//because at least 1 is disabled
 Script "QCDE_ClassDisabled" (void)
 {
 	int tid = UniqueTid();
-	//int classwas = CheckInventory("ClassID");
 	SpawnProjectile(0,"DeliverDeath",0,0,0,0,0);
 	GiveInventory("DisableColor",1);
 	delay(1);
@@ -209,30 +210,30 @@ Script "QCDE_ClassDisabled" (void)
 	Thing_Remove(tid);
 
 	// Find a random class not banned by the server
-	
+
 	int arrayLength = 0;
-	
+
 	for(int i = 0; i < NUMBER_OF_CLASSES; i++) {
 		if(!GetCVar(StrParam(s:"_bc_", d:i))) {
 			allowedClasses[arrayLength] = i;
 			arrayLength++;
 		}
 	}
-	
+
 	int randomAllowedClass = allowedClasses[random(0, arrayLength - 1)];
 	int to = classConversion[randomAllowedClass];
-	
+
 	ACS("QCDE_KMP", to);
 	ACS("QCDE_Playerclass", to);
 }
 
-// script "QCDE_Playerclass" (int to) CLIENTSIDE 
+// script "QCDE_Playerclass" (int to) CLIENTSIDE
 // is in Messages.acs
 
 
 // Menudef scripts
 
-script "QCDE_JoinClassIdx" (int row, int col, int team) NET CLIENTSIDE 
+script "QCDE_JoinClassIdx" (int row, int col, int team) NET CLIENTSIDE
 {
 	str class = getcpdata(0,row,col);
 	//printbold(s:"QCDE_JoinClassIdx ", d:row, s:" ", d:col);
