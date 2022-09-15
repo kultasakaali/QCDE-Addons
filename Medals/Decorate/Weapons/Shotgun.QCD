@@ -47,20 +47,20 @@ Actor ShotgunPickup : CustomInventory 15601
 		BeTribolt:
 			TNT1 A 0 A_SpawnItemEx("TriboltPickup")
 			Stop
-	
+
 	BecomeWeaponItself:
 		TNT1 A 0 A_SpawnItemEx("QCShotgun")
 		TNT1 A 0 A_JumpIf(true, "End") Goto Idle // <-- this is to fool client-side predictor
 	End:TNT1 A 0
 		Stop
-	
+
 	Idle:
 		QCG3 Y -1 ACS_NamedExecuteWithResult("QCDE_WeaponSpawned",3,args[4])
 		Wait
 	Pickup:
 		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("WeaponStayCheck",0,0,0,0),"WeaponStay")
 		TNT1 A 0 A_GiveInventory("QCShotgun")
-		TNT1 A 0 
+		TNT1 A 0
 		Stop
 	WeaponStay:
 		TNT1 A 0 A_JumpIfInventory("QCShotgun",1,"Stay")
@@ -79,7 +79,6 @@ Actor ShotgunPickup : CustomInventory 15601
 Actor QCShotgun : QCWeapon
 {
 	Height 48
-	Weapon.SwaySpeed 3.2
 	Weapon.Kickback 35
 	Weapon.SelectionOrder 1940
 	Weapon.AmmoUse 1
@@ -92,7 +91,8 @@ Actor QCShotgun : QCWeapon
 	States
 	{
 	Spawn:
-		QCG3 Y 35 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("MultiplayerCheck",0,0,0,0) == 2,"DMSpawn")
+		TNT1 A 1
+		QCG3 Y 35 A_JumpIf(ACS_NamedExecuteWithResult("MultiplayerCheck",0,0,0,0) == 2,"DMSpawn")
 		Goto Idle
 	DMSpawn:
 		QCG3 Z 0 Bright A_ChangeFlag("NOBLOCKMAP",1)	//in DM, if a player drops this weapon, cant be picked
@@ -108,7 +108,7 @@ Actor QCShotgun : QCWeapon
 		QCG3 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
 		QCG3 A 3 A_WeaponReady
 		Loop
-		
+
 		ReadyCantFire:
 			QCG3 A 0 A_StopSound(CHAN_WEAPON)
 			QCG3 A 0 A_StopSound(6)
@@ -131,7 +131,7 @@ Actor QCShotgun : QCWeapon
 		QCG3 A 1 A_Raise
 		"####" "###" 0 A_Raise
 		Loop
-		
+
 	Deselect:
 		"####" "#" 0 A_ZoomFactor(1.0)
 		"####" "#" 0 A_TakeInventory("WeaponZoomedToken",32767)
@@ -139,7 +139,7 @@ Actor QCShotgun : QCWeapon
 		QCG3 A 1 A_Lower
 		"####" "###" 0 A_Lower
 		Loop
-		
+
 	//-----------------------
 	// Fire Seq
 	//-----------------------
@@ -147,17 +147,17 @@ Actor QCShotgun : QCWeapon
 		QCG3 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
 		TNT1 A 0 A_AlertMonsters
 		QCG3 B 0 Bright A_GunFlash("PrimaryFlash")
-		"####" B 1 Bright 
-		"####" B 1 Bright Offset(5,28) 
-		"####" C 1 Offset(12,20) 
-		"####" D 1 Offset(24,12) 
-		"####" D 1 Offset(33,10) 
-		"####" E 1 Offset(39,8) 
-		"####" E 1 Offset(45,7) 
+		"####" B 1 Bright
+		"####" B 1 Bright Offset(5,28)
+		"####" C 1 Offset(12,20)
+		"####" D 1 Offset(24,12)
+		"####" D 1 Offset(33,10)
+		"####" E 1 Offset(39,8)
+		"####" E 1 Offset(45,7)
 		"####" F 1
 		"####" F 1
 		"####" F 1 Offset(43,8)  //10
-		"####" F 1 Offset(40,9) 
+		"####" F 1 Offset(40,9)
 		"####" F 1 Offset(37,10)
 		"####" F 1 Offset(34,12)
 		"####" F 1 Offset(31,15)
@@ -176,80 +176,80 @@ Actor QCShotgun : QCWeapon
 		"####" A 1 Offset(2,34)
 		"####" A 1 Offset(1,33)	//28
 		Goto Ready
-		
+
 	PrimaryFlash: //Attacks doer
 		TNT1 A 0 A_JumpIfInventory("DMToken",1,"DM_Flash")
 		Goto SP_Flash
-			
+
 		SP_Flash:
 			TNT1 A 0 A_JumpIfInventory("WeaponZoomedToken",1,"CheckIfModifier")
 			TNT1 A 0 A_JumpIfInventory("SG_UG_Spread",1,"DoSpread")
 			TNT1 A 0 A_FireBullets(6,2,7,random(8,12),"QCShotgunPuff",FBF_NORANDOM|FBF_USEAMMO)
 			TNT1 AAAA 0 A_FireCustomMissile("BulletSmallTracer",frandom(6,-6),false,3,0,FPF_NOUNLAGGED|FPF_SKIPOWNER,frandom(2,-2))
 			Goto FlashCheckSound
-			
+
 			DoSpread:
 				TNT1 A 0 A_FireBullets(2,1,7,random(10,14),"QCShotgunPuff",FBF_NORANDOM|FBF_USEAMMO)
 				TNT1 AAAA 0 A_FireCustomMissile("BulletSmallTracer",frandom(2,-2),false,3,0,FPF_NOUNLAGGED|FPF_SKIPOWNER,frandom(1.5,-1.5))
 				Goto FlashCheckSound
-			
+
 			CheckIfModifier:
 				TNT1 A 0 A_JumpIfInventory("SG_UG_Explosive",1,"DoExplosive")
 				Goto SP_Flash+1
 			DoExplosive:
-				TNT1 A 0 A_JumpIfInventory("SG_UG_Spread",1,"DoExplosiveSpread") 
+				TNT1 A 0 A_JumpIfInventory("SG_UG_Spread",1,"DoExplosiveSpread")
 				TNT1 A 0 A_FireCustomMissile("SGExplosiveBullet",frandom(6,-6),true,3,0,0,frandom(2,-2))
 				TNT1 AAAAAAA 0 A_FireCustomMissile("SGExplosiveBullet",frandom(6,-6),false,3,0,0,frandom(2,-2))
 				Goto FlashCheckSound
-				
+
 				DoExplosiveSpread:
 					TNT1 A 0 A_FireCustomMissile("SGExplosiveBullet",frandom(2,-2),true,3,0,0,frandom(1.5,-1.5))
 					TNT1 AAAAAAA 0 A_FireCustomMissile("SGExplosiveBullet",frandom(2,-2),false,3,0,0,frandom(1.5,-1.5))
 					Goto FlashCheckSound
-			
-			
-		DM_Flash:
-			TNT1 A 0 A_FireBullets(sin(  0)*2.65  ,cos(  0)*2.65   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_USEAMMO|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin( 36)*2.75  ,cos( 36)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin( 72)*2.75  ,cos( 72)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(108)*2.75  ,cos(108)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(144)*2.75  ,cos(144)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(180)*2.75  ,cos(180)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(216)*2.75  ,cos(216)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(252)*2.75  ,cos(252)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(288)*2.75  ,cos(288)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(324)*2.75  ,cos(324)*2.75   ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
 
-			TNT1 A 0 A_FireBullets(sin(  0)*5.5  ,cos(  0)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin( 36)*5.5  ,cos( 36)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin( 72)*5.5  ,cos( 72)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(108)*5.5  ,cos(108)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(144)*5.5  ,cos(144)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(180)*5.5  ,cos(180)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(216)*5.5  ,cos(216)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(252)*5.5  ,cos(252)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(288)*5.5  ,cos(288)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
-			TNT1 A 0 A_FireBullets(sin(324)*5.5  ,cos(324)*5.5  ,-1,3,"QCShotgunPuffHit_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+
+		DM_Flash:
+			TNT1 A 0 A_FireBullets(sin(  0)*2.65  ,cos(  0)*2.65   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_USEAMMO|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin( 36)*2.75  ,cos( 36)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin( 72)*2.75  ,cos( 72)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(108)*2.75  ,cos(108)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(144)*2.75  ,cos(144)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(180)*2.75  ,cos(180)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(216)*2.75  ,cos(216)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(252)*2.75  ,cos(252)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(288)*2.75  ,cos(288)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(324)*2.75  ,cos(324)*2.75   ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+
+			TNT1 A 0 A_FireBullets(sin(  0)*5.5  ,cos(  0)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin( 36)*5.5  ,cos( 36)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin( 72)*5.5  ,cos( 72)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(108)*5.5  ,cos(108)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(144)*5.5  ,cos(144)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(180)*5.5  ,cos(180)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(216)*5.5  ,cos(216)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(252)*5.5  ,cos(252)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(288)*5.5  ,cos(288)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
+			TNT1 A 0 A_FireBullets(sin(324)*5.5  ,cos(324)*5.5  ,-1,3,"QCShotgunPuff_DM",FBF_NORANDOM|FBF_EXPLICITANGLE)
 
 			TNT1 AAAA 0 A_FireCustomMissile("BulletSmallTracer",frandom(5.0,-5.0),false,3,0,FPF_NOUNLAGGED|FPF_SKIPOWNER,frandom(5.0,-5.0))
 			Goto FlashCheckSound
-			
+
 		FlashCheckSound:
 			TNT1 A 0 A_JumpIfInventory("PowerQuad",1,"QuadSound")
 			Goto NormalSound
-			
+
 			NormalSound:
 				TNT1 A 0 A_PlaySound("QC/Weapons/Shotgun/Fire",CHAN_WEAPON)
 				Goto FlashEnder
 			QuadSound:
 				TNT1 A 0 A_PlaySound("QC/Weapons/Shotgun/Quad/Fire",CHAN_WEAPON)
 				Goto FlashEnder
-			
+
 	FlashEnder:
 		TNT1 A 0 A_JumpIfInventory("WepNoFlashToken",1,2)
 		TNT1 A 0 A_SetBlend("Orange",0.10,10)
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("WepNoRecoilToken",1,"FlashEnderNoRecoil")		
+		TNT1 A 0 A_JumpIfInventory("WepNoRecoilToken",1,"FlashEnderNoRecoil")
 		TNT1 A 0 A_SetPitch(pitch-3.5)
 		TNT1 AA 1 A_FireCustomMissile("SGSmokeSpawner",0, false,4,4)
 		TNT1 A 2
@@ -261,8 +261,8 @@ Actor QCShotgun : QCWeapon
 	}
 }
 
-	
-	
+
+
 Actor SGSmokeSpawner
 {
 	Radius 1
@@ -297,10 +297,10 @@ Actor SGSmoke
 		TNT1 A 0
 		TNT1 A 0 A_Jump(256,"Type1","Type2")	//to define which graphic will use
 	Type1:
-		X201 E 0	
+		X201 E 0
 		Goto "Continue"
 	Type2:
-		X201 F 0	
+		X201 F 0
 		Goto "Continue"
 	Continue:
 		"####" "#" 0 A_Jump(160,2,4,6)
@@ -360,7 +360,7 @@ Actor SGExplosiveBullet : FastProjectile
 	XDeath:
 		TNT1 A 1 A_GiveToTarget("HitBeepLow",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 		Stop
-		
+
 	Death: //crashed somewhere and checks for splash
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop
@@ -371,9 +371,9 @@ Actor SGExplosiveBullet : FastProjectile
 		RadiusHit:	//splash damage beep
 			TNT1 A 0 A_GiveToTarget("HitBeepMid",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 			TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
-			Goto DeathCont		
-		
-	DeathCont:	
+			Goto DeathCont
+
+	DeathCont:
 		TNT1 A 0 A_SetScale(0.35)
 		TNT1 A 0 A_Explode(30,112,0,1,0)
 		TNT1 A 0 A_Jump(256,"Type1","Type2")
@@ -394,8 +394,8 @@ Actor SGExplosiveBullet : FastProjectile
 //	For competitive DM, weapons dont autoaim
 // --------------------------------------------------------------------------
 Actor QCShotgunDM : QCShotgun
-{	
-	+WEAPON.NOAUTOAIM	
+{
+	+WEAPON.NOAUTOAIM
 	+CHEATNOTWEAPON
 	Tag "$TAG_QCShotgun" // "Shotgun (DM)"
 	Weapon.AmmoGive 10

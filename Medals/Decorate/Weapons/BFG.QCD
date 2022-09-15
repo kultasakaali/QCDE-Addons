@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------
 //
-// BFG10K 
+// BFG10K
 // Weapon and Pickup sprite by FrancoTieppo
 // Weapon code by DBT
 //
@@ -19,10 +19,10 @@ Actor BFGPickup : CustomInventory 15608
 	Inventory.PickupMessage "$GOT_QCBFG" // "Picked up the BFG10k."
 	Tag "$TAG_QCBFG" // "BFG 10k"
 	Inventory.RespawnTics 2100	//60sec
-	
-	// Zandronum's client-server disagreement over whether the #dress is under 
+
+	// Zandronum's client-server disagreement over whether the #dress is under
 	// the balcony or on the ledge has really wasted quite a bit of my time.
-	// Here's to 2018, and here's to like maybe 16 hours I spent in both D4T 
+	// Here's to 2018, and here's to like maybe 16 hours I spent in both D4T
 	// and QCDE trying to get BFG to show its pickup where you can get it,
 	// despite pickup being one actor.
 	//
@@ -31,11 +31,12 @@ Actor BFGPickup : CustomInventory 15608
 	//
 	// ~Michaelis
 	+NOGRAVITY
-	
+
 	States
 	{
 	Spawn:
-		QCG8 Y 0 NoDelay ACS_NamedExecuteWithResult("QCDE_RemoveIfDuel")
+		TNT1 A 1
+		QCG8 Y 0 ACS_NamedExecuteWithResult("QCDE_RemoveIfDuel")
 		QCG8 Y 35 A_JumpIf(ACS_NamedExecuteWithResult("MultiplayerCheck",0,0,0,0) == 2,"DMSpawn")
 		Goto Idle
 	DMSpawn:
@@ -51,7 +52,7 @@ Actor BFGPickup : CustomInventory 15608
 		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("MultiplayerCheck",0,0,0,0) == 2,"DMPickup")
 		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("WeaponStayCheck",0,0,0,0),"WeaponStay")
 		TNT1 A 0 A_GiveInventory("QCBFG")
-		TNT1 A 0 
+		TNT1 A 0
 		Stop
 	DMWeaponStay: // BFG doesn't stay even if it wants to in DM
 	DMPickup:
@@ -74,7 +75,6 @@ Actor BFGPickup : CustomInventory 15608
 Actor QCBFG : QCWeapon
 {
 	Height 48
-	Weapon.SwaySpeed 2.6
 	Weapon.SelectionOrder 6666 // lowest
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 8
@@ -101,22 +101,22 @@ Actor QCBFG : QCWeapon
 	//-----------------------
 	Ready:
 		QCG8 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
-		QCG8 A 0 A_PlaySound("QC/Weapons/BFG/Idle",5,0.7,1)
+		QCG8 A 0 A_PlaySound("QC/Weapons/BFG/Idle",CHAN_WEAPON,0.7,1)
 		QCG8 A 0 A_JumpIfInventory("DMToken",1,"AltFireReady")
 		QCG8 A 0 A_JumpIfInventory("BFG_UG_Charge",1,"AltFireReady")
 		QCG8 BCDEFG 3 A_WeaponReady(WRF_NOSECONDARY)			//doesnt allow zoom, handled here to continue idle animation
 		QCG8 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
-		QCG8 HAAAAA 3 A_WeaponReady(WRF_NOSECONDARY)	
+		QCG8 HAAAAA 3 A_WeaponReady(WRF_NOSECONDARY)
 		Loop
-		
+
 	AltFireReady:
 		QCG8 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
-		QCG8 A 0 A_PlaySound("QC/Weapons/BFG/Idle",5,0.7,1)
+		QCG8 A 0 A_PlaySound("QC/Weapons/BFG/Idle",CHAN_WEAPON,0.7,1)
 		QCG8 BCDEFG 3 A_WeaponReady
 		QCG8 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
 		QCG8 HAAAAA 3 A_WeaponReady
 		Loop
-		
+
 		ReadyCantFire:
 			QCG8 A 0 A_StopSound(CHAN_WEAPON)
 			QCG8 A 0 A_StopSound(6)
@@ -140,7 +140,7 @@ Actor QCBFG : QCWeapon
 		QCG8 A 1 A_Raise
 		"####" "###" 0 A_Raise
 		Loop
-		
+
 	Deselect:
 		"####" "#" 0 A_StopSound(CHAN_WEAPON)
 		"####" "#" 0 A_ZoomFactor(1.0)
@@ -149,26 +149,26 @@ Actor QCBFG : QCWeapon
 		QCG8 A 1 A_Lower
 		"####" "###" 0 A_Lower
 		Loop
-		
+
 	//-----------------------
 	// Fire Seq
 	//-----------------------
-	Fire: 
+	Fire:
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_JumpIfInventory("WeaponZoomedToken",1,"CheckIfUpgrade")
 		Goto FIRAH
-		
+
 		CheckIfUpgrade:
 			TNT1 A 0 A_JumpIfInventory("BFG_UG_Charge",1,"StartCharge")
 			Goto FIRAH
-		
+
 	//-----------
 	//Regular fire
 	FIRAH:
 		QCG8 A 0 A_JumpIfInventory("NoWeaponFireToken",1,"ReadyCantFire")
 		QCG8 A 0 A_StopSound(6) //stops raise sound
 		QCG8 I 1 Bright offset(7,47) A_GunFlash("PrimaryFlash")
-		QCG8 IJ 1 Bright 
+		QCG8 IJ 1 Bright
 		QCG8 K 1 offset(8,48)
 		QCG8 K 1 offset(7,46)
 		QCG8 K 1 offset(6,44)
@@ -187,25 +187,25 @@ Actor QCBFG : QCWeapon
 	PrimaryFlash: //Attacks doer
 		TNT1 A 0 A_JumpIfInventory("DMToken",1,"DM_Flash")
 		Goto SP_Flash
-			
+
 		SP_Flash:
 			TNT1 A 0 A_FireCustomMissile("QCBFGShot",0, true,1,5)
 			Goto FlashCheckSound
 		DM_Flash:
 			TNT1 A 0 A_FireCustomMissile("QCBFGShot_DM",0, true,1,5)
 			Goto FlashCheckSound
-			
+
 		FlashCheckSound:
 			TNT1 A 0 A_JumpIfInventory("PowerQuad",1,"QuadSound")
 			Goto NormalSound
-			
+
 			NormalSound:
 				TNT1 A 0 A_PlaySound("QC/Weapons/BFG/Fire",CHAN_WEAPON)
 				Goto FlashEnder
 			QuadSound:
 				TNT1 A 0 A_PlaySound("QC/Weapons/BFG/Quad/Fire",CHAN_WEAPON)
 				Goto FlashEnder
-			
+
 	FlashEnder:
 		TNT1 A 0 A_JumpIfInventory("WepNoFlashToken",1,2)
 		TNT1 A 0 A_SetBlend("Green",0.14,20)
@@ -219,11 +219,11 @@ Actor QCBFG : QCWeapon
 		TNT1 A 1 A_SetPitch(pitch+0.5)
 		TNT1 A 1 A_SetPitch(pitch+0.5)
 		Stop
-		
+
 			FlashEnderNoRecoil:
 				TNT1 A 1
 				Stop
-		
+
 	FlashEnderZoomed:
 		TNT1 A 0 A_JumpIfInventory("WepNoRecoilToken",1,"FlashEnderNoRecoil")
 		TNT1 A 0 A_SetPitch(pitch-1.25)
@@ -234,8 +234,8 @@ Actor QCBFG : QCWeapon
 		TNT1 A 1 A_SetPitch(pitch+0.25)
 		TNT1 A 1 A_SetPitch(pitch+0.25)
 		Stop
-		
-		
+
+
 	//-----------
 	//Charge fire
 	StartCharge:
@@ -251,7 +251,7 @@ Actor QCBFG : QCWeapon
 		Goto Release
 	Part2:
 		QCG8 F 1 Bright Offset(2,33)
-		QCG8 G 1 Bright Offset(1,33) 
+		QCG8 G 1 Bright Offset(1,33)
 		QCG8 H 1 Bright Offset(1,34)
 		QCG8 A 1 Bright Offset(2,34)
 		QCG8 A 0 A_GiveInventory("BFG_Charges",1)
@@ -269,20 +269,20 @@ Actor QCBFG : QCWeapon
 		QCG8 L 1 Bright Offset(2,33)
 		QCG8 A 0 A_Refire("MaxCharge")
 		Goto Release
-	
+
 	Release:
 		QCG8 I 1 Bright offset(7,47) A_GunFlash("ChargedFlash")
-		QCG8 IJ 1 Bright 
+		QCG8 IJ 1 Bright
 		QCG8 K 1 offset(8,48)
 		QCG8 K 1 offset(7,46)
 		QCG8 K 1 offset(6,44)
 		QCG8 K 1 offset(5,42)
-		QCG8 A 1 offset(4,40) 
+		QCG8 A 1 offset(4,40)
 		QCG8 A 1 offset(3,38)
-		QCG8 A 1 offset(2,36) 
+		QCG8 A 1 offset(2,36)
 		QCG8 A 1 offset(1,32)
 		Goto Ready
-		
+
 
 	ChargedFlash: //Attacks doer
 			TNT1 A 0 A_JumpIfInventory("BFG_Charges",15,"FirePower6")
@@ -291,8 +291,8 @@ Actor QCBFG : QCWeapon
 			TNT1 A 0 A_JumpIfInventory("BFG_Charges",6,"FirePower3")
 			TNT1 A 0 A_JumpIfInventory("BFG_Charges",3,"FirePower2")
 			Goto FirePower1
-			
-		FirePower1:	
+
+		FirePower1:
 			TNT1 A 0 A_FireCustomMissile("QCBFGChargeShot",0, true,1,5)
 			Goto GenericFlashChecks
 		FirePower2:
@@ -300,12 +300,12 @@ Actor QCBFG : QCWeapon
 			TNT1 A 0 A_JumpIfInventory("PowerInfin",1,"GenericFlashChecks")
 			TNT1 A 0 A_TakeInventory("QCBFGAmmo",1,TIF_NOTAKEINFINITE)
 			Goto GenericFlashChecks
-		FirePower3:	
+		FirePower3:
 			TNT1 A 0 A_FireCustomMissile("QCBFGChargeShot3",0, true,1,5)
 			TNT1 A 0 A_JumpIfInventory("PowerInfin",1,"GenericFlashChecks")
 			TNT1 A 0 A_TakeInventory("QCBFGAmmo",2,TIF_NOTAKEINFINITE)
 			Goto GenericFlashChecks
-		FirePower4:	
+		FirePower4:
 			TNT1 A 0 A_FireCustomMissile("QCBFGChargeShot4",0, true,1,5)
 			TNT1 A 0 A_JumpIfInventory("PowerInfin",1,"GenericFlashChecks")
 			TNT1 A 0 A_TakeInventory("QCBFGAmmo",3,TIF_NOTAKEINFINITE)
@@ -320,7 +320,7 @@ Actor QCBFG : QCWeapon
 			TNT1 A 0 A_JumpIfInventory("PowerInfin",1,"GenericFlashChecks")
 			TNT1 A 0 A_TakeInventory("QCBFGAmmo",5,TIF_NOTAKEINFINITE)
 			Goto GenericFlashChecks
-			
+
 		GenericFlashChecks:
 			TNT1 A 0 A_JumpIfInventory("PowerQuad",1,"ChargeQuadSound")
 			Goto ChargeNormalSound
@@ -358,7 +358,7 @@ Actor QCBFG : QCWeapon
 
 Actor QCBFGShot
 {
-	Projectile 
+	Projectile
 	Speed 45
 	RenderStyle Add
 	Alpha 0.99
@@ -396,12 +396,12 @@ Actor QCBFGShot
 		DB48 WX 1 Bright Light("GreenBigPoint3")
 		TNT1 A 0 A_Explode(16,128,0)
 		Goto Spawn+1
-		
+
 	Xdeath:	//Direct hit
 		TNT1 A 0 A_GiveToTarget("HitBeepMax",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 		TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 		Goto DeathCont
-		
+
 	Death: //crashed somewhere and checks for splash
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop
@@ -409,12 +409,12 @@ Actor QCBFGShot
 		TNT1 A 0 A_JumpIfTargetInLOS("RadiusHit",360,JLOSF_PROJECTILE,268)
 		TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 		Goto DeathCont
-		
+
 		RadiusHit:	//splash damage beep
 			TNT1 A 0 A_GiveToTarget("HitBeepMid",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 			TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 			Goto DeathCont
-			
+
 	DeathCont:
 		TNT1 A 0 A_ChangeFlag("NODAMAGETHRUST", true)
 		TNT1 A 0 A_Explode(180,192,0,0,64)
@@ -426,8 +426,8 @@ Actor QCBFGShot
 	DoRays:
 		TNT1 A 0 A_BFGSpray("BFGfogLightning",5,40)
 		Goto EndDeath
-		
-	EndDeath:	
+
+	EndDeath:
 		TNT1 A 0 A_PlaySound("QC/Weapons/BFG/Explo",7,1,0,0.75)
 		TNT1 A 0 A_Quake(4,20,0,1500)
 		TNT1 A 0 A_SpawnItemEx("BFGExploRingSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SKIPOWNER|SXF_NOUNLAGGED)
@@ -455,7 +455,7 @@ Actor BFGExploRingSmall //shockwave
 	Spawn:
 		X060 C 1 Bright A_SetScale(0.15)
 		X060 C 1 Bright A_SetScale(0.45)
-	Looper:	
+	Looper:
 		X060 C 1 Bright A_SetScale(scalex*1.2)
 		TNT1 A 0 A_FadeOut(0.1)
 		Loop
@@ -499,17 +499,17 @@ Actor BFGExploLightningSmall
 	{
 	Spawn:
 		TNT1 A 0 NoDelay A_Jump(256,"T1","T2","T3","T4","T5")
-	T1:	DLI1 A 0 
+	T1:	DLI1 A 0
 		Goto PlayOff
-	T2:	DLI2 A 0 
+	T2:	DLI2 A 0
 		Goto PlayOff
-	T3:	DLI3 A 0 
+	T3:	DLI3 A 0
 		Goto PlayOff
-	T4:	DLI4 A 0 
+	T4:	DLI4 A 0
 		Goto PlayOff
-	T5:	DLI5 A 0 
+	T5:	DLI5 A 0
 		Goto PlayOff
-		
+
 	PlayOff:
 		"####" A 0 A_Jump(128,"FromL")
 	FromA:
@@ -518,11 +518,11 @@ Actor BFGExploLightningSmall
 	FromL:
 		"####" LMNOPQRSTUV 1 Bright
 		Stop
-		
+
 	}
 }
 
-Actor BFGfogLightning 
+Actor BFGfogLightning
 {
 	+NOINTERACTION +NOTONAUTOMAP
 	+CLIENTSIDEONLY +NONETID
@@ -537,21 +537,21 @@ Actor BFGfogLightning
 		TNT1 A 0 NODELAY A_Jump(200,2,3,4,5,6,7,8)	//for sliiiigh randomization of when it spawns
 		TNT1 AAAAAAAAAA 1
 		TNT1 A 0 A_Jump(256,"T1","T2","T3","T4","T5")
-		
-		T1:	DLI1 A 0 
+
+		T1:	DLI1 A 0
 			Goto PlayOff
-		T2:	DLI2 A 0 
+		T2:	DLI2 A 0
 			Goto PlayOff
-		T3:	DLI3 A 0 
+		T3:	DLI3 A 0
 			Goto PlayOff
-		T4:	DLI4 A 0 
+		T4:	DLI4 A 0
 			Goto PlayOff
-		T5:	DLI5 A 0 
+		T5:	DLI5 A 0
 			Goto PlayOff
-		
+
 	PlayOff:
 		"####" A 0 A_Jump(128,"FromL")
-		
+
 		FromA:
 			"####" ABCDE 1 Bright
 			"####" FGHIJK 1 Bright
@@ -560,16 +560,16 @@ Actor BFGfogLightning
 			"####" LMNOP 1 Bright
 			"####" QRSTUV 1 Bright
 			Goto Repeater
-		
+
 	Repeater:
 		TNT1 A 0 A_JumpIf(user_counter>=2,"Destroy")
 		TNT1 A 0 A_SetUserVar(user_counter,user_counter+1)
 		Goto Spawn
-		
+
 	Destroy:
 		TNT1 A 5
 		Stop
-		
+
 	}
 }
 
@@ -590,11 +590,11 @@ Actor BFG_Charges : Inventory
 	+SERVERNETID
 	Inventory.MaxAmount 15
 	Inventory.InterHubAmount 0
-} 
+}
 
 Actor QCBFGChargeShot
 {
-	Projectile 
+	Projectile
 	Speed 45
 	RenderStyle Add
 	Alpha 0.99
@@ -638,12 +638,12 @@ Actor QCBFGChargeShot
 		DB68 EF 1 Bright Light("GreenBigPoint3")
 		TNT1 A 0 A_Explode(16,128,0)
 		Goto Spawn+1
-		
+
 	Xdeath:	//Direct hit
 		TNT1 A 0 A_GiveToTarget("HitBeepMax",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 		TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 		Goto DeathCont
-		
+
 	Death: //crashed somewhere and checks for splash
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop
@@ -651,12 +651,12 @@ Actor QCBFGChargeShot
 		TNT1 A 0 A_JumpIfTargetInLOS("RadiusHit",360,JLOSF_PROJECTILE,268)
 		TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 		Goto DeathCont
-		
+
 		RadiusHit:	//splash damage beep
 			TNT1 A 0 A_GiveToTarget("HitBeepMid",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 			TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 			Goto DeathCont
-			
+
 	DeathCont:
 		TNT1 A 0 A_Explode(180,192,0,0,64)
 		TNT1 A 0 A_Explode(40,64,XF_HURTSOURCE)	//self damage. Beware
@@ -666,8 +666,8 @@ Actor QCBFGChargeShot
 	DoRays:
 		TNT1 A 0 A_BFGSpray("BFGfogLightning",5,40)
 		Goto EndDeath
-		
-	EndDeath:	
+
+	EndDeath:
 		TNT1 A 0 A_PlaySound("QC/Weapons/BFG/Explo",7,1,0,0.75)
 		TNT1 A 0 A_Quake(4,20,0,1500)
 		TNT1 A 0 A_SpawnItemEx("BFGExploRingSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SKIPOWNER|SXF_NOUNLAGGED)
@@ -692,7 +692,7 @@ Actor QCBFGChargeShot2 : QCBFGChargeShot
 		TNT1 A 0 A_Jump(255,"EndDeath")
 		Goto EndDeath
 	DoRays:
-		TNT1 A 0 A_BFGSpray("BFGfogLightning",5,45)	
+		TNT1 A 0 A_BFGSpray("BFGfogLightning",5,45)
 		Goto EndDeath
 	}
 }
@@ -765,7 +765,7 @@ Actor QCBFGChargeShot6 : QCBFGChargeShot
 		TNT1 A 0 A_BFGSpray("BFGfogLightning",20,60)
 		TNT1 A 0 A_Jump(255,"EndDeath")
 		Goto EndDeath
-	EndDeath:	
+	EndDeath:
 		TNT1 A 0 A_PlaySound("QC/Weapons/BFG/Explo",7,1,0,0.75)
 		TNT1 A 0 A_Quake(4,20,0,1500)
 		TNT1 A 0 A_SpawnItemEx("BFGExploRingSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SKIPOWNER|SXF_NOUNLAGGED)
@@ -785,8 +785,8 @@ Actor QCBFGChargeShot6 : QCBFGChargeShot
 //	For competitive DM, weapons dont autoaim
 // --------------------------------------------------------------------------
 Actor QCBFGDM : QCBFG
-{	
-	+WEAPON.NOAUTOAIM	
+{
+	+WEAPON.NOAUTOAIM
 	+CHEATNOTWEAPON
 	Tag "$TAG_QCBFG" // "BFG 10k (DM)"
 	Weapon.SelectionOrder 666 // highest
@@ -798,7 +798,7 @@ Actor QCBFGDM : QCBFG
 
 Actor QCBFGShot_DM	//No AOE while flying
 {
-	Projectile 
+	Projectile
 	Speed 45
 	RenderStyle Add
 	Alpha 0.99
@@ -817,7 +817,7 @@ Actor QCBFGShot_DM	//No AOE while flying
 		DB48 A 0 NODELAY A_PlaySound("QC/Weapons/BFG/BallFlying",7,0.6,true,2.5)
 		DB48 ABCDEFGHIJKLMNOPQRSTUVWX 1 Bright Light("GreenBigPoint3")
 		Goto Spawn+1
-		
+
 	Xdeath:	//Direct hit
 		TNT1 A 0 A_GiveToTarget("HitBeepMax",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 		//Medals start
@@ -825,7 +825,7 @@ Actor QCBFGShot_DM	//No AOE while flying
 		//Medals end
 		TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 		Goto DeathCont
-		
+
 	Death: //crashed somewhere and checks for splash
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop
@@ -833,15 +833,15 @@ Actor QCBFGShot_DM	//No AOE while flying
 		TNT1 A 0 A_JumpIfTargetInLOS("RadiusHit",360,JLOSF_PROJECTILE,180)
 		TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 		Goto DeathCont
-		
+
 		RadiusHit:	//splash damage beep
 			TNT1 A 0 A_GiveToTarget("HitBeepMid",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
 			TNT1 A 0 A_Jump(256,"DeathCont") //for virtual jump to inherited versions
 			//Medals start
-			TNT1 A 0 A_GiveToTarget("BFGSplashDamageToken",1) 
+			TNT1 A 0 A_GiveToTarget("BFGSplashDamageToken",1)
 			//Medals end
 			Goto DeathCont
-			
+
 	DeathCont:
 		TNT1 A 0 A_PlaySound("QC/Weapons/BFG/Explo",7,0.85,0,0.75)
 		TNT1 A 0 A_Quake(3,15,0,768)

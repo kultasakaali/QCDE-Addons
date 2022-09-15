@@ -31,7 +31,7 @@ Actor TotemCleanerProc : CustomInventory
 	{
 	Pickup:
 		TNT1 A 0 A_TakeInventory("NoWeaponFireToken",1)
-		TNT1 A 35 
+		TNT1 A 35
 		Stop
 	}
 }
@@ -206,17 +206,18 @@ Actor TotemHealth : InventoryClassChecker
 		DoPostal:
 		DoPainkiller:
 		DoIntruder:
+		DoOrbb:
 		Default:
 			TNT1 A 0 A_JumpIfHealthLower(CallACS("MaxHealth"),1)	Goto Failer
 			TNT1 A 0 A_JumpIfInventory("DMToken",1,"HealDoneSuccessPVP")
 			TNT1 A 0 A_Jump(256,"HealDoneSuccess")					Goto HealDoneSuccess
 		// ^ insert more classes here
-		
+
 	HealDoneSuccess:
-		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 5, 0) 
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 5, 0)
 		Stop
 	HealDoneSuccessPVP:
-		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 8, 0) 
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 8, 0)
 		Stop
 	Failer:
 		TNT1 A 0
@@ -229,7 +230,7 @@ Actor TotemHealthPvE : TotemHealth
 	States
 	{
 	HealDoneSuccess:
-		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 5, 0) 
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 5, 0)
 		Stop
 	HealDoneSuccessPVP:
 		TNT1 A 0 // do nothing
@@ -242,10 +243,10 @@ Actor TotemSuperHealth : TotemHealth
 	States
 	{
 	HealDoneSuccess:
-		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 10, 0) 
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 10, 0)
 		Stop
 	HealDoneSuccessPVP:
-		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 14, 0) 
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 14, 0)
 		Stop
 	}
 }
@@ -255,7 +256,7 @@ Actor TotemSuperHealthPvE : TotemHealth
 	States
 	{
 	HealDoneSuccess:
-		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 10, 0) 
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver", CallACS("MaxHealth"), 10, 0)
 		Stop
 	HealDoneSuccessPVP:
 		TNT1 A 0 // do nothing
@@ -364,12 +365,12 @@ Actor TotemExplosion
 	}
 }
 Actor TotemVanish : TotemExplosion
-{ 
+{
 	Scale 0.9
 	States
 	{
 	Spawn:
-		DB13 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright 
+		DB13 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright
 		Stop
 	}
 }

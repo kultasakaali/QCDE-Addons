@@ -104,24 +104,6 @@ Actor PreciseCounter: Token {Inventory.MaxAmount 10}
 
 Actor CollateralToken: Token {Inventory.MaxAmount 1}
 
-/* For Humiliation check
-//QCDE already has a token built in for this
-Actor GFiredGiver: Powerupgiver
-{	
-	Inventory.PickupMessage ""
-	Inventory.UseSound "Nothing"
-	Inventory.MaxAmount 0
-	+INVENTORY.AUTOACTIVATE
-	Powerup.Duration 35
-	Powerup.Type "GFired"
-}
-
-Actor PowerGFired: Powerup
-{
-	Powerup.Duration 15
-}
-*/
-
 //Net Master death stop
 Actor NetMasterEnd: Token {Inventory.MaxAmount 1}
 
@@ -164,61 +146,3 @@ Actor BFGSplashDamageToken: Token {Inventory.MaxAmount 500}
 Actor PKDamageToken: Token {Inventory.MaxAmount 500}
 Actor DemonDirectDamageToken: Token {Inventory.MaxAmount 500}
 Actor DemonSplashDamageToken: Token {Inventory.MaxAmount 500}
-
-//////////////////////////////////////////////////
-//
-//	Custom Puffs for medals
-//
-//////////////////////////////////////////////////
-
-//HMG and MG
-Actor QCHMGBulletPuff : QCBulletPuff_DM
-{
-	States
-	{
-	XDeath: //hit bleeding actor
-		TNT1 A 0 A_GiveToTarget("HitBeepLow",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
-		TNT1 A 0 A_GiveToTarget("MGDamageToken",1)
-		TNT1 A 10 A_PlaySound("BulletHitFleshRandom",7,0.6,0,9)
-		Stop
-	}
-}
-
-//SG and SSG
-Actor QCShotgunPuffHit_DM : QCShotgunPuff_DM
-{
-	States
-	{
-	XDeath:
-		TNT1 A 0 A_GiveToTarget("HitBeepMid",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
-		TNT1 A 0 A_GiveToTarget("SGDamageToken",1)
-		//TNT1 A 0 A_GiveToTarget("PelletHitToken",1)  //unused
-		TNT1 A 0 A_JumpIfCloser(96, "XDeath_PBlank")
-		TNT1 A 10 A_PlaySound("BulletHitFleshRandom",7,0.6,0,9)
-		Stop
-	
-	XDeath_PBlank:
-		TNT1 A 0 A_GiveToTarget("PointBlankToken",1)
-		TNT1 A 10 A_PlaySound("BulletHitFleshRandom",7,0.6,0,9)
-		TNT1 A 0 A_TakeFromTarget("PointBlankToken",1)
-		Stop
-	}
-}	
-
-//Charged RG
-//charging mechanics removed from QC:DE
-/*Actor RailgunChargedPuff_DM : RailgunPuff_DM
-{ 
-	States
-	{
-	Xdeath:	//hit bleeding actor
-		TNT1 A 0 
-		TNT1 A 0 A_GiveToTarget("HitBeepBig",1)
-		TNT1 A 1
-		TNT1 A 0 A_GiveToTarget("TwoHitsToken",1)
-		TNT1 A 1
-		TNT1 A 0 A_GiveToTarget("RLDirectDamageToken",1)
-		TNT1 A 1
-		Stop
-	}
-}*/

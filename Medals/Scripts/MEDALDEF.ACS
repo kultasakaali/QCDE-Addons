@@ -97,7 +97,7 @@ str medalPool[MEDALS_TOTAL][2] = {
 	{	"MASMEDAL", "PMassacre"		},
 	{	"SWAMEDAL", "SWatch"		},
 	{	"COLMEDAL",	"Collateral"	},
-	
+
 	{	"PSYMEDAL", "GPsyched"		},
 	{	"SEEMEDAL", "Seer"			},
 	{	"CURMEDAL", "Cursed"		},
