@@ -208,7 +208,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		int victimTID = 1000 + victimNo;
 		int killerHP = GetActorProperty(0, APROP_Health);
 
-		if(victimTID == ActivatorTID())
+		if(victimTID == ActivatorTID())		//redundant check? PLAYERFRAGS doesn't seem to trigger on suicide
 			terminate;
 
 		ACS_NamedExecuteAlways("QCDE_Excellent", 0, Timer());
@@ -359,6 +359,9 @@ script "QCDE_Impressive" (void) {
 
 	if(!GetCVar("cl_qcmedals"))
 		terminate;
+		
+	if (GetNetworkState() == NETSTATE_CLIENT)
+        terminate;
 
 	if((CheckInventory("AimWellToken") == 1) && (CheckInventory("TwoHitsToken") == 0)) {
 		TakeInventory("AimWellToken", 2);
@@ -568,6 +571,9 @@ script "QCDE_PowerUpMassacre" (void) {
 
 	if(!GetCVar("cl_qcmedals"))
 		terminate;
+		
+	if (GetNetworkState() == NETSTATE_CLIENT)
+        terminate;
 
 	int f = PlayerFrags() + 5;
 
