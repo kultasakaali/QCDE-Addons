@@ -1,2 +1,2 @@
-//0: off, 1: sound only, 2: full
-user int cl_qcmedals = 2;
+//0: off, 1: full, 2: sound only
+user int cl_qcmedals = 1;
