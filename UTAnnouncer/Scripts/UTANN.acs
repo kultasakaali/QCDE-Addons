@@ -95,7 +95,7 @@ script "UTANN_Announce" (int mode, int idx, int plr) CLIENTSIDE {
 		
 		case MULTI:
 
-			idx > 3 ? SetFont("TORMENTS") : SetFont("UNRC");
+			idx > 3 ? SetFont("BIGFONT") : SetFont("SMALLFNT");
 				
 			HudMessage(s:multiKills[idx]; HUDMSG_FADEOUT, MSGID_MULTI, CR_DARKRED, 1.5, 0.24, 2.0, 0.5);
 			
@@ -108,7 +108,7 @@ script "UTANN_Announce" (int mode, int idx, int plr) CLIENTSIDE {
 			
 			idx < 2 ? on_a = "on a " : on_a = "";
 			
-			SetFont("UNRC");
+			SetFont("SMALLFNT");
 			HudMessageBold(n:plr + 1, s:" is ", s:on_a, s:killingSprees[idx];
 				HUDMSG_FADEOUT|HUDMSG_LOG, MSGID_SPREE, CR_LIGHTBLUE, 1.5, 0.28, 2.0, 0.5);
 				
@@ -117,7 +117,7 @@ script "UTANN_Announce" (int mode, int idx, int plr) CLIENTSIDE {
 			
 		case SPREE_END:
 		
-			SetFont("UNRC");
+			SetFont("SMALLFNT");
 			
 			//we store the killer in idx as it's free in this mode
 			if(plr == idx) {
