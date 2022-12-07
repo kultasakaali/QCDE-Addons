@@ -11,7 +11,8 @@ enum {
 enum {
 	MULTI,
 	SPREE,
-	SPREE_END
+	SPREE_END,
+	FIRST_BLOOD
 };
 
 enum {

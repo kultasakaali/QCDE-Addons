@@ -4,11 +4,21 @@
 #include "bcsutils.bcs"
 #include "UTANNDEF.acs"
 
+bool firstBloodGiven = false;
+
 int lastFrag[64][2];
 int excellentLevels[8] = {2, 3, 4, 5, 6, 7, 8, 9999};
 
 int killingSpree[64];
 int spreeLevels[6] = {5, 10, 15, 20, 25, 30};
+
+script "MapInitiator" OPEN {
+
+	if(GameType() < GAME_NET_DEATHMATCH)
+		terminate;
+
+	firstBloodGiven = false;	//reset this here, so it starts with default value after warm-up ends
+}
 							
 script "UTANN_PlayerDeath" DEATH {
 	int plr = PlayerNumber();
@@ -19,7 +29,7 @@ script "UTANN_PlayerDeath" DEATH {
 	SetActivatorToPlayer(plr);
 	
 	if(CheckInventory("SpreeToken"))
-			ACS_NamedExecuteAlways("UTANN_Announce", 0, SPREE_END, killerNo, plr);
+		ACS_NamedExecuteAlways("UTANN_Announce", 0, SPREE_END, killerNo, plr);
 			
 	lastFrag[plr][EXCELLENT] = 0;
 	killingSpree[plr] = 0;
@@ -32,6 +42,9 @@ script "UTANN_FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 	
 	//GAMEEVENT_PLAYERFRAGS
 	if(evtTyp == 0) {
+		
+		if(!firstBloodGiven)
+			ACS_NamedExecuteAlways("UTANN_FirstBlood", 0);
 		
 		int victimTID = victimNo + 1000;
 		
@@ -89,6 +102,13 @@ script "UTANN_KillingSpree" (void) {
 	}
 }
 
+script "UTANN_FirstBlood" (void) {
+	
+	firstBloodGiven = true;
+	Delay(50);
+	ACS_NamedExecuteAlways("UTANN_Announce", 0, FIRST_BLOOD, 0, PlayerNumber());
+}
+
 script "UTANN_Announce" (int mode, int idx, int plr) CLIENTSIDE {
 	
 	switch(mode) {
@@ -104,9 +124,7 @@ script "UTANN_Announce" (int mode, int idx, int plr) CLIENTSIDE {
 			
 		case SPREE:
 			
-			str on_a;
-			
-			idx < 2 ? on_a = "on a " : on_a = "";
+			str on_a = (idx < 2) ? "on a " : "";
 			
 			SetFont("SMALLFNT");
 			HudMessageBold(n:plr + 1, s:" is ", s:on_a, s:killingSprees[idx];
@@ -130,13 +148,21 @@ script "UTANN_Announce" (int mode, int idx, int plr) CLIENTSIDE {
 			}
 			
 			break;
+			
+		case FIRST_BLOOD:
+		
+			SetFont("SMALLFNT");
+			HudMessageBold(n:plr + 1, s:" drew first blood";
+				HUDMSG_FADEOUT|HUDMSG_LOG, MSGID_SPREE, CR_DARKRED, 1.5, 0.28, 2.0, 0.5);
+				
+			UTANN_PlaySound(mode, idx);
 	}
 }
 
 function void UTANN_PlaySound(int mode, int idx) {
 
 	int announcer = BCSUtils.clamp(GetCVar("cl_utannouncer"), 0, 4);
-	str set = (mode == SPREE) ? "spree" : "multi";
+	str set = (mode == SPREE) ? "spree" : (mode == FIRST_BLOOD) ? "fblod" : "multi";
 	str sound = StrParam(s:"UTDE/announcer/a", d:announcer, s:"_", s:set, d:idx);
 	
 	LocalAmbientSound(sound, 127 * GetCVar("snd_announcervolume") >> 16);
