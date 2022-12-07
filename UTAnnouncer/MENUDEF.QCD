@@ -13,10 +13,6 @@ OptionMenu "QZDESoundOptions"
 	Option 		"QCDE Taunt subtitles",			"cl_tauntSubtitles",		"TauntSubtitles"
 	Option 		"QCDE OST enabled (if loaded)",	"snd_qcdemus",				"OnOff"
 	Option 		"QCDE OST playback order",		"snd_randommus",			"OSTorder"
-	
-	StaticText " "	
-	Submenu 	"All Sound Options",			"SoundOptions"
-	
 }
 
 OptionValue "UT_Announcers"
