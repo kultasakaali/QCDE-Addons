@@ -44,11 +44,3 @@ bugfixes of newly introduced features:
 	- Fixed STOPWATCH being given rapidly repeatedly when Heavy Armor could not be picked up
 
 You MAY NOT redistribute this addon without this text file included and unmodified!
-
-todo (-: pending; +: needs testing):
-+ double whammy sometimes given seemingly randomly on rail hit
-+ excellent medals
-+ shub slayer
-+ collateral damage
-+ from the shadows
-+ spree medals

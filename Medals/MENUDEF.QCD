@@ -1,42 +1,47 @@
-OptionMenu "QZDEHUDOptions"
+OptionMenu "QCDEHUDOptions"
 {
-	Title "HUD & Display Options"
-	
-	StaticText 	"Visual",1
-	Slider 		"Field of View",				"fov", 5.0, 179.0, 1.0, 2
-	Slider 		"Move bobbing intensity",		"movebob", 			  	0,  0.75, 0.02, 2
-	Option 		"Crosshair type",				"crosshair",           	"Crosshairs"
-	Option 		"Crosshair shows health",		"crosshairhealth", "OnOff"
-	ColorPicker "Crosshair color", 				"crosshaircolor"
-	
-	StaticText " "
-	StaticText "Information",1
-	Option 		"Speedometer",					"cl_speedometerr",     	"Speedometer"
-	Option		"QC Medals",					"cl_qcmedals",			"QCMedals"
-	Option 		"Weapon bar (16:9)",			"cl_showWeaponBar",    	"OnOff"
-	Option 		"Health bar style",				"cl_barStyle",         	"BarStyle"
-	Option 		"Low ammo warning",				"cl_lowAmmoWarning",   	"LowWarning"
-	Option 		"Low health warning",			"cl_lowHealthWarning", 	"LowWarning"
-	Option 		"Weapon hit-markers",			"cl_hitmarker",				"OnOff"
-	Option 		"Damage numbers",               "sv_ShowDamageNumbers",  "OnOff"
+	Indent 153
+	Title "HUD & DISPLAY OPTIONS"
+
+	StaticText	"Visual",1
+	Slider		"Field of View",				"fov",					5.0, 179.0, 1.0, 2
+	Slider		"Move bobbing intensity",		"movebob", 			  	0,  0.75, 0.02, 2
+	Slider		"Weapon sway intensity",		"movesway", 			0,   2.0, 0.01, 2
+	Option		"Show weapon",					"r_drawplayersprites",	"OnOff"
+	Option		"Sprite billboard",				"gl_billboard_mode",	"BillboardModes"
+	Option		"Crosshair type",				"crosshair",           	"Crosshairs"
+	Option		"Crosshair shows health",		"crosshairhealth",		"OnOff"
+	Slider		"Crosshair scale",				"crosshairscalef",		0, 10, 0.1
+	ColorPicker	"Crosshair color",				"crosshaircolor"
 
 	StaticText " "
-	StaticText "Effects",1
-	Option 		"Weapon firing recoil", 		"cl_weaponrecoil",       	"OnOff"
-	Option 		"Weapon firing flash",  		"cl_weaponfireflash",    	"OnOff"
-	Option 		"HUD Blood smears",         	"cl_ShowHUDBloodSmears", 	"OnOff"
-	Option 		"LG beam transparency (DM)", 	"cl_lgtransparency",     	"LGTransp"
-	Slider 		"Pickup flash intensity",		"pickup_blend_scalar", 0, 1, 0.05, 2
-	Slider 		"Screen blood intensity",		"blood_fade_scalar",   0, 1, 0.05, 2	
-	
-	StaticText " "
-	StaticText 	"Champion specific settings",1
-	Option 		"Eradicator Radar mode",       "cl_radarMode",    "RadarMode"
+
+	StaticText	"Information",1
+	Option		"Speedometer",					"cl_speedometer",			"QCSpeedometer"
+	Option		"QC Medals",					"cl_qcmedals",				"QCMedals"
+	Option		"Weapon bar (16:9)",			"cl_showWeaponBar",			"OnOff"
+	Option		"Health bar style",				"cl_barStyle",				"BarStyle"
+	Option		"Low ammo warning",				"cl_lowAmmoWarning",		"LowWarning"
+	Option		"Low health warning",			"cl_lowHealthWarning",		"LowWarning"
+	Option		"Weapon hit-markers",			"cl_hitmarker",				"OnOff"
+	Option		"Damage numbers",               "sv_ShowDamageNumbers",		"OnOff"
+	Option		"Show obituaries",				"show_obituaries",			"YesNo"
+	Option		"Show large frag messages",		"cl_showlargefragmessages",	"YesNo"
 
 	StaticText " "
-	Submenu 	"Full HUD Options",			"HUDOptions"
-	Submenu 	"Full Display Options",		"VideoOptions"
-	Submenu "Message/Scaling Options", 			"MessageOptions"
+
+	StaticText	"Effects",1
+	Option		"Weapon firing recoil",			"cl_weaponrecoil",			"OnOff"
+	Option		"Weapon firing flash",			"cl_weaponfireflash",		"OnOff"
+	Option		"HUD Blood smears",				"cl_ShowHUDBloodSmears",	"OnOff"
+	Option		"LG beam transparency (DM)",	"cl_lgtransparency",		"LGTransp"
+	Slider		"Pickup flash intensity",		"pickup_blend_scalar", 0, 1, 0.05, 2
+	Slider		"Screen blood intensity",		"blood_fade_scalar",   0, 1, 0.05, 2
+
+	StaticText " "
+
+	StaticText	"Champion specific settings",1
+	Option		"Eradicator Radar mode",		"cl_radarMode",				"RadarMode"
 }
 
 OptionValue "QCMedals"

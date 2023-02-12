@@ -1,5 +1,17 @@
 //General Token to queue medals whose drawing is pending
 Actor MedalInExecutionToken: Token {Inventory.MaxAmount 1}
+Actor MedalToken : Token
+{
+	+SERVERNETID
+}
+Actor MedalPowerup : PowerupGiver
+{
+	+SERVERNETID
+	Inventory.PickupMessage ""
+	Inventory.UseSound "Nothing"
+	Inventory.MaxAmount 1
+	+INVENTORY.AUTOACTIVATE
+}
 
 //////////////////////////////////////////////////
 //
@@ -10,19 +22,15 @@ Actor MedalInExecutionToken: Token {Inventory.MaxAmount 1}
 //LG things
 Actor PowerLGFired: Powerup {Powerup.Duration 35}
 
-Actor LGFiredGiver: PowerupGiver
+Actor LGFiredGiver: MedalPowerup
 {
-	Inventory.PickupMessage ""
-	Inventory.UseSound "Nothing"
-	Inventory.MaxAmount 1
-	+INVENTORY.AUTOACTIVATE
 	Powerup.Type "LGFired"
 	Powerup.Duration 35
 }
 
 Actor PowerLGHit: Powerup {Powerup.Duration 35}
 
-Actor LGHitGiver: LGFiredGiver
+Actor LGHitGiver: MedalPowerup
 {
 	Powerup.Type "LGHit"
 	Powerup.Duration 35
@@ -30,7 +38,7 @@ Actor LGHitGiver: LGFiredGiver
 
 Actor PowerComboSwitchLG: Powerup {Powerup.Duration 35}
 
-Actor ComboSwitchLGGiver: LGFiredGiver
+Actor ComboSwitchLGGiver: MedalPowerup
 {
 	Powerup.Type "ComboSwitchLG"
 	Powerup.Duration 35
@@ -39,7 +47,7 @@ Actor ComboSwitchLGGiver: LGFiredGiver
 //RL Things
 Actor PowerRLFired: Powerup {Powerup.Duration 70}
 
-Actor RLFiredGiver: LGFiredGiver
+Actor RLFiredGiver: MedalPowerup
 {
 	Powerup.Type "RLFired"
 	Powerup.Duration 70
@@ -47,7 +55,7 @@ Actor RLFiredGiver: LGFiredGiver
 
 Actor PowerRLHit: Powerup {Powerup.Duration 70}
 
-Actor RLHitGiver: LGFiredGiver
+Actor RLHitGiver: MedalPowerup
 {
 	Powerup.Type "RLHit"
 	Powerup.Duration 70
@@ -55,7 +63,7 @@ Actor RLHitGiver: LGFiredGiver
 
 Actor PowerComboSwitchRL: Powerup {Powerup.Duration 35}
 
-Actor ComboSwitchRLGiver: LGFiredGiver
+Actor ComboSwitchRLGiver: MedalPowerup
 {
 	Powerup.Type "ComboSwitchRL"
 	Powerup.Duration 35
@@ -65,7 +73,7 @@ Actor ComboSwitchRLGiver: LGFiredGiver
 
 Actor PowerRGFired: Powerup {Powerup.Duration 35}
 
-Actor RGFiredGiver: LGFiredGiver
+Actor RGFiredGiver: MedalPowerup
 {
 	Powerup.Type "RGFired"
 	Powerup.Duration 35
@@ -74,7 +82,7 @@ Actor RGFiredGiver: LGFiredGiver
 //Final Combo Kill Check
 
 Actor PowerSickShot: Powerup {Powerup.Duration 35}
-Actor SickShotGiver: LGFiredGiver
+Actor SickShotGiver: MedalPowerup
 {
 	Powerup.Type "SickShot"
 	Powerup.Duration 48
@@ -87,34 +95,34 @@ Actor SickShotGiver: LGFiredGiver
 //////////////////////////////////////////////////
 
 //Double Whammy and Impressive
-Actor AimWellToken: Token {Inventory.MaxAmount 2}
-Actor TwoHitsToken: Token {Inventory.MaxAmount 2}
-Actor DWhammyToken: Token {Inventory.MaxAmount 2}
+Actor AimWellToken: MedalToken {Inventory.MaxAmount 2}
+Actor TwoHitsToken: MedalToken {Inventory.MaxAmount 2}
+Actor DWhammyToken: MedalToken {Inventory.MaxAmount 2}
 
 //Point Blank
-//Actor PelletHitToken: Token {Inventory.MaxAmount 30} //unused
-Actor PointBlankToken: Token {Inventory.MaxAmount 1}
+//Actor PelletHitToken: MedalToken {Inventory.MaxAmount 30} //unused
+Actor PointBlankToken: MedalToken {Inventory.MaxAmount 1}
 
 //For ShowStopper
-Actor SpreeToken: Token {Inventory.MaxAmount 1}
+Actor SpreeToken: MedalToken {Inventory.MaxAmount 1}
 
 //To activate Direct Hit Rocket Medals
-Actor DirectRocketToken: Token {Inventory.MaxAmount 1}
-Actor PreciseCounter: Token {Inventory.MaxAmount 10}
+Actor DirectRocketToken: MedalToken {Inventory.MaxAmount 1}
+Actor PreciseCounter: MedalToken {Inventory.MaxAmount 10}
 
-Actor CollateralToken: Token {Inventory.MaxAmount 1}
+Actor CollateralToken: MedalToken {Inventory.MaxAmount 1}
 
 //Net Master death stop
-Actor NetMasterEnd: Token {Inventory.MaxAmount 1}
+Actor NetMasterEnd: MedalToken {Inventory.MaxAmount 1}
 
 //Galen totem explosion token - move to QCDE_TotemExploded if possible in the future
-Actor TotemExploded: Token {Inventory.MaxAmount 5}
+Actor TotemExploded: MedalToken {Inventory.MaxAmount 5}
 
 //Nyx ability token
-Actor FromTheShadowsToken: Token {Inventory.MaxAmount 1}
+Actor FromTheShadowsToken: MedalToken {Inventory.MaxAmount 1}
 
 //Projectile abilities for now check for this token
-Actor AbilityToken: Token {Inventory.MaxAmount 10}
+Actor AbilityToken: MedalToken {Inventory.MaxAmount 10}
 
 //////////////////////////////////////////////////
 //
@@ -122,27 +130,29 @@ Actor AbilityToken: Token {Inventory.MaxAmount 10}
 //
 //////////////////////////////////////////////////
 
-Actor GDamageToken: Token {Inventory.MaxAmount 500}
+Actor GDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor MGDamageToken: Token {Inventory.MaxAmount 500}
+Actor MGDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor SGDamageToken: Token {Inventory.MaxAmount 500}
+Actor SGDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor SNGDamageToken: Token {Inventory.MaxAmount 500}
+Actor NGDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor TBDirectDamageToken: Token {Inventory.MaxAmount 500}
-Actor TBSplashDamageToken: Token {Inventory.MaxAmount 500}
+Actor SNGDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor RLDirectDamageToken: Token {Inventory.MaxAmount 500}
-Actor RLSplashDamageToken: Token {Inventory.MaxAmount 500}
+Actor TBDirectDamageToken: MedalToken {Inventory.MaxAmount 500}
+Actor TBSplashDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor LGDamageToken: Token {Inventory.MaxAmount 500}
+Actor RLDirectDamageToken: MedalToken {Inventory.MaxAmount 500}
+Actor RLSplashDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor RGDamageToken: Token {Inventory.MaxAmount 500}
+Actor LGDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor BFGDirectDamageToken: Token {Inventory.MaxAmount 500}
-Actor BFGSplashDamageToken: Token {Inventory.MaxAmount 500}
+Actor RGDamageToken: MedalToken {Inventory.MaxAmount 500}
 
-Actor PKDamageToken: Token {Inventory.MaxAmount 500}
-Actor DemonDirectDamageToken: Token {Inventory.MaxAmount 500}
-Actor DemonSplashDamageToken: Token {Inventory.MaxAmount 500}
+Actor BFGDirectDamageToken: MedalToken {Inventory.MaxAmount 500}
+Actor BFGSplashDamageToken: MedalToken {Inventory.MaxAmount 500}
+
+Actor PKDamageToken: MedalToken {Inventory.MaxAmount 500}
+Actor DemonDirectDamageToken: MedalToken {Inventory.MaxAmount 500}
+Actor DemonSplashDamageToken: MedalToken {Inventory.MaxAmount 500}

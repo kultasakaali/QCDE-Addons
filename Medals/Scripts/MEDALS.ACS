@@ -59,6 +59,7 @@ script "ResetMedalCounters" DEATH {
 	TakeInventory("GDamageToken", 500);
 	TakeInventory("MGDamageToken", 500);
 	TakeInventory("SGDamageToken", 500);
+	TakeInventory("NGDamageToken", 500);
 	TakeInventory("SNGDamageToken", 500);
 	TakeInventory("TBDirectDamageToken", 500);
 	TakeInventory("TBSplashDamageToken", 500);
@@ -183,10 +184,10 @@ script "QCDE_WhatsYourPoison" DEATH {
 		if(CheckInventory("Class_Nyx") && CheckInventory("AbilityToken")) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_INSIDEOUT);
 			terminate;
-		} else if(!GetCVar("instagib")) {
+		}/* else if(!GetCVar("instagib")) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RINGOUT);
 			terminate;
-		}
+		}*/
 	}
 }
 
@@ -295,7 +296,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 
 		//Midair
 		if(CheckInventory("DirectRocketToken")) {
-			if(!CheckSolidFooting(victimTID, 64 << 16)) {
+			if(!CheckSolidFooting(victimTID, 64 << 16) && GetActorProperty(0, APROP_WATERLEVEL) == 0) {
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_MIDAIR);
 				terminate; //if midair was given don't give precise
 			}
@@ -357,11 +358,11 @@ script "ComboKillTokenGiver" ENTER {
 
 script "QCDE_Impressive" (void) {
 
+	if (GetNetworkState() == NETSTATE_CLIENT)
+		terminate;
+
 	if(!GetCVar("cl_qcmedals"))
 		terminate;
-		
-	if (GetNetworkState() == NETSTATE_CLIENT)
-        terminate;
 
 	if((CheckInventory("AimWellToken") == 1) && (CheckInventory("TwoHitsToken") == 0)) {
 		TakeInventory("AimWellToken", 2);
@@ -418,6 +419,8 @@ script "QCDE_NetMaster" (void) {
 
 	int sg = CheckInventory("SGDamageToken") * 4;
 
+	int ng = CheckInventory("NGDamageToken") * 12;
+
 	int sng = CheckInventory("SNGDamageToken") * 20;
 
 	int tb1 = CheckInventory("TBDirectDamageToken") * 45;
@@ -457,6 +460,7 @@ script "QCDE_NetMaster" (void) {
 		TakeInventory("GDamageToken", 500);
 		TakeInventory("MGDamageToken", 500);
 		TakeInventory("SGDamageToken", 500);
+		TakeInventory("NGDamageToken", 500);
 		TakeInventory("SNGDamageToken", 500);
 		TakeInventory("TBDirectDamageToken", 500);
 		TakeInventory("TBSplashDamageToken", 500);
@@ -566,14 +570,14 @@ script "QCDE_KillingSpree" (void) {
 //Paint the Town red
 script "QCDE_PowerUpMassacre" (void) {
 
+	if (GetNetworkState() == NETSTATE_CLIENT)
+		terminate;
+
 	if(GameType() < GAME_NET_DEATHMATCH)
 		terminate;
 
 	if(!GetCVar("cl_qcmedals"))
 		terminate;
-		
-	if (GetNetworkState() == NETSTATE_CLIENT)
-        terminate;
 
 	int f = PlayerFrags() + 5;
 
