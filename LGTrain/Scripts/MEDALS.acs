@@ -1,0 +1,7 @@
+#include "zcommon.acs"
+
+script "QCDE_MajorItemSpawned" (void) {}
+script "ComboKillTokenGiver" (void) {}
+script "QCDE_Impressive" (void) {}
+script "QCDE_StopWatch" (void) {}
+script "QCDE_PowerUpMassacre" (void) {}
