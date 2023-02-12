@@ -182,14 +182,11 @@ script "QCDE_WhatsYourPoison" DEATH {
 	if(-500 > GetActorProperty(0,APROP_HEALTH))	{
 
 		SetActivator(b);
-		//also don't for Nyx ghostwalk kill, instead yield ability medal
+		
 		if(CheckInventory("Class_Nyx") && CheckInventory("AbilityToken")) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_INSIDEOUT);
 			terminate;
-		}/* else if(!GetCVar("instagib")) {
-			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RINGOUT);
-			terminate;
-		}*/
+		}
 	}
 }
 
@@ -289,6 +286,11 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		//Denied
 		if(victimActiveTokens > 0) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DENIED);
+		}
+		
+		//Ring Out
+		if(GetActorProperty(victimTID, APROP_HEALTH) < -500) {
+			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RINGOUT);
 		}
 
 		//Point Blank
