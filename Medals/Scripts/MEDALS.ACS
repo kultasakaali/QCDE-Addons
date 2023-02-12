@@ -40,6 +40,8 @@ script "MedalsInitiator" ENTER {
 
 	if(!GetCVar("lastmanstanding") && !GetCVar("teamlms")) //don't give a Tank at every round start
 		ACS_NamedExecuteAlways("QCDE_Tank", 0);
+		
+	killingSpree[PlayerNumber()] = 0;
 }
 
 script "ResetMedalCounters" DEATH {
