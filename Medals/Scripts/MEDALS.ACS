@@ -589,7 +589,7 @@ script "QCDE_PowerUpMassacre" (void) {
 	while((CheckInventory("PowerQuad")) && (PlayerFrags() != f))
 		Delay(10);
 
-	while((CheckInventory("PowerProtecc")) && (PlayerFrags() != f))
+	while((CheckInventory("PowerProtec")) && (PlayerFrags() != f))
 		Delay(10);
 
 	if(PlayerFrags() == f)
