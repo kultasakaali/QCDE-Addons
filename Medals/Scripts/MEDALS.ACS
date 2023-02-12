@@ -201,15 +201,16 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 
 	//GAMEEVENT_PLAYERFRAGS
 	if(evtTyp == 0) {
+		
+		int victimTID = 1000 + victimNo;
+		int victimActiveTokens = CheckActorInventory(victimNo+1000, "ActiveProgressToken");
+		int killerHP = GetActorProperty(0, APROP_Health);
 
 		if(!GetCVar("cl_qcmedals")) {
 			if(!firstBloodGiven)			//still have to flip the switch even if the fist killer has turned medals off
 				firstBloodGiven = true;
 			terminate;
 		}
-
-		int victimTID = 1000 + victimNo;
-		int killerHP = GetActorProperty(0, APROP_Health);
 
 		if(victimTID == ActivatorTID())		//redundant check? PLAYERFRAGS doesn't seem to trigger on suicide
 			terminate;
@@ -286,7 +287,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		}
 
 		//Denied
-		if(CheckActorInventory(victimTID, "ActiveProgressToken") > 0) {
+		if(victimActiveTokens > 0) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DENIED);
 		}
 
