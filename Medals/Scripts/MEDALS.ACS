@@ -281,7 +281,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		}
 		
 		//Ring Out
-		if(GetActorProperty(victimTID, APROP_HEALTH) < -500 && !insidedOut) {
+		if(GetActorProperty(victimTID, APROP_HEALTH) < -500 && !GetCVar("instagib") && !insidedOut) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RINGOUT);
 		}
 
