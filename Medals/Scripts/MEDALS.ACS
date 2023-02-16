@@ -157,32 +157,7 @@ script "QCDE_WhatsYourPoison" DEATH {
 		ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_PBREAKER);
 	}
 
-	//Perforated
-	SetActivator(a);
-	if(-2000 >= GetActorProperty(0,APROP_HEALTH)) {
-
-		if(distance < 64) { //if we are close enough, this was a telefrag
-
-			SetActivator(b);
-
-			if(CheckInventory("PowerRGFired")) //no-no if Instagib point blank range with Quad Damage - just in case
-				terminate;
-
-			//Check for Shub Slaying
-			if(CheckInventory("Class_Ranger") && CheckInventory("ActiveProgressToken")) {
-				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_SHUB);
-				terminate;
-			}
-
-			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_PERFORATED);
-			//I have to terminate here otherwise a Perforated player would always also give Ring Out medal
-			//Ringed out player cannot have less than -2000 health (Telefrag damage -1000000, Instadeath Floor -999)
-			//
-			//Actually can by recieving damage through DamageThing when passed 0 as damage amount, deals the same as telefrag
-			//to bypass god and buddha [kultasakaali]
-			terminate;
-		}
-	}
+	
 }
 
 //Handles various medals that should activate on frag events
@@ -287,6 +262,30 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		//Denied
 		if(victimActiveTokens > 0) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DENIED);
+		}
+		
+		//Perforated
+		if(GetActorProperty(victimTID, APROP_HEALTH) < -2000) {
+
+			if(distance < 64) { //if we are close enough, this was a telefrag
+
+				if(CheckInventory("PowerRGFired")) //no-no if Instagib point blank range with Quad Damage - just in case
+					terminate;
+
+				//Check for Shub Slaying
+				if(CheckInventory("Class_Ranger") && CheckInventory("ActiveProgressToken")) {
+					ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_SHUB);
+					terminate;
+				}
+
+				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_PERFORATED);
+				//I have to terminate here otherwise a Perforated player would always also give Ring Out medal
+				//Ringed out player cannot have less than -2000 health (Telefrag damage -1000000, Instadeath Floor -999)
+				//
+				//Actually can by recieving damage through DamageThing when passed 0 as damage amount, deals the same as telefrag
+				//to bypass god and buddha [kultasakaali]
+				terminate;
+			}
 		}
 		
 		//Ring Out
