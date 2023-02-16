@@ -85,6 +85,18 @@ script "ResetMedalCounters" DEATH {
 	killingSpree[plr] = 0;
 }
 
+function int QCDE_ProximityCheck(int victimTID, int killerTID) {
+	
+	int xDiff = GetActorX(victimTID) - GetActorX(killerTID);
+	int yDiff = GetActorY(victimTID) - GetActorY(killerTID);
+	int zDiff = GetActorZ(victimTID) - GetActorZ(killerTID);
+	
+	int len = VectorLength(xDiff, yDiff);
+		len = VectorLength(zDiff, len);
+		
+	return len >> 16;
+}
+
 //////////////////////////////////////////////////////////////////
 //																//
 //	Medal Scripts												//
@@ -113,10 +125,8 @@ script "QCDE_WhatsYourPoison" DEATH {
 	if(a == b)
 		terminate;
 
-	//Get coordinate differences for Perforated
-	int xDiff = GetActorX(a) - GetActorX(b);
-	int yDiff = GetActorY(a) - GetActorY(b);
-	int zDiff = GetActorZ(a) - GetActorZ(b);
+	//Get players' distance from each other for Perforated
+	int distance = QCDE_ProximityCheck(a, b);
 
 	//From The Grave, if killer and victim are dead killer gets medal
 	if((0 >= GetActorProperty(a,APROP_HEALTH)) && (0 >= GetActorProperty(b,APROP_HEALTH)))
@@ -151,10 +161,7 @@ script "QCDE_WhatsYourPoison" DEATH {
 	SetActivator(a);
 	if(-2000 >= GetActorProperty(0,APROP_HEALTH)) {
 
-		int len = VectorLength(xDiff, yDiff);
-		len = VectorLength(zDiff, len);
-
-		if((len >> 16) < 64) { //if we are close enough, this was a telefrag
+		if(distance < 64) { //if we are close enough, this was a telefrag
 
 			SetActivator(b);
 
@@ -189,7 +196,9 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		
 		int victimTID = 1000 + victimNo;
 		int victimActiveTokens = CheckActorInventory(victimNo+1000, "ActiveProgressToken");
+		int killerAbilityToken = CheckInventory("PowerAbilityToken");
 		int killerHP = GetActorProperty(0, APROP_Health);
+		int distance = QCDE_ProximityCheck(victimTID, ActivatorTID());
 
 		if(!GetCVar("cl_qcmedals")) {
 			if(!firstBloodGiven)			//still have to flip the switch even if the fist killer has turned medals off
@@ -234,12 +243,8 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		if(CheckInventory("PowerInjectionSpeed"))
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_JUNKIE);
 
-		//Nyx
-		if(CheckInventory("FromTheShadowsToken"))
-			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_FTSHADOWS);
-
 		//Projectile or puff based abilities
-		if(CheckInventory("AbilityToken")) {
+		if(killerAbilityToken) {
 
 			//Keel
 			if(CheckInventory("Class_Keel"))
@@ -259,6 +264,10 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_INSIDEOUT);
 			}
 		}
+		
+		//Nyx
+		if(CheckInventory("PowerFromTheShadows") && !insidedOut && distance > 32)
+			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_FTSHADOWS);
 
 		//////////////////////
 		//	Other medals	//
