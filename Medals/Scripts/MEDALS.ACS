@@ -22,7 +22,7 @@ int heavySpawnTics;
 //////////////////////////////////////////////////////////////////
 script "MapInitiator" OPEN {
 
-	if(GameType() < GAME_NET_DEATHMATCH)
+	if(GameType() < GAME_NET_DEATHMATCH || GetGameModeState() < GAMESTATE_INPROGRESS)
 		terminate;
 
 	firstBloodGiven = false;	//reset this here, so it starts with default value after warm-up ends
@@ -30,7 +30,7 @@ script "MapInitiator" OPEN {
 
 script "MedalsInitiator" ENTER {
 
-	if(GameType() < GAME_NET_DEATHMATCH)
+	if(GameType() < GAME_NET_DEATHMATCH || GetGameModeState() < GAMESTATE_INPROGRESS)
 		terminate;
 
 	if(!GetCVar("cl_qcmedals"))
@@ -40,13 +40,13 @@ script "MedalsInitiator" ENTER {
 
 	if(!GetCVar("lastmanstanding") && !GetCVar("teamlms")) //don't give a Tank at every round start
 		ACS_NamedExecuteAlways("QCDE_Tank", 0);
-		
+
 	killingSpree[PlayerNumber()] = 0;
 }
 
 script "ResetMedalCounters" DEATH {
 
-	if(GameType() < GAME_NET_DEATHMATCH)
+	if(GameType() < GAME_NET_DEATHMATCH || GetGameModeState() < GAMESTATE_INPROGRESS)
 		terminate;
 
 	if(!GetCVar("cl_qcmedals"))
@@ -86,14 +86,14 @@ script "ResetMedalCounters" DEATH {
 }
 
 function int QCDE_ProximityCheck(int victimTID, int killerTID) {
-	
+
 	int xDiff = GetActorX(victimTID) - GetActorX(killerTID);
 	int yDiff = GetActorY(victimTID) - GetActorY(killerTID);
 	int zDiff = GetActorZ(victimTID) - GetActorZ(killerTID);
-	
+
 	int len = VectorLength(xDiff, yDiff);
 		len = VectorLength(zDiff, len);
-		
+
 	return len >> 16;
 }
 
@@ -106,12 +106,10 @@ function int QCDE_ProximityCheck(int victimTID, int killerTID) {
 //Handles various medals that should activate on frag events
 script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 
-	if(GameType() < GAME_NET_DEATHMATCH)
+	if(GameType() < GAME_NET_DEATHMATCH || GetGameModeState() < GAMESTATE_INPROGRESS)
 		terminate;
 
-	//GAMEEVENT_PLAYERFRAGS
-	if(evtTyp == 0) {
-		
+	if(evtTyp == GAMEEVENT_PLAYERFRAGS) {
 		int victimTID = 1000 + victimNo;
 		int victimActiveTokens = CheckActorInventory(victimNo+1000, "ActiveProgressToken");
 		int victimSpreeToken = CheckActorInventory(victimTID, "SpreeToken");
@@ -174,14 +172,14 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 			//Zedek
 			if(CheckInventory("Class_Zedek"))
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_STOMPER);
-			
+
 			//Nyx
 			if(CheckInventory("Class_Nyx")) {
 				bool insidedOut = true;
 				ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_INSIDEOUT);
 			}
 		}
-		
+
 		//Nyx
 		if(CheckInventory("PowerFromTheShadows") && !insidedOut && distance > 32)
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_ABIL_FTSHADOWS);
@@ -195,19 +193,19 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_FIRSTBLOOD);
 			firstBloodGiven = true;
 		}
-		
+
 		//Humiliation
 		if(CheckWeapon("QCGauntlet") && CheckInventory("PunchedAlready"))
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_HUMIL);
-		
+
 		//From the Grave
 		if(killerHP <= 0 && victimHP <= 0)
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_FTGRAVE);
-		
+
 		//Combo Kill
 		if(CheckInventory("PowerSickShot"))
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_CKILL);
-			
+
 		//Show Stopper
 		if(victimSpreeToken)
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_SSTOPPER);
@@ -223,10 +221,9 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 		//Denied
 		if(victimActiveTokens > 0)
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_DENIED);
-		
+
 		//Perforated
 		if(GetActorProperty(victimTID, APROP_HEALTH) < -2000) {
-
 			if(distance < 64) { //if we are close enough, this was a telefrag
 
 				if(CheckInventory("PowerRGFired")) //no-no if Instagib point blank range with Quad Damage - just in case
@@ -247,7 +244,7 @@ script "FragEvent" (int evtTyp, int victimNo, int arg2) EVENT {
 				terminate;
 			}
 		}
-		
+
 		//Ring Out
 		if(GetActorProperty(victimTID, APROP_HEALTH) < -500 && !GetCVar("instagib") && !insidedOut) {
 			ACS_NamedExecuteAlways("DrawMedal", 0, MEDAL_RINGOUT);
@@ -538,7 +535,7 @@ script "QCDE_PowerUpMassacre" (void) {
 	if (GetNetworkState() == NETSTATE_CLIENT)
 		terminate;
 
-	if(GameType() < GAME_NET_DEATHMATCH)
+	if(GameType() < GAME_NET_DEATHMATCH || GetGameModeState() < GAMESTATE_INPROGRESS)
 		terminate;
 
 	if(!GetCVar("cl_qcmedals"))
@@ -570,7 +567,7 @@ Script "QCDE_MajorItemSpawned" (int itemType) { // 0 for Mega, 1 for Heavy <-- f
 
 Script "QCDE_StopWatch" (int itemType) {
 
-	if(GameType() < GAME_NET_DEATHMATCH)
+	if(GameType() < GAME_NET_DEATHMATCH || GetGameModeState() < GAMESTATE_INPROGRESS)
 		terminate;
 
 	if(!GetCVar("cl_qcmedals"))
