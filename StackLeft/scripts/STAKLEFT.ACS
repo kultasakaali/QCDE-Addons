@@ -4,7 +4,7 @@
 script 100 (int evtTyp, int victimNo, int arg2) EVENT {
 	
 	if(!GetUserCVar(victimNo, "cl_showStackLeft")) terminate;
-	if(GameType() < GAME_NET_DEATHMATCH) terminate;
+	if(GameType() < GAME_NET_DEATHMATCH || GetGameModeState() < GAMESTATE_INPROGRESS) terminate;
 	if(GetCvar("duel") && !GetCVar("sv_showStackLeftInDuels")) terminate;
 	
 	if(evtTyp == 0) {
