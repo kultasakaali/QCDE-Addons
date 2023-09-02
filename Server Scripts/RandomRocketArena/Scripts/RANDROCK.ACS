@@ -21,6 +21,7 @@ function void roll(void) {
 
 Script "RandomRocketArena" OPEN {
 	
+	if(GetGamemodeState() == GAMESTATE_INPROGRESS) terminate;
 	if(!GetCVar("sv_randomRocketArena")) terminate;
 	
 	roll();
