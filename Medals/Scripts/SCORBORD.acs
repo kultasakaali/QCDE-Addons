@@ -253,6 +253,7 @@ str mirrorThings[MIRROR_THINGS_COUNT] = {
 // map-scope, because gametype cannot change mid-map
 int duel          ;
 int teamplay      ;
+int lastmanstanding;
 int teamlms       ;
 int teampossession;
 int ctf           ;
@@ -262,6 +263,7 @@ int teamgame      ;
 int pointgame     ;
 int coop          ;
 int freezetag     ;
+int scorelimit    ;
 
 Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 {
@@ -271,6 +273,7 @@ Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 
 	duel           = getCvar("duel");
 	teamplay       = getCvar("teamplay");
+	lastmanstanding= getCvar("lastmanstanding");
 	teamlms        = getCvar("teamlms");
 	teampossession = getCvar("teampossession");
 	ctf            = getCvar("ctf");
@@ -326,8 +329,8 @@ Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 		// ^ insert more classes here
 	}
 
-	if(teamplay || teamlms || pointgame || ctf) {
-		if(teamlms)   { maxScore = getCvar(  "winlimit"); if(!maxScore) maxScore =  10; }
+	if(teamplay || lastmanstanding || teamlms || pointgame || ctf) {
+		if(lastmanstanding || teamlms)   { maxScore = getCvar(  "winlimit"); if(!maxScore) maxScore =  10; }
 		if(teamplay)  { maxScore = getCvar( "fraglimit"); if(!maxScore) maxScore = 100; }
 		if(pointgame) { maxScore = getCvar("pointlimit"); if(!maxScore) maxScore = 100; }
 		if(ctf)       { maxScore = getCvar("pointlimit"); if(!maxScore) maxScore =  10; }
@@ -342,6 +345,24 @@ Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 				maxScore = 20;
 	}
 
+	if (lastmanstanding || teamlms)
+    	scorelimit = GetCVar("winlimit");
+    else if (teamplay || pointgame || ctf)
+    	scorelimit = 0;
+    else
+    	scorelimit = GetCVar("fraglimit");
+
+    for (i = 0; i < 64; i++)
+    {
+    	if (PlayerInGame(i))
+    	{
+    		SetActivatorToPlayer(i);
+    		SetInventory("ScoreLimit",		  scorelimit);
+    	}
+    }
+    SetActivatorToPlayer(me);
+    SetInventory("ScoreLimit",		  scorelimit); // set scorelimit to self if spectating
+
 	while(true)
 	{
 		watchdog = Timer();
@@ -351,14 +372,17 @@ Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 		if(!IsZandronum(true)) // GZDoom. Sigh.
 			plr = 1000;
 		if (plr >= ORBBDRON_TIDBASE)
+		{
 			plr -= ORBBDRON_TIDBASE;
+			plr += 1000;
+		}
 
 		// Periodically update maximums for bars and cvar display settings
 
 		if(!(Timer() % 36))
 		{
-			if(teamplay || teamlms || pointgame || ctf) {
-				if(teamlms)   { maxScore = getCvar(  "winlimit"); if(!maxScore) maxScore =  10; }
+			if(teamplay || lastmanstanding || teamlms || pointgame || ctf) {
+				if(lastmanstanding || teamlms)   { maxScore = getCvar(  "winlimit"); if(!maxScore) maxScore =  10; }
 				if(teamplay)  { maxScore = getCvar( "fraglimit"); if(!maxScore) maxScore = 100; }
 				if(pointgame) { maxScore = getCvar("pointlimit"); if(!maxScore) maxScore = 100; }
 				if(ctf)       { maxScore = getCvar("pointlimit"); if(!maxScore) maxScore =  10; }
@@ -374,6 +398,24 @@ Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 			}
 
 			radarMode = GetUserCvar(me, "cl_radarMode");
+
+			if (lastmanstanding || teamlms)
+				scorelimit = GetCVar("winlimit");
+			else if (teamplay || pointgame || ctf)
+				scorelimit = 0;
+			else
+				scorelimit = GetCVar("fraglimit");
+
+			for (i = 0; i < 64; i++)
+			{
+				if (PlayerInGame(i))
+				{
+					SetActivatorToPlayer(i);
+					SetInventory("ScoreLimit",		  scorelimit);
+				}
+			}
+			SetActivatorToPlayer(me);
+			SetInventory("ScoreLimit",		  scorelimit); // set scorelimit to self if spectating
 		}
 
 
@@ -388,6 +430,24 @@ Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 		str txtM = strparam(d:minutes); if(minutes < 10) txtM = strparam(s:"0", s:txtM);
 		str txtH = strparam(d:hours  );
 		timedisplay = strparam(s:txtH, s:":", s:txtM, s:":", s:txtS);
+
+		SetActivatorToPlayer(me);
+		int cl_noWeaponBar = GetCVar("cl_showWeaponBar");
+		int cl_speedometer = GetCVar("cl_speedometer");
+		int cl_barStyle = GetCVar("cl_barStyle");
+
+		for (i = 0; i < 64; i++)
+		{
+			if (PlayerInGame(i))
+			{
+				SetActivatorToPlayer(i);
+				SetInventory("NoWeaponBar",      !cl_noWeaponBar);
+				SetInventory("Speedometer",       cl_speedometer);
+				SetInventory("FlatHealthPref",    cl_barStyle);
+				SetInventory("FlatArmorPref",     cl_barStyle);
+			}
+		}
+		SetActivatorToPlayer(me);
 
 		if(plr)
 		{
@@ -459,6 +519,17 @@ Script "QCDE_HudTracker_CLIENTSIDE" OPEN CLIENTSIDE
 					int r = _o(plr); // rank
 					pos1[me] = "1"            ; name1[me] = name[o[0]]; frags1[me] = strparam(d:frags[o[0]]);
 					pos2[me] = strparam(d:-~r); name2[me] = name[o[r]]; frags2[me] = strparam(d:frags[o[r]]);
+				}
+
+				if(notMe)
+				{
+					GiveInventory("BeingSpectated", 1);
+
+					drawPowerupCounters();
+				}
+				else
+				{
+					TakeInventory("BeingSpectated", ALL_OF_IT);
 				}
 			}
 			else if (duel)
@@ -721,6 +792,8 @@ function void giveEnemyClassToken(int enemyTid)
 #define HUD_EMBIGGENMENT 2
 function void drawPowerupCounters(void)
 {
+	if (GetCvar("screenblocks") == 10 || GetCvar("screenblocks") >= 12)
+		return;
 
 	int i;
 	for(i = 0; i < ITEM_TIMERS; i++)
@@ -787,4 +860,22 @@ Script "QCDE_CrownTheBest" (void)
 
 	if (!CheckActorInventory(1000 + best, "PowerGhostTint") && !CheckActorInventory(1000 + best, "PowerWendigoTint"))
 		GiveActorInventory(1000 + best, "CrownProc", 1);
+}
+
+str endgame[7] = { "ENDGAME0", "ENDGAME1", "ENDGAME2", "ENDGAME3", "ENDGAME4",
+					"ENDGAME5", "ENDGAME6" };
+
+Script "QCDE_EndGameFlash" (int type, int arg1, int arg2) EVENT
+{
+	if (type != GAMEEVENT_ROUND_ENDS)
+		terminate;
+
+	int i;
+	for (i = 0; i < 7; i++)
+	{
+		SetHudSize(800, 600, true);
+		SetFont(endgame[i]);
+		HudMessageBold(s:"A"; HUDMSG_FADEOUT, ENDGAME_FLASH, CR_UNTRANSLATED, 400.0, 220.0, 1.0, 0.5);
+		delay(2);
+	}
 }

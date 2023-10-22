@@ -1,3 +1,6 @@
+
+Actor CompatVer30_HealthArmor {} // for compatibility checks
+
 //==================================================================================
 //==================================================================================
 //	This is the base class from which most armors and health inherit
@@ -103,7 +106,7 @@ Actor QCHealthBonus : Health replaces HealthBonus
 	Inventory.PickupMessage "$GOT_QCHealthBonus" // "Picked up an overstacking health bonus."
 	Inventory.PickupSound "QC/Items/SmallHealth"
 	Inventory.RespawnTics 1050 //30 sec
-	Scale 0.7
+	Scale 0.85
 	States
 	{
 	Spawn:
@@ -225,7 +228,7 @@ Actor QCMegaHealth : InventoryClassChecker replaces SoulSphere
 	Height 48
 	Radius 20
 	Scale 1.0
-	Inventory.PickupSound "QC/Items/PowerupPick"
+	Inventory.PickupSound "QC/Items/MegaHealth"
 	Inventory.PickupMessage "$GOT_QCMegaHealth" // "Picked up a mega health!"
 	Inventory.RespawnTics 1050 //30 sec
 	States
@@ -349,7 +352,7 @@ Actor QCMegaMega : CustomInventory replaces MegaSphere
 	Radius 20
 	Scale 1.0
 	Inventory.PickupMessage "$GOT_QCMegaMega" // "Picked up a mega charge!"
-	Inventory.PickupSound "QC/Items/PowerupPick"
+	Inventory.PickupSound "QC/Items/MegaMega"
 	Inventory.RespawnTics 2100 //60 sec
 	+INVENTORY.ALWAYSPICKUP
 	States
@@ -497,7 +500,7 @@ Actor QCSargeArmorGain : BasicArmorBonus
 	Inventory.Pickupmessage "$GOT_QCSargeArmorGain" // "Picked up an armor shard."
 	Inventory.Icon "BON2A0"
 	Armor.Savepercent 66.665
-	Armor.Saveamount 12
+	Armor.Saveamount 10
 	Armor.Maxsaveamount 200
 	Inventory.RespawnTics 525 //15 sec
 	+COUNTITEM
@@ -511,6 +514,11 @@ Actor QCSargeArmorGain : BasicArmorBonus
 		QCAR AAAAAAAAAA 35 BRIGHT		//10 seconds
 		Stop
 	}
+}
+
+Actor QCSargeArmorGainBig : QCSargeArmorGain
+{
+	Armor.Saveamount 25
 }
 
 Actor QCArmorPoint : BasicArmorBonus //used for the ACS script that gives armor
@@ -575,7 +583,6 @@ Actor QCSmallArmorGiver : InventoryClassChecker replaces GreenArmor
 		DoHunter:
 		DoPostal:
 		DoPainkiller:
-		DoDurandal:
 		DoIntruder:
 		DoOrbb:
 		Default:
@@ -591,6 +598,12 @@ Actor QCSmallArmorGiver : InventoryClassChecker replaces GreenArmor
 			TNT1 A 0 A_JumpIfInventory("BasicArmor",CallACS("MaxArmor"),"Failer")
 			TNT1 A 0 ACS_NamedExecuteWithResult("ArmorGiver",	CallACS("MaxArmor"),	MediumArmorAmount+20,0) //+20 because of passive
 			Goto ArmorDoneSuccess
+		DoDurandal:
+			TNT1 A 0 A_JumpIfHealthLower(CallACS("MaxHealth"),"ActuallyDoDurandal")//1. if health low, do activate
+			TNT1 A 0 A_JumpIfInventory("BasicArmor",CallACS("MaxArmor"),"Failer")	//2. if armor max, fail
+			ActuallyDoDurandal:			//3. Armor wasnt max, activate
+				TNT1 A 0 ACS_NamedExecuteWithResult("DurandalArmor",	CallACS("MaxArmor"),CallACS("MaxHealth"),MediumArmorAmount)
+				Goto ArmorDoneSuccess
 		DoSarge:
 			TNT1 A 0 A_JumpIfInventory("BasicArmor",CallACS("MaxArmor")+100,"Failer")
 			TNT1 A 0 ACS_NamedExecuteWithResult("ArmorGiver",	CallACS("MaxArmor")+100,	MediumArmorAmount,0)
@@ -717,7 +730,6 @@ Actor QCBigArmorGiver : InventoryClassChecker replaces BlueArmor
 		DoPostal:
 		DoPainkiller:
 		DoIntruder:
-		DoDurandal:
 		DoOrbb:
 		Default:
 			TNT1 A 0 A_JumpIfInventory("BasicArmor",CallACS("MaxArmor")+75,"Failer") //If already at max armor for this class, fails
@@ -732,6 +744,12 @@ Actor QCBigArmorGiver : InventoryClassChecker replaces BlueArmor
 			TNT1 A 0 A_JumpIfInventory("BasicArmor",CallACS("MaxArmor")+75,"Failer")
 			TNT1 A 0 ACS_NamedExecuteAlways("ArmorGiver",0,	CallACS("MaxArmor"),BigArmorAmount+50,1) //+50 because of passive
 			Goto ArmorDoneSuccess
+		DoDurandal:
+			TNT1 A 0 A_JumpIfHealthLower(CallACS("MaxHealth"),"ActuallyDoDurandal")		//1. if health low, do activate
+			TNT1 A 0 A_JumpIfInventory("BasicArmor",CallACS("MaxArmor")+75,"Failer")	//2. if armor max, fail
+			ActuallyDoDurandal:			//3. Armor wasnt max, activate
+				TNT1 A 0 ACS_NamedExecuteAlways("DurandalArmor",0,	CallACS("MaxArmor"),CallACS("MaxHealth"),BigArmorAmount)
+				Goto ArmorDoneSuccess
 		DoLucienne:
 		DoSarge:
 			TNT1 A 0 A_JumpIfInventory("BasicArmor",CallACS("MaxArmor")+100,"Failer")	//allows overstack of 100

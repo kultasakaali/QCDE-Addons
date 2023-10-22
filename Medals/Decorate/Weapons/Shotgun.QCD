@@ -6,6 +6,8 @@
 //
 // --------------------------------------------------------------------------
 
+Actor CompatVer30_Shotgun {} // for compatibility checks
+
 Actor ShotgunPickup : CustomInventory 15601
 {
 	//$NotAngled
@@ -95,9 +97,9 @@ Actor QCShotgun : QCWeapon
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 8
 	Weapon.AmmoType "QCShellAmmo"
-	Obituary "$OB_QCShotgun" // "%o was shot down by %k."
-	Inventory.PickupMessage "$GOT_QCShotgun" // "Picked up a Shotgun."
-	Tag "$TAG_QCShotgun" // "Shotgun"
+	Obituary "$OB_QCShotgun"
+	Inventory.PickupMessage "$GOT_QCShotgun"
+	Tag "$TAG_QCShotgun"
 	Scale 0.55
 	States
 	{
@@ -143,9 +145,6 @@ Actor QCShotgun : QCWeapon
 
 		ReadyCantFire:
 			"####" A 0 A_StopSound(CHAN_WEAPON)
-			"####" A 0 A_StopSound(6)
-			"####" A 0 A_ZoomFactor(1.0)
-			"####" A 0 A_TakeInventory("WeaponZoomedToken",32767)
 		RCFLooper:
 			"####" A 4 A_WeaponReady(WRF_NOFIRE)
 			"####" A 0 A_JumpIfInventory("NoWeaponFireToken",1,"RCFLooper")
@@ -175,19 +174,16 @@ Actor QCShotgun : QCWeapon
 		Goto SelectCont
 
 	SelectCont:
+		"####" A 0 A_PlaySound("QC/Weapons/Switch",CHAN_5,1,0,3) //Not in Weapon.UpSound because it interrupts CHAN_WEAPON sounds
 		"####" A 0 A_JumpIfInventory("NoWeaponFireToken",1,2)
-		"####" A 0 A_PlaySound("QC/Weapons/Switch",6,1,0,3) //Not in Weapon.UpSound because it interrupts CHAN_WEAPON sounds
 		"####" A 0 A_StopSound(CHAN_WEAPON) //stops any weapon looping sound
-		"####" A 0 A_ZoomFactor(1.0)
-		"####" A 0 A_TakeInventory("WeaponZoomedToken",32767)
+		"####" A 0 ACS_NamedExecuteWithResult("QCDE_ZoomCheckSelect")
 	SelectLooper:
 		"####" A 1 A_Raise
 		"####" AAA 0 A_Raise
 		Loop
 
 	Deselect:
-		"####" "#" 0 A_ZoomFactor(1.0)
-		"####" "#" 0 A_TakeInventory("WeaponZoomedToken",32767)
 	DeselectLooper:
 		"####" A 1 A_Lower
 		"####" AAA 0 A_Lower
@@ -221,9 +217,9 @@ Actor QCShotgun : QCWeapon
 		"####" H 1 Offset(16,28)
 		"####" H 1 Offset(14,29)	//20
 		"####" H 1 Offset(12,31)
-		"####" A 1 Offset(10,32)
-		"####" A 1 Offset(8,33)
-		"####" A 1 Offset(6,34)
+		"####" I 1 Offset(10,32)
+		"####" I 1 Offset(8,33)
+		"####" I 1 Offset(6,34)
 		"####" A 1 Offset(4,35)
 		"####" A 1 Offset(2,34)
 		"####" A 1 Offset(1,33)
@@ -289,6 +285,7 @@ Actor QCShotgun : QCWeapon
 
 		FlashCheckSound:
 			TNT1 A 0 A_JumpIfInventory("PowerQuad",1,"QuadSound")
+			TNT1 A 0 A_JumpIfInventory("PowerTerminatorArtifact",1,"QuadSound")
 			Goto NormalSound
 
 			NormalSound:
@@ -430,15 +427,15 @@ Actor SGExplosiveBullet : FastProjectile
 	speed 90
 	renderstyle ADD
 	alpha 0.9
-	scale 0.1
+	scale 0.025
 	Translation "0:255=%[0,0,0]:[1.4,0.7,0]"
 	DamageType "NoDamageToPlayers"
 	ProjectileKickBack 0
 	states
 	{
 	Spawn:
-		X029 A 1 BRIGHT
-		X029 A 70 BRIGHT A_PlaySound("QCDE/Other/BulletWhoosh",CHAN_AUTO,1.0,false,3.0)
+		G3EX A 1 BRIGHT
+		G3EX A 70 BRIGHT A_PlaySound("QCDE/Other/BulletWhoosh",CHAN_AUTO,1.0,false,3.0)
 		Wait
 	XDeath:
 		TNT1 A 1 A_GiveToTarget("HitBeepLow",1,AAPTR_DEFAULT,GIF_FORCESERVERSIDE)
