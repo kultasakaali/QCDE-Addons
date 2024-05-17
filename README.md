@@ -29,17 +29,17 @@ Happy frying!
 A continuation of **Ivory Duke**'s QC style [medals add-on](https://www.moddb.com/mods/quake-champions-doom-edition/addons/qcde-medals) updated for QCDE 2.7 with bug fixes, improvements and new medals.
 Medals can be turned on/off in the `HUD Options` menu or with the console variable `cl_qcMedals`.  
 
-**NOTE**: This add-on is now included in QC:DE starting from version 3.0, code base will most likely be kept updated here nonetheless. A link to a legacy version can be found below.  
+**NOTE**: This add-on is now included in QC:DE starting from version 3.0, code base will not be maintained here any further.  
 
 See the included [credits](https://github.com/kultasakaali/QCDE-Addons/blob/main/Medals/!CREDITS!.txt) file for more information and changelog up to the point of integration!  
 
 A list of medals can be found [here](https://github.com/kultasakaali/QCDE-Addons/blob/main/Medals/qcde_medals.pdf).
 
-[Download 1.3 RC5](https://allfearthesentinel.com/zandronum/download.php?file=qcde_medals-qzan_v1.3_rc5.pk3)
-
 ## UT Announcer for the Unreal Tournament weapons add-on
 
 An add-on for **geNia**'s [UT Weapons add-on](https://www.moddb.com/mods/quake-champions-doom-edition/addons/unreal-tournament-weapons-for-q-zandronum) that brings multikill and killing spree announcements to the game.  
+
+**NOTE**: This add-on is now included with the Unreal Tournament weapons add-on, code base will not be maintained here any further.  
 
 Currently the pack contains 5 announcers you can choose from via the sound menu or using the `cl_utannouncer` CVar.  
 
@@ -49,16 +49,13 @@ Currently the pack contains 5 announcers you can choose from via the sound menu 
 - UT2004 Sexy
 - UT2003
 
-[Download 1.05](https://allfearthesentinel.com/zandronum/download.php?file=qcde_ut_weapons_announcer_v1.05.pk3)
-
 ## RailJump
 
 This add-on will provide you with a Railgun that is able to thrust you in the air, exactly like a rocket jump, with no self-damage. Intended to use with Instagib game mode, however it's not restricted to that.  
 
-**NOTE**: This feature is now provided by QC:DE starting from version 3.0 by the name of RailRecoil. Links to legacy versions can be found below.  
+**NOTE**: This feature is now provided by QC:DE starting from version 3.0 as secondary fire in Instagib. Link to a legacy version can be found below in case you would like to use it with QC:DE 2.7  
 
 [Download 1.0 for Zandronum](https://allfearthesentinel.com/zandronum/download.php?file=qcde--railjump.pk3)  
-[Download 1.3 for Q-Zandronum](https://allfearthesentinel.com/zandronum/download.php?file=qcde--railjump-qzand_v1.3.pk3)
 
 ## Server Scripts
 
@@ -81,6 +78,6 @@ This add-on will provide you with a Railgun that is able to thrust you in the ai
 ## Stack Left
 
 This simple add-on will display your killer's stack left like in QC. Disabled in duels by default, but can be enabled by the server with `sv_showStackLeftInDuels`. Players who wouldn't like to recieve these messages can turn them off with `cl_showStackLeft`.  
-**NOTE**: This feature is now included in QC:DE from version 3.0 onwards
+**NOTE**: This feature is now included in QC:DE from version 3.0 onwards, you can still use it with 2.7  
 
 [Download 1.0](https://allfearthesentinel.com/zandronum/download.php?file=qcde--stackleft.pk3)
