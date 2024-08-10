@@ -7,7 +7,7 @@ global int 49: usedChamps[];
 
 str champPool[NUMBER_OF_CLASSES] = {	"RANGER", "DOOMSLAYER", "CORVUS", "KANE", "CALEB", "MENELKIR", "TERMINATOR", "ZEDEK", "INQUISITOR", "BITTERMAN",
 										"GALEN", "NYX", "SORGAUL", "DUKE NUKEM", "DURANDAL", "KEEL", "SARGE", "LO WANG", "GRAYSON", "ERADICATOR", "BLAZKOWICZ",
-										"FREEMAN", "VORMATUR", "ELEENA", "LUCIENNE", "MAJOR", "HUNTER", "SAM", "POSTAL", "PAINKILLER", "INTRUDER", "ORBB"	};
+										"FREEMAN", "VORMATUR", "ELEENA", "LUCIENNE", "MAJOR", "HUNTER", "SAM", "POSTAL", "PAINKILLER", "INTRUDER", "ORBB", "BROCK"	};
 
 script "roll" (void) {
 	int champ = random(0, NUMBER_OF_CLASSES - 1);
