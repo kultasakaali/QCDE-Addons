@@ -3,7 +3,6 @@ GameInfo {
 }
 
 map QCLG01 "Lightning gun training" {
-	Music = "QCDEM22"
 	UsePlayerStartZ
-	Next = "QCLG02"
+	Next = "QCDL11"
 }

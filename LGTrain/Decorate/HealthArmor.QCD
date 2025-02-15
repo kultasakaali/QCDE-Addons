@@ -48,6 +48,7 @@ Actor InventoryClassChecker : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("Class_Painkiller",	1,"DoPainkiller")
 		TNT1 A 0 A_JumpIfInventory("Class_Intruder",	1,"DoIntruder")
 		TNT1 A 0 A_JumpIfInventory("Class_Orbb",		1,"DoOrbb")
+		TNT1 A 0 A_JumpIfInventory("Class_Brock",		1,"DoBrock")
 		// ^ insert more classes here
 		TNT1 A 0 A_Jump(256, "Default")
 		Fail
@@ -83,6 +84,7 @@ Actor InventoryClassChecker : CustomInventory
 	DoPainkiller:	TNT1 A 1 A_PrintBold("$DBG_HAPainkiller")     Stop
 	DoIntruder:		TNT1 A 1 A_PrintBold("$DBG_HAIntruder")       Stop
 	DoOrbb:			TNT1 A 1 A_PrintBold("$DBG_HAOrbb")           Stop
+	DoBrock:		TNT1 A 1 A_PrintBold("$DBG_HABrock")          Stop
 	// ^ insert more classes here
 	Default:		TNT1 A 1 A_PrintBold("InventoryClassChecker default debug message") Stop
 	}
@@ -93,7 +95,7 @@ Actor InventoryClassChecker : CustomInventory
 //			Health
 //==================================================================================
 //==================================================================================
-Actor QCHealthBonus : Health replaces HealthBonus
+Actor QCHealthBonus : InventoryClassChecker replaces HealthBonus
 {
 	+COUNTITEM
 	+INVENTORY.ALWAYSPICKUP
@@ -106,7 +108,7 @@ Actor QCHealthBonus : Health replaces HealthBonus
 	Inventory.PickupMessage "$GOT_QCHealthBonus" // "Picked up an overstacking health bonus."
 	Inventory.PickupSound "QC/Items/SmallHealth"
 	Inventory.RespawnTics 1050 //30 sec
-	Scale 0.7
+	Scale 0.85
 	States
 	{
 	Spawn:
@@ -118,11 +120,57 @@ Actor QCHealthBonus : Health replaces HealthBonus
 		TNT1 A 0 A_SpawnItemEx("Hourglass")
 		Stop
 	BeHealthBonus:
-		HEAL A -1 BRIGHT ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
+		HEAL A -1 Light(GreenSmallPoint3) Bright ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
 		Loop
 	Death:
         TNT1 A 0
         Stop 
+
+	DoRanger:
+	DoDoomSlayer:
+	DoCorvus:
+	DoKane:
+	DoCaleb:
+	DoMenelkir:
+	DoTerminator:
+	DoZedek:
+	DoInquisitor:
+	DoGalen:
+	DoBitterman:
+	DoNyx:
+	DoDukeNukem:
+	DoSorgaul:
+	DoDurandal:
+	DoKeel:
+	DoLoWang:
+	DoGrayson:
+	DoBlazkowicz:
+	DoFreeman:
+	DoVorMatur:
+	DoEleena:
+	DoLucienne:
+	DoMajor:
+	DoHunter:
+	DoSam:
+	DoPainkiller:
+	DoIntruder:
+	DoEradicator:
+	DoOrbb:
+	Default:
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver",CallACS("MaxHealth"),3, 75)
+		Goto HealthDoneSuccess
+	DoSarge:
+	DoPostal:
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver",CallACS("MaxHealth"),3,100)
+		Goto HealthDoneSuccess
+	DoBrock:
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver",CallACS("MaxHealth"),3,99)
+		Goto HealthDoneSuccess
+	// ^ insert more classes here
+
+	HealthDoneSuccess:
+		TNT1 A 0
+		Stop
 	}
 }
 
@@ -141,7 +189,7 @@ Actor QCStimpack : InventoryClassChecker replaces Stimpack
 	{
 	Spawn:
 		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
-		HEAL B -1 BRIGHT ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
+		HEAL B -1 Light(YellowSmallPoint3) BRIGHT ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
 		Stop
 
 		DoRanger:
@@ -174,6 +222,7 @@ Actor QCStimpack : InventoryClassChecker replaces Stimpack
 		DoIntruder:
 		DoEradicator:
 		DoOrbb:
+		DoBrock:
 		Default:
 			TNT1 A 0 A_JumpIfHealthLower(CallACS("MaxHealth"),1)	Goto Failer
 			TNT1 A 0 A_Jump(256,"HealDoneSuccess")					Goto HealDoneSuccess
@@ -213,9 +262,9 @@ Actor QCMedikit : QCStimpack replaces Medikit
 	States
 	{
 	Spawn:
-		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
-		HEAL C 0 A_SpawnItemEx("QCDEBotBait", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
-		HEAL C -1 BRIGHT ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
+		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death") 
+		HEAL C 0
+		HEAL C -1 Light(OrangeSmallPoint3) BRIGHT ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
 		Stop
 		//special handler for Duke only
 		DoDukeNukem:
@@ -240,7 +289,7 @@ Actor QCMegaHealth : InventoryClassChecker replaces SoulSphere
 	Height 48
 	Radius 20
 	Scale 1.0
-	Inventory.PickupSound "QC/Items/PowerupPick"
+	Inventory.PickupSound "QC/Items/MegaHealth"
 	Inventory.PickupMessage "$GOT_QCMegaHealth" // "Picked up a mega health!"
 	Inventory.RespawnTics 1050 //30 sec
 	States
@@ -249,13 +298,12 @@ Actor QCMegaHealth : InventoryClassChecker replaces SoulSphere
 		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
 		MEGR A 0 BRIGHT ACS_NamedExecuteWithResult("QCDE_ItemSpawned", 0)
 		MEGR A 0 A_ThrowGrenade("QCMegaHealthFX", -35, 0, 0, 0, TGR_NOUNLAGGED)
-		MEGR A 0 A_SpawnItemEx("QCDEBotBait", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
-		MEGR A -1 BRIGHT
+		MEGR A -1 Light(BlueSmallPoint2) BRIGHT
 		Stop
 
 	//Medals start
 	Pickup:
-		TNT1 A 0 ACS_NamedExecute("QCDE_StopWatch", 0, 1)
+		TNT1 A 0 ACS_NamedExecute("QCDE_StopWatch", 0, 0)
 		Goto Super::Pickup
 	//Medals end
 
@@ -304,6 +352,9 @@ Actor QCMegaHealth : InventoryClassChecker replaces SoulSphere
 		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver",CallACS("MaxHealth"),100,100)
 		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_Passive_Postal_Mega")
 		Goto HealthDoneSuccess
+	DoBrock:
+		TNT1 A 0 ACS_NamedExecuteWithResult("HealthGiver",CallACS("MaxHealth"),100,99)
+		Goto HealthDoneSuccess
 	// ^ insert more classes here
 
 	HealthDoneSuccess:
@@ -311,7 +362,6 @@ Actor QCMegaHealth : InventoryClassChecker replaces SoulSphere
 		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ItemTaken", 0)
 		TNT1 A 0
 		Stop
-	
 	Death:
         TNT1 A 0
         Stop 
@@ -369,20 +419,26 @@ Actor QCMegaMega : CustomInventory replaces MegaSphere
 	Radius 20
 	Scale 1.0
 	Inventory.PickupMessage "$GOT_QCMegaMega" // "Picked up a mega charge!"
-	Inventory.PickupSound "QC/Items/PowerupPick"
+	Inventory.PickupSound "QC/Items/MegaMega"
 	Inventory.RespawnTics 2100 //60 sec
 	+INVENTORY.ALWAYSPICKUP
 	States
 	{
 	Spawn:
 		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
-		MEGB A 0 BRIGHT A_SpawnItemEx("QCDEBotBait", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+		MEGB A 0 BRIGHT ACS_NamedExecuteWithResult("QCDE_RemoveIfDuel", 0)
+		MEGB A 0 ACS_NamedExecuteWithResult("QCDE_ItemSpawned", 3)
 		MEGB A 0 A_ThrowGrenade("QCMegamegaFX", -35, 0, 0, 0, TGR_NOUNLAGGED)
-		MEGB A -1 BRIGHT
+		MEGB A -1 Light(PurpleSmallPoint1) BRIGHT
 		Stop
 	Pickup:
+		//Medals start
+		TNT1 A 0 ACS_NamedExecute("QCDE_StopWatch", 0, 3)
+		//Medals end
 		TNT1 A 0 A_GiveInventory("QCMegaHealth",1)
 		TNT1 A 0 A_GiveInventory("QCBigArmorGiver",1)
+		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ItemTaken", 3)
+		TNT1 A 0
 		Stop
 	Death:
         TNT1 A 0
@@ -461,8 +517,7 @@ Actor QCArmorBonus : BasicArmorBonus replaces ArmorBonus
 	States
 	{
 	Spawn:
-		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
-		TNT1 A 0 A_JumpIf(random(1,10)==1, "BeHourglass")
+		TNT1 A 0 NoDelay A_JumpIf(random(1,10)==1, "BeHourglass")
 		Goto BeArmorBonus
 	BeHourglass:
 		TNT1 A 0 A_ChangeFlag("Countitem",0)
@@ -488,6 +543,7 @@ Actor QCPlayerArmorDrop
 		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
 		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("MultiplayerCheck") < 2, "Death")
 		TNT1 A 1 A_JumpIf(ACS_NamedExecuteWithResult("InstagibCheck",true), "Death")
+		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("DefragCheck"), "Death")
 		TNT1 AAA 1 A_SpawnItemEx("QCArmorShardNoHourGlass",0,0,24,random(-3,3),random(-3,3),random(3,7),0,SXF_NOCHECKPOSITION)
 		Stop
 	Death:
@@ -526,14 +582,42 @@ Actor QCSargeArmorGain : BasicArmorBonus
 	Inventory.Pickupmessage "$GOT_QCSargeArmorGain" // "Picked up an armor shard."
 	Inventory.Icon "BON2A0"
 	Armor.Savepercent 66.665
-	Armor.Saveamount 12
+	Armor.Saveamount 10
 	Armor.Maxsaveamount 200
 	Inventory.RespawnTics 525 //15 sec
 	+COUNTITEM
 	+INVENTORY.ALWAYSPICKUP
 	+SERVERNETID
 	Scale 0.9
-	Inventory.PickupSound "QC/Items/ArmorShardPick"
+	Inventory.PickupSound "QC/Items/ArmorShardQ3Pick"
+	States
+	{
+	Spawn:
+		QCAR AAAAAAAAAA 35 BRIGHT		//10 seconds
+		Stop
+	}
+}
+
+Actor QCSargeArmorGainBig : QCSargeArmorGain
+{
+	Armor.Saveamount 25
+}
+
+Actor QCBrockArmorGain : BasicArmorPickup
+{
+	Radius 20
+	Height 48
+	//Inventory.Pickupmessage "$GOT_QCBrockArmorGain" // "Picked up an armor shard."
+	Inventory.Icon "BON2A0"
+	Armor.Savepercent 100.0
+	Armor.Saveamount 150
+	//Armor.Maxsaveamount 150
+	Inventory.RespawnTics 525 //15 sec
+	+COUNTITEM
+	+INVENTORY.ALWAYSPICKUP
+	+SERVERNETID
+	Scale 0.9
+	//Inventory.PickupSound "QC/Items/ArmorShardQ3Pick"
 	States
 	{
 	Spawn:
@@ -576,9 +660,9 @@ Actor QCSmallArmorGiver : InventoryClassChecker replaces GreenArmor
 	{
 	Spawn:
 		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
-		QCAR B 0 A_SpawnItemEx("QCDEBotBait", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+		QCAR B 0
 		QCAR B 0 A_ThrowGrenade("QCLightArmorFX", -35, 0, 0, 0, TGR_NOUNLAGGED)
-		QCAR B -1 BRIGHT ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
+		QCAR B -1 Light(GreenSmallPoint3) BRIGHT ACS_NamedExecuteWithResult("QCDE_PickupSpawned")
 		Stop
 
 		DoRanger:
@@ -641,6 +725,9 @@ Actor QCSmallArmorGiver : InventoryClassChecker replaces GreenArmor
 			TNT1 A 0 ACS_NamedExecuteWithResult("ArmorGiver",	CallACS("MaxArmor"),MediumArmorAmount,0)
 			TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_Passive_Sam",5) // <- Passive
 			Goto ArmorDoneSuccess
+		DoBrock:
+			TNT1 A 0 ACS_NamedExecuteWithResult("ArmorGiver",	CallACS("MaxArmor"),	MediumArmorAmount,0)
+			Goto ArmorDoneSuccess
 		// ^ insert more classes here
 
 	ArmorDoneSuccess:
@@ -650,8 +737,8 @@ Actor QCSmallArmorGiver : InventoryClassChecker replaces GreenArmor
 		TNT1 A 0
 		Fail
 	Death:
-		TNT1 A 0
-		Stop
+        TNT1 A 0
+        Stop 
 	}
 }
 
@@ -708,7 +795,7 @@ Actor QCSmallArmorDoubleGiver : QCSmallArmorGiver
 	{
 	Spawn:
 		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Super::Death")
-		QCAR B -1 BRIGHT A_SpawnItemEx("QCSmallArmorGiver", random(15,-15),random(15,-15),0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+		QCAR B -1 Light(GreenSmallPoint3) BRIGHT A_SpawnItemEx("QCSmallArmorGiver", random(15,-15),random(15,-15),0, 0,0,0, 0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -729,8 +816,8 @@ Actor QCBigArmorGiver : InventoryClassChecker replaces BlueArmor
 		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Death")
 		QCAR C 0 BRIGHT ACS_NamedExecuteWithResult("QCDE_ItemSpawned", 1)
 		QCAR C 0 A_ThrowGrenade("QCHeavyArmorFX", -35, 0, 0, 0, TGR_NOUNLAGGED)
-		QCAR C 0 A_SpawnItemEx("QCDEBotBait", 0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
-		QCAR C -1 BRIGHT
+		QCAR C 0
+		QCAR C -1 Light(GreenSmallPoint2) BRIGHT
 		Stop
 
 		DoRanger:
@@ -791,11 +878,14 @@ Actor QCBigArmorGiver : InventoryClassChecker replaces BlueArmor
 			TNT1 A 0 ACS_NamedExecuteAlways("ArmorGiver",0,	CallACS("MaxArmor"),BigArmorAmount,1)
 			TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_Passive_Sam",10) // <- Passive
 			Goto ArmorDoneSuccess
+		DoBrock:
+			TNT1 A 0 A_GiveInventory("QCBrockArmorGain", 1, 0, GIF_FORCESERVERSIDE)		// Give 150 armor and absorb to 100%
+			Goto ArmorDoneSuccess
 		// ^ insert more classes here
 
 	ArmorDoneSuccess:
 		//Medals start
-		TNT1 A 0 ACS_NamedExecute("QCDE_StopWatch", 0, 2)
+		TNT1 A 0 ACS_NamedExecute("QCDE_StopWatch", 0, 1)
 		//Medals end
 		TNT1 A 0 A_SpawnItemEx("BigArmorGiverFlash", 0,0,24, 0,0,0,0, SXF_NOCHECKPOSITION)
 		TNT1 A 0 ACS_NamedExecuteWithResult("QCDE_ItemTaken", 1)
@@ -805,8 +895,8 @@ Actor QCBigArmorGiver : InventoryClassChecker replaces BlueArmor
 		TNT1 A 0
 		Fail
 	Death:
-		TNT1 A 0
-		Stop
+        TNT1 A 0
+        Stop 
 	}
 }
 
@@ -870,7 +960,6 @@ Actor QCHealthBonusMap : QCHealthBonus 15500
 	States
 	{
 	Spawn:	//needed so that it doesn't spawn hourglasses randomly like "replacers" do
-		TNT1 A 1 NoDelay A_JumpIf(ACS_NamedExecuteWithResult("checkPracticeMode") == 1, "Super::Death")
 		HEAL A 0
 		Goto BeHealthBonus
 	}
@@ -947,76 +1036,76 @@ Actor QCMegaMegaMap : QCMegaMega  15507
 
 
 //--------------------------
-// Floaty versions
-Actor QCHealthBonusMapFloat : QCHealthBonusMap 15520
+// No Gravity versions
+Actor QCHealthBonusMapNoGravity : QCHealthBonusMap 15520
 {
 	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
+	//$Category "QCDE Health & Armor (No Gravity)"
 	//$Color 1
-	//$Title "Float Health Bonus (+3)"
+	//$Title "Health Bonus (+3) (No Gravity)"
 	+NOGRAVITY
 }
-Actor QCStimpackMapFloat : QCStimpackMap  15521
+Actor QCStimpackMapNoGravity : QCStimpackMap  15521
 {
 	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
+	//$Category "QCDE Health & Armor (No Gravity)"
 	//$Color 1
-	//$Title "Float Medium Health (+25)"
+	//$Title "Medium Health (+25) (No Gravity)"
 	+NOGRAVITY
 }
-Actor QCMedikitMapFloat : QCMedikitMap  15522
+Actor QCMedikitMapNoGravity : QCMedikitMap  15522
 {
 	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
+	//$Category "QCDE Health & Armor (No Gravity)"
 	//$Color 1
-	//$Title "Float Big Health (+50)"
-	+NOGRAVITY
-}
-
-Actor QCMegaHealthFMapFloat : QCMegaHealth  15523
-{
-	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
-	//$Color 1
-	//$Title "Float Mega Health (+100)"
+	//$Title "Big Health (+50) (No Gravity)"
 	+NOGRAVITY
 }
 
-
-Actor QCArmorBonusMapFloat : QCArmorBonusMap 15524
+Actor QCMegaHealthFMapNoGravity : QCMegaHealth  15523
 {
 	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
+	//$Category "QCDE Health & Armor (No Gravity)"
+	//$Color 1
+	//$Title "Mega Health (+100) (No Gravity)"
+	+NOGRAVITY
+}
+
+
+Actor QCArmorBonusMapNoGravity : QCArmorBonusMap 15524
+{
+	//$NotAngled
+	//$Category "QCDE Health & Armor (No Gravity)"
 	//$Color 10
-	//$Title "Float Armor Shard (+3)"
+	//$Title "Armor Shard (+3) (No Gravity)"
 	+NOGRAVITY
 }
 
-Actor QCSmallArmorGiverMapFloat : QCSmallArmorGiverMap  15525
+Actor QCSmallArmorGiverMapNoGravity : QCSmallArmorGiverMap  15525
 {
 	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
+	//$Category "QCDE Health & Armor (No Gravity)"
 	//$Color 10
-	//$Title "Float Light Armor (+50)"
+	//$Title "Light Armor (+50) (No Gravity)"
 	+NOGRAVITY
 }
 
-Actor QCBigArmorGiverMapFloat : QCBigArmorGiver  15526
+Actor QCBigArmorGiverMapNoGravity : QCBigArmorGiver  15526
 {
 	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
+	//$Category "QCDE Health & Armor (No Gravity)"
 	//$Color 10
-	//$Title "Float Heavy Armor (+100)"
+	//$Title "Heavy Armor (+100) (No Gravity)"
 	+NOGRAVITY
 }
 
 
-Actor QCMegaMegaMapFloat : QCMegaMega  15527
+Actor QCMegaMegaMapNoGravity : QCMegaMega  15527
 {
 	//$NotAngled
-	//$Category "QCDE Float Health & Armor"
+	//$Category "QCDE Health & Armor (No Gravity)"
 	//$Color 1
-	//$Title "Float MegaMega (+100, +100)"
+	//$Title "MegaMega (+100, +100) (No Gravity)"
 	+NOGRAVITY
 }
 
